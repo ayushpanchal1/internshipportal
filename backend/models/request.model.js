@@ -1,0 +1,26 @@
+import mongoose from "mongoose";
+
+const Request = new mongoose.Schema(
+	{
+		firstname: { type: String, required: true },
+        lastname: { type: String, required: true },
+        seatno: {type: Number, required: true},
+		academicyear: { type: String, required: true },
+        department: { type: String, required: true },
+        semester: {type: Number, required: true},
+        division: { type: String, required: true },
+        classteacher: { type: String, required: true },
+        hod: { type: String, required: true },
+		mothername: { type: String, required: true },
+		fathername: { type: String, required: true },
+        fromduration: { type: String, required: true },
+		toduration: { type: String, required: true },
+        wherefrom: { type: String, required: true },
+        whatfor: { type: String, required: true },
+		domain: { type: String, required: true },
+	},
+	{ collection: 'request-data' }
+)
+
+
+export default mongoose.model('RequestData', Request);
