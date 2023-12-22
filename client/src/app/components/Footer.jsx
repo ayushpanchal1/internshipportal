@@ -6,11 +6,12 @@ const Footer = () => {
     <footer className=' bg-black h-40 hover:bg-slate-800 text-white'>
       <div className='flex p-5 justify-around'>
         <div className='text-center flex flex-col justify-center'>
-          <h1 className='text-3xl text-white hover:text-blue-200'>
-            ABOUT MY Internship Portal Project
+          <h1 className='text-3xl text-white hover:text-blue-200 mt-5'>
+            About My Internship Portal Project
           </h1>
+          <br />
           <p className=' text-white hover:text-blue-200'>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio, iste?
+            Powered By K.J. Somaiya Institute Of Technology
           </p>
         </div>
         <div className=' text-white hover:text-blue-200 flex items-center'>

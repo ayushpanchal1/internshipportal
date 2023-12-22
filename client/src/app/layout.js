@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CustomNavbar from './components/CustomNavbar';
 import Footer from './components/Footer';
 import { ToastContainer } from 'react-toastify';
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"></link>
 
 const roboto = Roboto({
   weight: '400',

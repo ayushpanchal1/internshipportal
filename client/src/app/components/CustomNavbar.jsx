@@ -13,7 +13,18 @@ const CustomNavbar = () => {
   const handleItemClick = (itemName) => {
     setActiveItem(itemName);
   };
+  const [showSignupOptions, setShowSignupOptions] = useState(false);
+  const [showLoginOptions, setShowLoginOptions] = useState(false);
 
+  const handleSignupDropdown = () => {
+    setShowSignupOptions(!showSignupOptions);
+    setShowLoginOptions(false); // Hide login dropdown when signup is clicked
+  };
+
+  const handleLoginDropdown = () => {
+    setShowLoginOptions(!showLoginOptions);
+    setShowSignupOptions(false); // Hide signup dropdown when login is clicked
+  };
   return (
     <nav className="bg-gradient-to-r from-red-900 to-blue-300 h-16 flex justify-between items-center text-white font-semibold shadow-lg sticky top-0 z-50">
       <div className="pl-8">
@@ -65,7 +76,7 @@ const CustomNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/add-task" passHref>
+            <Link href="/adddata" passHref>
               <span
                 onClick={() => handleItemClick('Add Task')}
                 className={`block md:inline-block text-white ${
@@ -77,7 +88,7 @@ const CustomNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/show-task" passHref>
+            <Link href="/showdata" passHref>
               <span
                 onClick={() => handleItemClick('Show Task')}
                 className={`block md:inline-block text-white ${
@@ -89,27 +100,45 @@ const CustomNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="#!" passHref>
-              <span
-                onClick={() => handleItemClick('Login')}
-                className={`block md:inline-block text-white ${
-                  activeItem === 'Login' ? 'bg-blue-500 hover:bg-blue-600' : 'hover:text-blue-200'
-                } px-4 py-2 transition duration-300`}
-              >
-                Login
-              </span>
-            </Link>
-          </li>
+          <div className="relative inline-block">
+            <span
+              onClick={handleLoginDropdown}
+              className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
+            >
+              Login
+            </span>
+            {showLoginOptions && (
+              <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
+                <Link href="/login" passHref>
+                  <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
+                </Link>
+                <Link href="/teacher_login" passHref>
+                  <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </li>
           <li>
-            <Link href="/signup" passHref>
-              <span
-                onClick={() => handleItemClick('Sign Up')}
-                className={`block md:inline-block text-white  hover:bg-blue-600 px-4 py-2 rounded transition duration-300`}
-              >
-                Sign Up
-              </span>
-            </Link>
-          </li>
+          <div className="relative inline-block">
+            <span
+              onClick={handleSignupDropdown}
+              className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
+            >
+              Signup
+            </span>
+            {showSignupOptions && (
+              <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
+                <Link href="/signup" passHref>
+                  <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
+                </Link>
+                <Link href="/admin_signup" passHref>
+                  <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        </li>
         </ul>
       </div>
     </nav>
