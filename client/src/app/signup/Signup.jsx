@@ -4,16 +4,17 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import signUpBanner from "../../assets/signup.svg";
+import { studentSignup } from "../services/userService";
 
 const Signup = () => {
   const [data, setData] = useState({
-    name: "",
+    fname: "",
+    lname:"",
     email: "",
     password: "",
     confirm_pass: "",
     gender: "",
     seatno: "",
-    academicyear: "",
     department: "",
     semester: "",
     division: "",
@@ -26,129 +27,177 @@ const Signup = () => {
     dateofbirth: "",
   });
 
-  const [errors, setErrors] = useState({});
+  
   const doSignup = async (event) => {
     event.preventDefault();
 
-    const validateForm = () => {
-      let valid = true;
-      const newErrors = {};
+  
+      
 
-      if (data.name.trim() === "" || data.name === null) {
-        newErrors.name = "Name is required!";
-        valid = false;
+      if (data.fname.trim() === "" || data.fname === null) {
+        toast.warning("First-Name is required !!", {
+          position: "top-center",
+        });
       }
-
+      if (data.lname.trim() === "" || data.lname === null) {
+       toast.warning("Last Name is required!! ",{
+        position:"top-center"
+       })
+      }
       if (data.email.trim() === "" || data.email === null) {
-        newErrors.email = "Email is required!";
-        valid = false;
+        toast.warning("Email is required!",{
+        position:"top-center"
+        })
       } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-        newErrors.email = "Please enter a valid email address!";
-        valid = false;
+        toast.warning("Please enter a valid email address!",{
+          position:"top-center"
+        }
+        )
       }
 
       if (data.password.trim() === "" || data.password === null) {
-        newErrors.password = "Password is required!";
-        valid = false;
+        toast.warning("Password is required!",{
+          position:"top-center"
+        }
+        )
+        
       } else if (data.password.length < 6) {
-        newErrors.password = "Password should be at least 6 characters long!";
-        valid = false;
+        toast.warning("Password should be at least 6 characters long!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.gender.trim() === "") {
-        newErrors.gender = "Please select a gender!";
-        valid = false;
+        toast.warning("Please select a gender!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.dateofbirth.trim() === "") {
-        newErrors.dateofbirth = "Please provide your date of birth!";
-        valid = false;
+        toast.warning("Please provide your date of birth!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.department.trim() === "") {
-        newErrors.department = "Department is required!";
-        valid = false;
+        toast.warning("Department is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.division.trim() === "") {
-        newErrors.division = "Division is required!";
-        valid = false;
+        toast.warning("Division is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.semester.trim() === "") {
-        newErrors.semester = "Semester is required!";
-        valid = false;
+        toast.warning("Semester is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.classteacher.trim() === "") {
-        newErrors.classteacher = "Class Teacher is required!";
-        valid = false;
+        toast.warning("Class Teacher is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.hod.trim() === "") {
-        newErrors.hod = "HOD is required!";
-        valid = false;
+        toast.warning("HOD is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.address.trim() === "") {
-        newErrors.address = "Address is required!";
-        valid = false;
+        toast.warning("Address is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.mothername.trim() === "") {
-        newErrors.mothername = "Mother's Name is required!";
-        valid = false;
+        toast.warning("Mother's Name is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.fathername.trim() === "") {
-        newErrors.fathername = "Father's Name is required!";
-        valid = false;
+        toast.warning("Father's Name is required!",{
+          position:"top-center"
+        }
+        )
+        
       }
 
       if (data.mobileno.trim() === "") {
-        newErrors.mobileno = "Mobile Number is required!";
-        valid = false;
+        toast.warning("Mobile Number is required!",{
+          position:"top-center"
+        }
+        )
+      
       } else if (!/^\d{10}$/.test(data.mobileno)) {
-        newErrors.mobileno = "Please enter a valid 10-digit mobile number!";
-        valid = false;
-      }
+        toast.warning("Please enter a valid 10-digit mobile number!",{
+          position:"top-center"
+        }
+        )
+             }
 
-      if (data.academicyear.trim() === "") {
-        newErrors.academicyear = "Academic Year is required!";
-        valid = false;
-      }
 
       // Add validations for other fields similarly
+    
+    try {
+      const result = await studentSignup(data);
 
-      setErrors(newErrors);
-      return valid;
-    };
+      console.log(result);
 
-    const isValid = validateForm();
-
-    if (isValid) {
-      try {
-        // Make an API call to your server to sign up the user
-        const response = await fetch("/api/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data), // Sending form data to the server
-        });
-
-        if (response.ok) {
-          // Handle successful signup
-          toast.success("Signup successful!");
-        } else {
-          // Handle signup failure
-          toast.error("Signup failed. Please try again.");
-        }
-      } catch (error) {
-        // Handle error cases
-        console.error("Error:", error);
-        toast.error("Something went wrong. Please try again.");
-      }
+      toast.success("User is registered !!", {
+        position: "top-center",
+      });
+      setData({
+    fname: "",
+    lname:"",
+    email: "",
+    password: "",
+    confirm_pass: "",
+    gender: "",
+    seatno: "",
+    department: "",
+    semester: "",
+    division: "",
+    classteacher: "",
+    hod: "",
+    address: "",
+    mothername: "",
+    fathername: "",
+    mobileno: "",
+    dateofbirth: "",
+      });
+    } catch (error) {
+      console.log(error);
+      console.log(error.response.data.message);
+      toast.error("Signup Error !! " + error.response.data.message, {
+        position: "top-center",
+      });
     }
   };
 
@@ -178,47 +227,39 @@ const Signup = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="fname"
                   className="block text-sm font-medium mb-2"
                 >
                   First Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="fname"
                   className="w-full  px-4 py-3 mr-20 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Enter your first name"
-                  name="name"
-                  value={data.name}
+                  name="fname"
+                  value={data.fname}
                   onChange={handleChange}
+                  
                 />
-                {errors.name && (
-                  <p className="error-message" style={{ color: "red" }}>
-                    {errors.name}
-                  </p>
-                )}
               </div>
               <div className="mb-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="lname"
                   className="block text-sm font-medium mb-2"
                 >
                   Last Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="lname"
                   className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Enter your first name"
-                  name="name"
-                  value={data.name}
+                  placeholder="Enter your last name"
+                  name="lname"
+                  value={data.lname}
                   onChange={handleChange}
                 />
-                {errors.name && (
-                  <p className="error-message" style={{ color: "red" }}>
-                    {errors.name}
-                  </p>
-                )}
+               
               </div>
             </div>
 
@@ -304,17 +345,18 @@ const Signup = () => {
                     <option value="Semester VII">Semester VII</option>
                     <option value="Semester VIII">Semester VIII</option>
                   </select>
-                </div>                <div className="mb-4">
+                </div>              
+                  <div className="mb-4">
                   <label
-                    htmlFor="semester"
+                    htmlFor="gender"
                     className="block text-sm font-medium mb-2"
                   >
                     Gender
                   </label>
                   <select
-                    id="semester"
-                    name="semester"
-                    value={data.semester}
+                    id="gender"
+                    name="gender"
+                    value={data.gender}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
@@ -455,9 +497,7 @@ const Signup = () => {
                       value={data.email}
                       onChange={handleChange}
                     />
-                    {errors.email && (
-                      <p className="error-message">{errors.email}</p>
-                    )}
+                   
                   </div>
 
                   {/* Password Field */}
@@ -477,9 +517,7 @@ const Signup = () => {
                       value={data.password}
                       onChange={handleChange}
                     />
-                    {errors.password && (
-                      <p className="error-message">{errors.password}</p>
-                    )}
+                    
                   </div>
                 </div>{" "}
               </div>

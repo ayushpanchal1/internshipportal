@@ -1,3 +1,5 @@
+
+
 import Student from '../models/student.model.js'
 import Teacher from '../models/teacher.model.js'
 import Request from '../models/request.model.js'
@@ -6,6 +8,27 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
+
+export async function currentUser(req, res) {
+  try {
+    const authToken = req.cookies.authToken; // Adjust this according to your cookie setup
+
+    if (!authToken) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const decodedToken = jwt.verify(authToken, process.env.JWT_KEY);
+    const user = await Student.findById(decodedToken._id).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 export async function studentsignup(req, res) {
   try {
