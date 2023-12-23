@@ -211,22 +211,27 @@ const AdminSignup = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="mb-4">
+            <div className="mb-4">
                   <label
                     htmlFor="department"
                     className="block text-sm font-medium mb-2"
                   >
                     Department
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="department"
-                    className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="Enter department"
                     name="department"
                     value={data.department}
                     onChange={handleChange}
-                  />
+                    className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  >
+                    
+                    <option value="">Select Department</option>
+                    <option value="Computer Science">CS</option>
+                    <option value="Information Technology">IT</option>
+                    <option value="Airtificial Intelligience and Data Science">AI-DS</option>
+                    <option value="Electronics And Telecommunications">EXTC</option>
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label

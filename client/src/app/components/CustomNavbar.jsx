@@ -83,7 +83,7 @@ const CustomNavbar = () => {
                   activeItem === 'Add Task' ? 'bg-blue-500 hover:bg-blue-600' : 'hover:text-blue-200'
                 } px-4 py-2 transition duration-300`}
               >
-                Add Task
+                Internship Form
               </span>
             </Link>
           </li>
@@ -95,7 +95,7 @@ const CustomNavbar = () => {
                   activeItem === 'Show Task' ? 'bg-blue-500 hover:bg-blue-600' : 'hover:text-blue-200'
                 } px-4 py-2 transition duration-300`}
               >
-                Show Task
+                My Internships
               </span>
             </Link>
           </li>
