@@ -34,7 +34,7 @@ export async function studentsignup(req, res) {
   try {
     console.log(req.body)
     const userexists = await Student.findOne({
-      email: req.body.Email,
+      email: req.body.email,
     })
     if (userexists) {
       res.json({ status: 'error, user already exists' })
@@ -42,22 +42,22 @@ export async function studentsignup(req, res) {
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (!err) {
         await Student.create({
-          firstname: req.body.FirstName,
-          lastname: req.body.LastName,
-          gender: req.body.Gender,
-          seatno: req.body.SeatNo,
-          academicyear: req.body.AcademicYear,
-          department: req.body.Department,
-          semester: req.body.Semester,
-          division: req.body.Division,
-          classteacher: req.body.ClassTeacher,
-          hod: req.body.HeadofDept,
-          address: req.body.Address,
-          mothername: req.body.MotherName,
-          fathername: req.body.FatherName,
-          mobileno: req.body.MobileNo,
-          dateofbirth: req.body.DateofBirth,
-          email: req.body.Email,
+          firstname: req.body.fname,
+          lastname: req.body.lname,
+          gender: req.body.gender,
+          seatno: req.body.seatno,
+          academicyear: req.body.academic,
+          department: req.body.department,
+          semester: req.body.semester,
+          division: req.body.division,
+          classteacher: req.body.classteacher,
+          hod: req.body.hod,
+          address: req.body.address,
+          mothername: req.body.mothername,
+          fathername: req.body.fathername,
+          mobileno: req.body.mobileno,
+          dateofbirth: req.body.dateofbirth,
+          email: req.body.email,
           password: hashedPassword,
         })
         res.json({ status: 'ok' })
@@ -74,13 +74,13 @@ export async function studentsignup(req, res) {
 export async function studentlogin(req, res) {
   try {
     const student = await Student.findOne({
-      email: req.body.Email,
+      email: req.body.email,
     })
 
     if (!student) {
       res.json({ status: 'error: account not found' })
     } else {
-      const match = await bcrypt.compare(req.body.Password, student.password)
+      const match = await bcrypt.compare(req.body.password, student.password)
       if (!match) {
         // passwords do not match!
         res.json({ status: 'error' })
@@ -114,7 +114,7 @@ export async function teachersignup(req, res) {
     if (userexists) {
       res.json({ status: 'error, user already exists' })
     }
-    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+    bcrypt.hash(req.body.Password, 10, async (err, hashedPassword) => {
       if (!err) {
         await Teacher.create({
           firstname: req.body.FirstName,
@@ -145,13 +145,13 @@ export async function teachersignup(req, res) {
 export async function teacherlogin(req, res) {
   try {
     const teacher = await Teacher.findOne({
-      email: req.body.Email,
+      email: req.body.email,
     })
 
     if (!teacher) {
       res.json({ status: 'error: account not found' })
     } else {
-      const match = await bcrypt.compare(req.body.Password, teacher.password)
+      const match = await bcrypt.compare(req.body.password, teacher.password)
       if (!match) {
         // passwords do not match!
         res.json({ status: 'error' })
