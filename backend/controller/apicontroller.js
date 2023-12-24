@@ -5,6 +5,7 @@ import Test from '../models/test.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 export async function studentsignup(req, res) {
@@ -71,7 +72,7 @@ export async function studentlogin(req, res) {
           { expiresIn: '24h' }
         )
 
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
           token,
         })
@@ -141,7 +142,7 @@ export async function teacherlogin(req, res) {
           process.env.JWT_KEY,
           { expiresIn: '24h' }
         )
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
           token,
         })
@@ -150,6 +151,43 @@ export async function teacherlogin(req, res) {
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
+}
+
+export async function userlogout(req,res){
+    try{
+      res.clearCookie('token')
+      res.status(200).send({ status: 'ok, user logged out' })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+export async function addrequest(req,res){
+    try{
+      //console.log(req.body)
+        await Request.create({
+          firstname: req.user.role.firstname,
+          lastname: req.user.role.lastname,
+          seatno: req.user.role.seatno,
+          academicyear: req.user.role.academicyear,
+          department: req.user.role.department,
+          semester: req.user.role.semester,
+          division: req.user.role.division,
+          classteacher: req.user.role.classteacher,
+          hod: req.user.role.hod,
+          mothername: req.user.role.mothername,
+          fathername: req.user.role.fathername,
+          fromduration: req.body.FromDuration,
+          toduration: req.body.ToDuration,
+          companyname: req.body.CompanyName,
+          companyaddress: req.body.CompanyAddress,
+          whatfor: req.body.WhatFor,
+          domain: req.body.Domain,
+        })
+        res.json({ status: 'ok' })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
 }
 
 export async function testsignup(req, res) {
@@ -196,7 +234,7 @@ export async function testlogin(req, res) {
           process.env.JWT_KEY,
           { expiresIn: '24h' }
         )
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
           token,
         })
@@ -207,28 +245,10 @@ export async function testlogin(req, res) {
   }
 }
 
-export async function addrequest(req,res){
+export async function testmiddleware(req,res){
     try{
-      console.log(req.body)
-        await Request.create({
-          firstname: req.body.FirstName,
-          lastname: req.body.LastName,
-          seatno: req.body.SeatNo,
-          academicyear: req.body.AcademicYear,
-          department: req.body.Department,
-          semester: req.body.Semester,
-          division: req.body.Division,
-          classteacher: req.body.ClassTeacher,
-          hod: req.body.HeadofDept,
-          mothername: req.body.MotherName,
-          fathername: req.body.FatherName,
-          fromduration: req.body.FromDuration,
-          toduration: req.body.ToDuration,
-          wherefrom: req.body.WhereFrom,
-          whatfor: req.body.WhatFor,
-          domain: req.body.Domain,
-        })
-        res.json({ status: 'ok' })
+      //console.log(req.user.role.email)
+      res.status(200).send({status: 'ok, middleware works!'})
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

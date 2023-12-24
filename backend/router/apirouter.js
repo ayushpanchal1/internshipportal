@@ -8,8 +8,12 @@ router.post('/studentsignup', controller.studentsignup)
 router.post('/studentlogin', controller.studentlogin)   
 router.post('/teachersignup', controller.teachersignup)  
 router.post('/teacherlogin', controller.teacherlogin)
+router.get('/userlogout', controller.userlogout)
+router.post('/addrequest', Auth, controller.addrequest)
+
+//test
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)
-router.post('/addrequest', Auth, controller.addrequest)
+router.post('/testmiddleware', Auth, controller.testmiddleware)
 
 export default router

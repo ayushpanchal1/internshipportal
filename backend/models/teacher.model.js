@@ -12,7 +12,7 @@ const Teacher = new mongoose.Schema(
         address: {type: String, required: true},
 		mothername: { type: String, required: true },
 		fathername: { type: String, required: true },
-		mobileno: { type: String, required: true },
+		mobileno: { type: Number, required: true },
         dateofbirth: { type: String, required: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },

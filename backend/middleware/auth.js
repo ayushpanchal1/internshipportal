@@ -5,11 +5,11 @@ dotenv.config()
 export default async function Auth(req, res, next) {
   try {
     // access authorize header to validate request
-    const token = req.headers.authorization
+    const token = req.cookies.token
 
     // retrive the user details fo the logged in user
     const decodedToken = await jwt.verify(token, process.env.JWT_KEY)
-    console.log("works")
+    //console.log("works")
 
     req.user = decodedToken
     //console.log(decodedToken);
