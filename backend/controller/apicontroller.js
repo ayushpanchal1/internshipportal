@@ -9,26 +9,26 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
-export async function currentUser(req, res) {
-  try {
-    const authToken = req.cookies.authToken; // Adjust this according to your cookie setup
+// export async function currentUser(req, res) {
+//   try {
+//     const authToken = req.cookies.authToken; // Adjust this according to your cookie setup
 
-    if (!authToken) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+//     if (!authToken) {
+//       return res.status(401).json({ error: 'Unauthorized' });
+//     }
 
-    const decodedToken = jwt.verify(authToken, process.env.JWT_KEY);
-    const user = await Student.findById(decodedToken._id).select('-password');
+//     const decodedToken = jwt.verify(authToken, process.env.JWT_KEY);
+//     const user = await Student.findById(decodedToken._id).select('-password');
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
 
-    return res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
+//     return res.json(user);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// }
 
 export async function studentsignup(req, res) {
   try {
@@ -265,3 +265,16 @@ export async function addrequest(req,res){
 //         res.status(500).send({ error: error.message });
 //     }
 // }
+
+export async function logout(req, res) {
+  try {
+    // Perform actions to logout the user here
+    // For example: clear cookies, delete session data, etc.
+
+    // Return a response indicating successful logout
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+}
+

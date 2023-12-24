@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import signUpBanner from "../../assets/signup.svg";
 import { studentSignup } from "../services/userService";
 
 const Signup = () => {
+  const router = useRouter();
   const [data, setData] = useState({
     fname: "",
     lname:"",
@@ -25,6 +27,7 @@ const Signup = () => {
     fathername: "",
     mobileno: "",
     dateofbirth: "",
+    academic:"",
   });
 
   
@@ -148,7 +151,13 @@ const Signup = () => {
         )
         
       }
-
+      if (data.academic.trim() === "") {
+        toast.warning("Academic No is required!",{
+          position:"top-center"
+        }
+        )
+        
+      }
       if (data.mobileno.trim() === "") {
         toast.warning("Mobile Number is required!",{
           position:"top-center"
@@ -191,7 +200,10 @@ const Signup = () => {
     fathername: "",
     mobileno: "",
     dateofbirth: "",
+    academic:"",
+    
       });
+      router.push('/login');
     } catch (error) {
       console.log(error);
       console.log(error.response.data.message);
@@ -329,21 +341,22 @@ const Signup = () => {
                     Semester
                   </label>
                   <select
-                    id="semeste"
+                    id="semester"
                     name="semester"
+                    type="number"
                     value={data.semester}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
-                    <option value="">Select Semester</option>
-                    <option value="Semester I">Semester I</option>
-                    <option value="Semester II">Semester II</option>
-                    <option value="Semester III">Semester III</option>
-                    <option value="Semester IV">Semester IV</option>
-                    <option value="Semester V">Semester V</option>
-                    <option value="Semester VI">Semester VI</option>
-                    <option value="Semester VII">Semester VII</option>
-                    <option value="Semester VIII">Semester VIII</option>
+                    <option value="0">Select Semester</option>
+                    <option value= "1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
                   </select>
                 </div>              
                   <div className="mb-4">
@@ -476,7 +489,44 @@ const Signup = () => {
                     name="mobileno"
                     value={data.mobileno}
                     onChange={handleChange}
+                    />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label
+                    htmlFor="academic"
+                    className="block text-sm font-medium mb-2"
+                  >
+                    Academic Year
+                  </label>
+                  <input
+                    type="number"
+                    id="academic"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter father's name"
+                    name="academic"
+                    value={data.academic}
+                    onChange={handleChange}
                   />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="seatno"
+                    className="block text-sm font-medium mb-2"
+                  >
+                    Seat Number
+                  </label>
+                  <input
+                    type="number"
+                    id="seatno"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter mobile number"
+                    name="seatno"
+                    value={data.seatno}
+                    onChange={handleChange}
+                  />
+                </div>
                 </div>
                 {/* ...other fields... */}
                 {/* Email Field */}
@@ -519,7 +569,6 @@ const Signup = () => {
                     />
                     
                   </div>
-                </div>{" "}
               </div>
             </div>
             <button

@@ -70,3 +70,12 @@ export async function addRequest(requestData) {
     throw new Error(error.response.data.error || error.message);
   }
 }
+
+export async function logout() {
+  try {
+    const response = await httpAxios.post('/api/logout');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error || error.message);
+  }
+}

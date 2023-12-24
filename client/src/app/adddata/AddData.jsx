@@ -4,7 +4,7 @@ import loginSvg from "../../assets/login.svg";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import Task from "../showdata/Task";
-import { addTask } from "../services/taskService";
+import { addRequest } from "../services/taskService";
 
 const AddData = () => {
   
@@ -46,7 +46,7 @@ const AddData = () => {
     try {
       // const result = await addTask(task);
       // console.log(result);
-      const data = await addTask(formData)
+      const data = await addRequest(formData)
       console.log("Form submitted:", data);
       toast.success("Your Information is added !!", {
         position: "top-center",

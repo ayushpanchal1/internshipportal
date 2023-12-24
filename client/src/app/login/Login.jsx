@@ -1,15 +1,17 @@
-import React from "react";
-import { useRouter } from "next/router";
+"use client"
+import React, { useContext,useState } from "react";
+
+import { useRouter } from "next/navigation";
 import UserContext from "../context/userContext";
 import Image from "next/image";
 import Link from "next/link";
+
 import signUpBanner from "../../assets/login.svg";
-import googleLogo from "../../assets/google-logo.png"; // Make sure to import the Google logo
 import { studentLogin } from "../services/userService";
 import { toast } from "react-toastify";
 
 
-const Login = async() => {
+const Login = () => {
   const router = useRouter();
   const context = useContext(UserContext);
   const [loginData, setLoginData] = useState({

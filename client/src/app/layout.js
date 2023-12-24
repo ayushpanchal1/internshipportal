@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CustomNavbar from './components/CustomNavbar';
 import Footer from './components/Footer';
 import { ToastContainer } from 'react-toastify';
+import UserProvider from './context/userProvider';
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"></link>
 
 const roboto = Roboto({
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={roboto.className}>
+       <UserProvider>
         <ToastContainer />
         <CustomNavbar />
         <div className='mt-2'>{children}</div>
@@ -33,6 +35,7 @@ export default function RootLayout({ children }) {
         <br></br>
         
         <Footer />
+        </UserProvider>
       </body>
     </html>
   );

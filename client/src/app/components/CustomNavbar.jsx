@@ -1,10 +1,23 @@
 "use client";
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
+import UserContext from '../context/userContext';
 
 const CustomNavbar = () => {
+  const context = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState('');
+  async function handleLogout() {
+    try {
+      const result = await logout();
+      console.log(result);
+      context.setUser(undefined);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout Error");
+    }
+  }
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -29,6 +42,7 @@ const CustomNavbar = () => {
     <nav className="bg-gradient-to-r from-red-900 to-blue-300 h-16 flex justify-between items-center text-white font-semibold shadow-lg sticky top-0 z-50">
       <div className="pl-8">
         <h1 className="text-2xl font-semibold">
+          
           <Link href="/" passHref>
             <span className="hover:text-blue-200">
               InternshipPortal
@@ -62,7 +76,7 @@ const CustomNavbar = () => {
         className={`md:flex ${isOpen ? 'block' : 'hidden'} md:items-center md:w-auto w-full transition duration-300`}
         id="menu"
       >
-        <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0">
+        <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0 space-x-4">
           <li>
             <Link href="/" passHref>
               <span
@@ -75,6 +89,9 @@ const CustomNavbar = () => {
               </span>
             </Link>
           </li>
+          <ul className='flex space-x-2'>
+          {context.user && (
+            <>
           <li>
             <Link href="/adddata" passHref>
               <span
@@ -99,6 +116,44 @@ const CustomNavbar = () => {
               </span>
             </Link>
           </li>
+
+          </>
+          )}
+          </ul>
+          <ul className="flex space-x-3">
+            {(context.user && 
+            <>
+          <li>
+          <div className="relative inline-block">
+      <span
+        onClick={handleLoginDropdown}
+        className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
+      >
+        {user ? 'Logout' : 'Login'}
+      </span>
+      {showLoginOptions && (
+        <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
+          <Link href="/login" passHref>
+            <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
+          </Link>
+          <Link href="/teacher_login" passHref>
+            <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
+          </Link>
+          {/* Conditional rendering based on the user's role */}
+          {user && user.role === 'student' && (
+            <span onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-200">Logout</span>
+          )}
+          {user && user.role === 'teacher' && (
+            <span onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-200">Logout</span>
+          )}
+        </div>
+      )}
+      </div>
+      </li>
+    </>
+  )}
+  {(!context.user && 
+  <>
           <li>
           <div className="relative inline-block">
             <span
@@ -139,6 +194,9 @@ const CustomNavbar = () => {
             )}
           </div>
         </li>
+        </>
+        )}
+        </ul>
         </ul>
       </div>
     </nav>
