@@ -74,7 +74,7 @@ export async function studentlogin(req, res) {
 
         return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          student,
         })
       }
     }
@@ -85,7 +85,7 @@ export async function studentlogin(req, res) {
 
 export async function teachersignup(req, res) {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const userexists = await Teacher.findOne({
       email: req.body.Email,
     })
@@ -144,7 +144,7 @@ export async function teacherlogin(req, res) {
         )
         return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          teacher,
         })
       }
     }
@@ -185,6 +185,21 @@ export async function addrequest(req,res){
           domain: req.body.Domain,
         })
         res.json({ status: 'ok' })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+export async function getmyrequests(req,res){
+    try{
+      const requests = await Request.find({
+        email: req.user.role.email,
+        approvalstatus: req.body.approvalstatus,
+      })
+      return res.status(200).send({
+        status: 'ok',
+        requests,
+      })
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -236,7 +251,7 @@ export async function testlogin(req, res) {
         )
         return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          test,
         })
       }
     }
