@@ -8,6 +8,29 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+export async function currentUser(req, res) {
+  try {
+
+    var user = null
+    
+    if (req.role === 'student') {
+      user = await Student.findById(req.user._id).select('-password');
+    } else if (req.role === 'teacher') {
+      user = await Teacher.findById(req.user._id).select('-password');
+    } else if (req.role === 'test') {
+      user = await Test.findById(req.user._id).select('-password');
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export async function studentsignup(req, res) {
   try {
     console.log(req.body)
@@ -66,7 +89,8 @@ export async function studentlogin(req, res) {
         const token = jwt.sign(
           {
             id: student._id,
-            role: student,
+            role: "student",
+            userdata: student,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }
@@ -137,7 +161,8 @@ export async function teacherlogin(req, res) {
         const token = jwt.sign(
           {
             id: teacher._id,
-            role: teacher,
+            role: "teacher",
+            userdata: teacher,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }
@@ -166,17 +191,17 @@ export async function addrequest(req,res){
     try{
       //console.log(req.body)
         await Request.create({
-          firstname: req.user.role.firstname,
-          lastname: req.user.role.lastname,
-          seatno: req.user.role.seatno,
-          academicyear: req.user.role.academicyear,
-          department: req.user.role.department,
-          semester: req.user.role.semester,
-          division: req.user.role.division,
-          classteacher: req.user.role.classteacher,
-          hod: req.user.role.hod,
-          mothername: req.user.role.mothername,
-          fathername: req.user.role.fathername,
+          firstname: req.user.firstname,
+          lastname: req.user.lastname,
+          seatno: req.user.seatno,
+          academicyear: req.user.academicyear,
+          department: req.user.department,
+          semester: req.user.semester,
+          division: req.user.division,
+          classteacher: req.user.classteacher,
+          hod: req.user.hod,
+          mothername: req.user.mothername,
+          fathername: req.user.fathername,
           fromduration: req.body.FromDuration,
           toduration: req.body.ToDuration,
           companyname: req.body.CompanyName,
@@ -244,7 +269,8 @@ export async function testlogin(req, res) {
         const token = jwt.sign(
           {
             id: test._id,
-            role: test,
+            role: "test",
+            userdata: test,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }

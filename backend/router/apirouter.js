@@ -4,6 +4,7 @@ import * as controller from '../controller/apicontroller.js'
 import Auth from '../middleware/auth.js'
 
 //removed auth middleware from all login and signup as token is received after login
+router.get('/current-user', Auth, controller.currentUser);
 router.post('/studentsignup', controller.studentsignup)  
 router.post('/studentlogin', controller.studentlogin)   
 router.post('/teachersignup', controller.teachersignup)  

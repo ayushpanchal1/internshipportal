@@ -4,6 +4,11 @@ dotenv.config()
 
 export default async function Auth(req, res, next) {
   try {
+
+    if (!req.cookies.token) {
+      return res.status(401).json({ error: 'Unauthorized, no token' });
+    }
+    
     // access authorize header to validate request
     const token = req.cookies.token
 
@@ -11,8 +16,9 @@ export default async function Auth(req, res, next) {
     const decodedToken = await jwt.verify(token, process.env.JWT_KEY)
     //console.log("works")
 
-    req.user = decodedToken
-    //console.log(decodedToken);
+    req.user = decodedToken.userdata
+    req.role = decodedToken.role
+    // console.log(decodedToken);
 
     next()
   } catch (error) {
