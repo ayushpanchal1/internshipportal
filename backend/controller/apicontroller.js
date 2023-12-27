@@ -8,29 +8,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-export async function currentUser(req, res) {
-  try {
-
-    var user = null
-    
-    if (req.role === 'student') {
-      user = await Student.findById(req.user._id).select('-password');
-    } else if (req.role === 'teacher') {
-      user = await Teacher.findById(req.user._id).select('-password');
-    } else if (req.role === 'test') {
-      user = await Test.findById(req.user._id).select('-password');
-    }
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    return res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
 export async function studentsignup(req, res) {
   try {
     console.log(req.body)
@@ -97,13 +74,55 @@ export async function studentlogin(req, res) {
         )
 
         return res.cookie('token',token).status(200).send({
-          status: 'ok',
-          student,
+          status: 'ok, student logged in',
         })
       }
     }
   } catch (error) {
     res.status(500).send({ error: error.message })
+  }
+}
+
+export async function addrequest(req,res){
+  try{
+    //console.log(req.body)
+      await Request.create({
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        seatno: req.user.seatno,
+        academicyear: req.user.academicyear,
+        department: req.user.department,
+        semester: req.user.semester,
+        division: req.user.division,
+        classteacher: req.user.classteacher,
+        hod: req.user.hod,
+        mothername: req.user.mothername,
+        fathername: req.user.fathername,
+        fromduration: req.body.FromDuration,
+        toduration: req.body.ToDuration,
+        companyname: req.body.CompanyName,
+        companyaddress: req.body.CompanyAddress,
+        whatfor: req.body.WhatFor,
+        domain: req.body.Domain,
+      })
+      res.json({ status: 'ok' })
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+}
+
+export async function getmyrequests(req,res){
+  try{
+    const requests = await Request.find({
+      email: req.user._id,
+      approvalstatus: req.body.approvalstatus,
+    })
+    return res.status(200).send({
+      status: 'ok',
+      requests,
+    })
+  } catch (error) {
+      res.status(500).send({ error: error.message });
   }
 }
 
@@ -168,8 +187,7 @@ export async function teacherlogin(req, res) {
           { expiresIn: '24h' }
         )
         return res.cookie('token',token).status(200).send({
-          status: 'ok',
-          teacher,
+          status: 'ok, teacher logged in',
         })
       }
     }
@@ -178,53 +196,30 @@ export async function teacherlogin(req, res) {
   }
 }
 
+export async function currentUser(req, res) {
+  try {
+    var user = null
+    
+    if (req.role === 'student') {
+      user = await Student.findById(req.user._id).select('-password');
+    } else if (req.role === 'teacher') {
+      user = await Teacher.findById(req.user._id).select('-password');
+    } else if (req.role === 'test') {
+      user = await Test.findById(req.user._id).select('-password');
+    }
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    return res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export async function userlogout(req,res){
     try{
       res.clearCookie('token')
       res.status(200).send({ status: 'ok, user logged out' })
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-}
-
-export async function addrequest(req,res){
-    try{
-      //console.log(req.body)
-        await Request.create({
-          firstname: req.user.firstname,
-          lastname: req.user.lastname,
-          seatno: req.user.seatno,
-          academicyear: req.user.academicyear,
-          department: req.user.department,
-          semester: req.user.semester,
-          division: req.user.division,
-          classteacher: req.user.classteacher,
-          hod: req.user.hod,
-          mothername: req.user.mothername,
-          fathername: req.user.fathername,
-          fromduration: req.body.FromDuration,
-          toduration: req.body.ToDuration,
-          companyname: req.body.CompanyName,
-          companyaddress: req.body.CompanyAddress,
-          whatfor: req.body.WhatFor,
-          domain: req.body.Domain,
-        })
-        res.json({ status: 'ok' })
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
-}
-
-export async function getmyrequests(req,res){
-    try{
-      const requests = await Request.find({
-        email: req.user.role.email,
-        approvalstatus: req.body.approvalstatus,
-      })
-      return res.status(200).send({
-        status: 'ok',
-        requests,
-      })
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
