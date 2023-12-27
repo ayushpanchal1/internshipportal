@@ -4,7 +4,8 @@ import loginSvg from "../../assets/login.svg";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import Task from "../showdata/Task";
-import { addRequest } from "../services/taskService";
+import { addRequest } from "../../services/taskService";
+import SideNavbar from "../../components/SideNavbar";
 
 const AddData = () => {
   
@@ -53,24 +54,27 @@ const AddData = () => {
       });
 
       setPersonalInfo({   
-      name: "",
+      firstname: "",
       lastName: "",
       seatNo: "",
-      email: "",
+      academicyear: "",
+      deparment:"",
+      semester:"",
+      division:"",
+      classteacher:"",
+      hod:"",
+      mothername:"",
+      fathername:"",
       mobileNo: "",
       dob: "",
       });
       setWorkDetails({
         technology: "",
         workplace: "",
-        companyName: "",
-        address1:"",
-        startdate:"",
-        enddate:"",
-      })
-      setUploadedDocs({
-        cv: null,
-        photo: null,
+        companyname: "",
+        acompanyaddress:"",
+        fromduration:"",
+        toduration:"",
       })
     } catch (error) {
       console.log(error);
@@ -87,24 +91,25 @@ const AddData = () => {
       case 1:
         return (
           <div>
+            <SideNavbar/>
        <div>
   <h2 className="text-2xl mb-4">Personal Information</h2>
   <div className="mt-4">
-    <label htmlFor="name" className="block text-sm font-medium mb-2">
+    <label htmlFor="firstname" className="block text-sm font-medium mb-2">
       Name
     </label>
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="name"
-      name="name"
+      id="firstname"
+      name="firstname"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
           name: event.target.value,
         });
       }}
-      value={personalInfo.name}
+      value={personalInfo.firstname}
     />
   </div>
   <div>
@@ -132,7 +137,7 @@ const AddData = () => {
       Seat No
     </label>
     <input
-      type="text"
+      type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
       id="seatNo"
       name="seatNo"
@@ -145,27 +150,153 @@ const AddData = () => {
       value={personalInfo.seatNo}
     />
   </div>
-  <div>
-  {/* ... */}
   <div className="mt-4">
-    <label htmlFor="email" className="block text-sm font-medium mb-2">
-      Email
+    <label htmlFor="academicyear" className="block text-sm font-medium mb-2">
+      Seat No
     </label>
     <input
-      type="email"
+      type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="email"
-      name="email"
+      id="academicyear"
+      name="academicyear"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
-          email: event.target.value,
+          academicyear: event.target.value,
         });
       }}
-      value={personalInfo.email}
+      value={personalInfo.academicyear}
+    />
+  </div>
+  <div>
+  {/* ... */}
+  <div className="mt-4">
+    <label htmlFor="department" className="block text-sm font-medium mb-2">
+      Department
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="department"
+      name="department"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          department: event.target.value,
+        });
+      }}
+      value={personalInfo.department}
     />
   </div>
   <div className="mt-4">
+    <label htmlFor="division" className="block text-sm font-medium mb-2">
+       Division
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="division"
+      name="division"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          division: event.target.value,
+        });
+      }}
+      value={personalInfo.division}
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="classteacher" className="block text-sm font-medium mb-2">
+    Classteacher
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="classteacher"
+      name="classteacher"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          classteacher: event.target.value,
+        });
+      }}
+      value={personalInfo.classteacher}
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="hod" className="block text-sm font-medium mb-2">
+      Hod
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="hod"
+      name="hod"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          hod: event.target.value,
+        });
+      }}
+      value={personalInfo.hod}
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="mothername" className="block text-sm font-medium mb-2">
+      Mother's Name
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="mothername"
+      name="mothername"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          mothername: event.target.value,
+        });
+      }}
+      value={personalInfo.department}
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="fathername" className="block text-sm font-medium mb-2">
+      Fathername
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="fathername"
+      name="fathername"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          fathername: event.target.value,
+        });
+      }}
+      value={personalInfo.fathername}
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="semester" className="block text-sm font-medium mb-2">
+      semester
+    </label>
+    <input
+      type="number"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="semester"
+      name="semester"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          semester: event.target.value,
+        });
+      }}
+      value={personalInfo.semester}
+    />
+  </div>
+  {/* <div className="mt-4">
     <label htmlFor="mobileNo" className="block text-sm font-medium mb-2">
       Mobile No
     </label>
@@ -182,8 +313,8 @@ const AddData = () => {
       }}
       value={personalInfo.mobileNo}
     />
-  </div>
-  <div className="mt-4">
+  </div> */}
+  {/* <div className="mt-4">
     <label htmlFor="dob" className="block text-sm font-medium mb-2">
       Date of Birth
     </label>
@@ -200,7 +331,7 @@ const AddData = () => {
       }}
       value={personalInfo.dob}
     />
-  </div>
+  </div> */}
 </div>
 
 </div>

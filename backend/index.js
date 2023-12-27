@@ -5,9 +5,12 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config()
+import cookieParser from 'cookie-parser'
 const MONGO_URI = process.env.MONGO_URI
 app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
+
 
 console.log('server starting')
 
@@ -26,7 +29,7 @@ connection.once('open', () => {
 app.get('/hello', (req, res) => {
   res.send('hello world')
 })
-
+app.use(cors({origin:'http://localhost:3000', credentials: true}))
 app.use('/api', apirouter)
 
 app.listen(1337, () => {

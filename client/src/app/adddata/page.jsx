@@ -1,7 +1,7 @@
 import React from "react";
 import AddData from "./AddData";
 export const metadata = {
-  title: "Add Task : Work Manager",
+  title: "Dashboard : Internship-Portal",
 };
 const AddDataPage = () => {
   return <AddData />;

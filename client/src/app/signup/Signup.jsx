@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import signUpBanner from "../../assets/signup.svg";
-import { studentSignup } from "../services/userService";
+import { studentSignup } from "../../services/userService";
 
 const Signup = () => {
   const router = useRouter();

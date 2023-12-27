@@ -1,13 +1,13 @@
-import UserContext from "../context/userContext";
+import UserContext from "@/src/context/userContext";
 import React, { useContext } from "react";
 import { RxCross1 } from "react-icons/rx";
 const Task = ({ task, deleteTaskParent }) => {
   const { user } = useContext(UserContext);
 
-  function deleteTask(taskId) {
-    // ....
-    deleteTaskParent(taskId);
-  }
+  // function deleteTask(taskId) {
+  //   // ....
+  //   deleteTaskParent(taskId);
+  // }
 
   return (
     <div
@@ -19,9 +19,9 @@ const Task = ({ task, deleteTaskParent }) => {
         <div className="flex justify-between">
           <h1 className="text-2xl font-semibold">{task.title}</h1>
           <span
-            onClick={() => {
-              deleteTask(task._id);
-            }}
+            // onClick={() => {
+            //   deleteTask(task._id);
+            // }}
             className="shadow-lg hover:bg-gray-900 bg-gray-950 rounded-full w-9 h-9 flex justify-center items-center cursor-pointer "
           >
             <RxCross1 />

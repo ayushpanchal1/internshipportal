@@ -7,6 +7,7 @@ import Test from '../models/test.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+
 dotenv.config()
 
 // export async function currentUser(req, res) {
@@ -88,15 +89,16 @@ export async function studentlogin(req, res) {
         const token = jwt.sign(
           {
             id: student._id,
-            role: student,
+            role: "student",
+            userdata: student,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }
         )
 
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          student,
         })
       }
     }
@@ -107,7 +109,7 @@ export async function studentlogin(req, res) {
 
 export async function teachersignup(req, res) {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const userexists = await Teacher.findOne({
       email: req.body.Email,
     })
@@ -159,20 +161,70 @@ export async function teacherlogin(req, res) {
         const token = jwt.sign(
           {
             id: teacher._id,
-            role: teacher,
+            role: "teacher",
+            userdata: teacher,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }
         )
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          teacher,
         })
       }
     }
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
+}
+
+export async function userlogout(req,res){
+    try{
+      res.clearCookie('token')
+      res.status(200).send({ status: 'ok, user logged out' })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+export async function addrequest(req,res){
+    try{
+      //console.log(req.body)
+        await Request.create({
+          firstname: req.user.firstname,
+          lastname: req.user.lastname,
+          seatno: req.user.seatno,
+          academicyear: req.user.academicyear,
+          department: req.user.department,
+          semester: req.user.semester,
+          division: req.user.division,
+          classteacher: req.user.classteacher,
+          hod: req.user.hod,
+          mothername: req.user.mothername,
+          fathername: req.user.fathername,
+          fromduration: req.body.FromDuration,
+          toduration: req.body.ToDuration,
+          companyname: req.body.CompanyName,
+        })
+        res.json({ status: 'ok' })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+export async function getmyrequests(req,res){
+    try{
+      const requests = await Request.find({
+        email: req.user.role.email,
+        approvalstatus: req.body.approvalstatus,
+      })
+      return res.status(200).send({
+        status: 'ok',
+        requests,
+      })
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
 }
 
 export async function testsignup(req, res) {
@@ -214,14 +266,15 @@ export async function testlogin(req, res) {
         const token = jwt.sign(
           {
             id: test._id,
-            role: test,
+            role: "test",
+            userdata: test,
           },
           process.env.JWT_KEY,
           { expiresIn: '24h' }
         )
-        return res.status(200).send({
+        return res.cookie('token',token).status(200).send({
           status: 'ok',
-          token,
+          test,
         })
       }
     }
@@ -230,28 +283,10 @@ export async function testlogin(req, res) {
   }
 }
 
-export async function addrequest(req,res){
+export async function testmiddleware(req,res){
     try{
-      console.log(req.body)
-        await Request.create({
-          firstname: req.body.FirstName,
-          lastname: req.body.LastName,
-          seatno: req.body.SeatNo,
-          academicyear: req.body.AcademicYear,
-          department: req.body.Department,
-          semester: req.body.Semester,
-          division: req.body.Division,
-          classteacher: req.body.ClassTeacher,
-          hod: req.body.HeadofDept,
-          mothername: req.body.MotherName,
-          fathername: req.body.FatherName,
-          fromduration: req.body.FromDuration,
-          toduration: req.body.ToDuration,
-          wherefrom: req.body.WhereFrom,
-          whatfor: req.body.WhatFor,
-          domain: req.body.Domain,
-        })
-        res.json({ status: 'ok' })
+      //console.log(req.user.role.email)
+      res.status(200).send({status: 'ok, middleware works!'})
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -265,16 +300,35 @@ export async function addrequest(req,res){
 //         res.status(500).send({ error: error.message });
 //     }
 // }
+// //template
+// export async function testlogin(req,res){
+//     try{
 
-export async function logout(req, res) {
+//     } catch (error) {
+//         res.status(500).send({ error: error.message });
+//     }
+// }
+
+
+export async function currentUser(req, res) {
   try {
-    // Perform actions to logout the user here
-    // For example: clear cookies, delete session data, etc.
 
-    // Return a response indicating successful logout
-    res.json({ message: 'Logged out successfully' });
+    var user = null
+
+    if (req.role === 'student') {
+      user = await Student.findById(req.user._id).select('-password');
+    } else if (req.role === 'teacher') {
+      user = await Teacher.findById(req.user._id).select('-password');
+    } else if (req.role === 'test') {
+      user = await Test.findById(req.user._id).select('-password');
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json(user);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 }
-

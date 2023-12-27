@@ -1,13 +1,29 @@
 import { httpAxios } from "../helper/httpHelper";
+import { getCookie } from "../helper/cookieHelper";
+
+
 
 export async function currentUser() {
   try {
-    const response = await httpAxios.get('/api/current');
+    const token = getCookie('token'); // Retrieve the token from cookies
+    console.log("Token:", token); // Log the token here to check if it's present
+
+    if (!token) {
+      throw new Error('Token is missing');
+    }
+
+    const response = await httpAxios.get('/api/current-user', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error || error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 }
+
 export async function studentSignup(userData) {
   try {
     const result = await httpAxios.post('/api/studentsignup', userData);
@@ -62,14 +78,14 @@ export async function testLogin(loginData) {
   }
 }
 
-export async function addRequest(requestData) {
-  try {
-    const result = await httpAxios.post('/api/addrequest', requestData);
-    return result.data;
-  } catch (error) {
-    throw new Error(error.response.data.error || error.message);
-  }
-}
+// export async function addRequest(requestData) {
+//   try {
+//     const result = await httpAxios.post('/api/addrequest', requestData);
+//     return result.data;
+//   } catch (error) {
+//     throw new Error(error.response.data.error || error.message);
+//   }
+// }
 
 export async function logout() {
   try {
@@ -77,5 +93,25 @@ export async function logout() {
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error || error.message);
+  }
+}
+export async function getMyRequest() {
+  try {
+    const token = getCookie('token'); // Retrieve the token from cookies
+    console.log("Token:", token); // Log the token here to check if it's present
+
+    if (!token) {
+      throw new Error('Token is missing');
+    }
+
+    const response = await httpAxios.get('/api/getmyrequests', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
   }
 }

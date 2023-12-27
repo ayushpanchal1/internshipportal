@@ -1,19 +1,21 @@
 "use client";
-import UserContext from "../context/userContext";
+import UserContext from "@/src/context/userContext";
 import React, { useContext, useEffect, useState } from "react";
 import Task from "./Task";
 import { toast } from "react-toastify";
+import { getMyRequest } from "@/src/services/userService";
 
 const ShowTasks = () => {
   const [tasks, setTasks] = useState([]);
   const context = useContext(UserContext);
   async function loadTasks(userId) {
     try {
-      const tasks = await getTasksOfUser(userId);
+      const tasks = await getMyRequest(userId);
       setTasks([...tasks].reverse());
       console.log(tasks);
     } catch (error) {
       console.log(error);
+      toast.error("Error");
     }
   }
 
@@ -23,18 +25,18 @@ const ShowTasks = () => {
     }
   }, [context.user]);
 
-  async function deleteTaskParent(tasksId) {
-    try {
-      const result = await deleteTask(tasksId);
-      console.log(result);
-      const newTasks = tasks.filter((item) => item._id != tasksId);
-      setTasks(newTasks);
-      toast.success("Your task is deleted ");
-    } catch (error) {
-      console.log(error);
-      toast.error("Error in deleting task !!");
-    }
-  }
+// async function deleteTaskParent(tasksId) {
+//   try {
+//     const result = await deleteTask(tasksId);
+//     console.log(result);
+//     const newTasks = tasks.filter((item) => item._id != tasksId);
+//     setTasks(newTasks);
+//     toast.success("Your task is deleted ");
+//   } catch (error) {
+//     console.log(error);
+//     toast.error("Error in deleting task !!");
+//   }
+// }
 
   return (
     <div className="grid grid-cols-12 mt-3">
@@ -45,7 +47,7 @@ const ShowTasks = () => {
           <Task
             task={task}
             key={task._id}
-            deleteTaskParent={deleteTaskParent}
+            // deleteTaskParent={deleteTaskParent}
           />
         ))}
       </div>

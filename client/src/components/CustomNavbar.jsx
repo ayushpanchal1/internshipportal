@@ -12,7 +12,7 @@ const CustomNavbar = () => {
       const result = await logout();
       console.log(result);
       context.setUser(undefined);
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       console.log(error);
       toast.error("Logout Error");
@@ -76,7 +76,9 @@ const CustomNavbar = () => {
         className={`md:flex ${isOpen ? 'block' : 'hidden'} md:items-center md:w-auto w-full transition duration-300`}
         id="menu"
       >
-        <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0 space-x-4">
+        <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0 space">
+              {context.user && (
+              <>
           <li>
             <Link href="/" passHref>
               <span
@@ -89,9 +91,6 @@ const CustomNavbar = () => {
               </span>
             </Link>
           </li>
-          <ul className='flex space-x-2'>
-          {context.user && (
-            <>
           <li>
             <Link href="/adddata" passHref>
               <span
@@ -121,15 +120,15 @@ const CustomNavbar = () => {
           )}
           </ul>
           <ul className="flex space-x-3">
-            {(context.user && 
-            <>
+            {context.user && (
+              <>
+              {context.user ? 'Logout' : 'Login'}
           <li>
           <div className="relative inline-block">
       <span
         onClick={handleLoginDropdown}
         className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
       >
-        {user ? 'Logout' : 'Login'}
       </span>
       {showLoginOptions && (
         <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
@@ -140,19 +139,19 @@ const CustomNavbar = () => {
             <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
           </Link>
           {/* Conditional rendering based on the user's role */}
-          {user && user.role === 'student' && (
-            <span onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-200">Logout</span>
+          {context.user && context.user.role === 'student' && (
+           <button onClick={handleLogout}> <span  className="block px-4 py-2 hover:bg-gray-200">Logout</span></button>
           )}
-          {user && user.role === 'teacher' && (
-            <span onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-200">Logout</span>
+          {context.user && context.user.role === 'teacher' && (
+          <button onClick={handleLogout}><span  className="block px-4 py-2 hover:bg-gray-200">Logout</span></button>
           )}
         </div>
       )}
       </div>
       </li>
-    </>
+    </> 
   )}
-  {(!context.user && 
+  {!context.user &&( 
   <>
           <li>
           <div className="relative inline-block">
@@ -197,7 +196,7 @@ const CustomNavbar = () => {
         </>
         )}
         </ul>
-        </ul>
+        
       </div>
     </nav>
   );
