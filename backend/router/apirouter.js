@@ -12,6 +12,8 @@ router.post('/teacherlogin', controller.teacherlogin)
 router.get('/userlogout', controller.userlogout)
 router.post('/getmyrequests', Auth, controller.getmyrequests)
 router.post('/addrequest', Auth, controller.addrequest)
+router.get('/teachergetmyrequests', Auth, controller.teachergetmyrequests)
+router.post('/teacherapprove', Auth, controller.teacherapprove)
 
 //test
 router.post('/testsignup', controller.testsignup)

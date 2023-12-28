@@ -114,7 +114,7 @@ export async function addrequest(req,res){
 export async function getmyrequests(req,res){
   try{
     const requests = await Request.find({
-      email: req.user._id,
+      email: req.user.email,
       approvalstatus: req.body.approvalstatus,
     })
     return res.status(200).send({
@@ -196,6 +196,77 @@ export async function teacherlogin(req, res) {
   }
 }
 
+export async function teachergetmyrequests(req,res){
+    try{
+      if(req.role != 'teacher'){
+        res.status(500).send({ error: 'User is not a teacher' });
+      } else {
+        const tchr = [req.user.firstname, req.user.lastname].join(' ')
+        const aprlstts = req.user.role == 'classteacher' ? 0 : 1
+
+        if(aprlstts==0){
+          var requests = await Request.find({
+            classteacher: tchr,
+            approvalstatus: aprlstts,
+          })
+        } else {
+          var requests = await Request.find({
+            hod: tchr,
+            approvalstatus: aprlstts,
+          })
+        }
+
+        return res.status(200).send({
+          status: 'ok',
+          requests,
+        })
+      }
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+}
+
+export async function teacherapprove(req,res){
+  try{
+    if(req.role != 'test'){
+      res.status(500).send({ error: 'User is not a teacher' });
+    } else {
+      const tchr = [req.user.email, req.user.password].join(' ')
+      const aprlstts = req.user.role == 'classteacher' ? 0 : 1
+
+      if(aprlstts==0){
+        var requests = await Request.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            classteacher: tchr,
+            approvalstatus: aprlstts,
+          },
+          {$inc: {approvalstatus:1}},
+          {returnNewDocument:true}
+        )
+      } else {
+        var requests = await Request.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            hod: tchr,
+            approvalstatus: aprlstts,
+          },
+          {$inc: {approvalstatus:1}},
+          {returnNewDocument:true}
+        )
+      }
+
+      if(!requests) return res.status(500).send({ error: 'No request found to approve' });
+
+      return res.status(200).send({
+        status: 'ok, request approved'
+      })
+    }
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+}
+
 export async function currentUser(req, res) {
   try {
     var user = null
@@ -271,8 +342,7 @@ export async function testlogin(req, res) {
           { expiresIn: '24h' }
         )
         return res.cookie('token',token).status(200).send({
-          status: 'ok',
-          test,
+          status: 'ok, test logged in',
         })
       }
     }
