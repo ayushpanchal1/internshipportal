@@ -3,6 +3,8 @@ import Request from '../models/request.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import PDFDocument from 'pdfkit'
+import fs from 'fs'
 
 dotenv.config()
 
@@ -110,38 +112,61 @@ export async function teachersignup(req, res) {
     try{
       if(req.role != 'teacher'){
         return res.status(500).send({ error: 'User is not a teacher' });
-      } else {
-        const tchr = [req.user.firstname, req.user.lastname].join(' ')
-        const aprlstts = req.user.role == 'classteacher' ? 0 : 1
-  
-        if(aprlstts==0){
-          var requests = await Request.findOneAndUpdate(
-            {
-              _id: req.body.id,
-              classteacher: tchr,
-              approvalstatus: aprlstts,
-            },
-            {$inc: {approvalstatus:1}},
-            {returnNewDocument:true}
-          )
-        } else {
-          var requests = await Request.findOneAndUpdate(
-            {
-              _id: req.body.id,
-              hod: tchr,
-              approvalstatus: aprlstts,
-            },
-            {$inc: {approvalstatus:1}},
-            {returnNewDocument:true}
-          )
-        }
-  
-        if(!requests) return res.status(500).send({ error: 'No request found to approve' });
-  
-        return res.status(200).send({
-          status: 'ok, request approved'
-        })
       }
+      const tchr = [req.user.firstname, req.user.lastname].join(' ')
+      const aprlstts = req.user.role == 'classteacher' ? 0 : 1
+
+      if(aprlstts==0){
+        var requests = await Request.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            classteacher: tchr,
+            approvalstatus: aprlstts,
+          },
+          {$inc: {approvalstatus:1}},
+          {returnNewDocument:true}
+        )
+      } else {
+
+        const request = await Request.findOne({
+          _id: req.body.id,
+        })
+
+      const pdfFilename = `${req.body.id}.pdf`;
+      const pdfStream = fs.createWriteStream(pdfFilename);
+      const pdfDoc = new PDFDocument();
+
+      // Pipe the PDF output to the file stream
+      pdfDoc.pipe(pdfStream);
+      // Write data from MongoDB document to PDF
+      pdfDoc.text(JSON.stringify(request));
+      // Finalize and close the PDF
+      pdfDoc.end();
+      await new Promise(r => setTimeout(r, 2)); // DO NOT touch this ~~gives blank input if lower than 2
+      // Save PDF file in MongoDB
+      const pdfBinary = fs.readFileSync(pdfFilename);
+
+      var requests = await Request.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            hod: tchr,
+            approvalstatus: aprlstts,
+          },
+          // {$inc: {approvalstatus:1}},
+          {$set: {pdfdata: pdfBinary},
+            $inc: {approvalstatus:1}},
+          {returnNewDocument:true}
+        )
+        // console.log(requests)
+      // Delete the local PDF file
+        fs.unlinkSync(pdfFilename);
+      }
+      if(!requests) return res.status(500).send({ error: 'No request found to approve' });
+
+      return res.status(200).send({
+        status: 'ok, request approved'
+      })
+    
     } catch (error) {
         return res.status(500).send({ error: error.message });
     }
