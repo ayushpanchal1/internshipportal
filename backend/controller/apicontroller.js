@@ -228,10 +228,10 @@ export async function teachergetmyrequests(req,res){
 
 export async function teacherapprove(req,res){
   try{
-    if(req.role != 'test'){
+    if(req.role != 'teacher'){
       res.status(500).send({ error: 'User is not a teacher' });
     } else {
-      const tchr = [req.user.email, req.user.password].join(' ')
+      const tchr = [req.user.firstname, req.user.lastname].join(' ')
       const aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
       if(aprlstts==0){
