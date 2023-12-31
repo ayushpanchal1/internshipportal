@@ -85,6 +85,8 @@ export async function studentsignup(req, res) {
     try{
       //console.log(req.body)
         await Request.create({
+          studentid: req.user._id,
+          studentemail: req.user.email,
           firstname: req.user.firstname,
           lastname: req.user.lastname,
           seatno: req.user.seatno,
@@ -112,7 +114,7 @@ export async function studentsignup(req, res) {
   export async function getmyrequests(req,res){
     try{
       const requests = await Request.find({
-        email: req.user.email,
+        studentid: req.user._id,
         approvalstatus: req.body.approvalstatus,
       })
       return res.status(200).send({

@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Request = new mongoose.Schema(
 	{
+        studentid: { type: String, required: true },
+        studentemail: { type: String, required: true },
 		firstname: { type: String, required: true },
         lastname: { type: String, required: true },
         seatno: {type: Number, required: true},
