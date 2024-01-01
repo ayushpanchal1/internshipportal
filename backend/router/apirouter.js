@@ -13,6 +13,7 @@ router.post('/studentlogin', studentcontroller.studentlogin)
 router.post('/getmyrequests', Auth, studentcontroller.getmyrequests)
 router.post('/addrequest', Auth, studentcontroller.addrequest)
 router.post('/removerequest', Auth, studentcontroller.removerequest)
+router.post('/downloadrequest', Auth, studentcontroller.downloadrequest)
 
 //teacher related requests ------------------------------------------------------------ in ../controller/teacherapicontroller.js
 router.post('/teachersignup', teachercontroller.teachersignup)  

@@ -130,7 +130,9 @@ export async function teachersignup(req, res) {
 
         const request = await Request.findOne({
           _id: req.body.id,
-        })
+        }).select('-pdfdata') // exclude pdf binary to prevent recursively increasing size of field and corrupting it
+
+        // console.log(request)
 
       const pdfFilename = `${req.body.id}.pdf`;
       const pdfStream = fs.createWriteStream(pdfFilename);

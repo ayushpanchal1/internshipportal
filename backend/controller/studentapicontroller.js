@@ -130,6 +130,34 @@ export async function studentsignup(req, res) {
         return res.status(500).send({ error: error.message });
     }
   }
+
+  export async function downloadrequest(req,res){
+    try{
+      console.log(req.body)
+      if(!req.body.id) return res.status(500).send({ error: "please give id of the request whose pdf is to be downloaded"});
+      // req.body.id = "6585a0e7c9541879187f3e7d"
+
+      const requests = await Request.findOne({
+        _id: req.body.id,
+        studentid: req.user._id,
+      })
+
+      if (!requests) return res.status(500).send({ error: "no requests were found with that id"});
+
+      if (!requests.pdfdata) return res.status(500).send({ error: "request does not have a pdf"});
+
+      // const pdfBinary = Buffer.from(requests.pdfdata, 'Base64');
+      const pdfBinary = Buffer.from(requests.pdfdata.toString('base64'), 'base64');
+      console.log(pdfBinary)
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", 'inline; filename="document.pdf"');
+      return res.end(pdfBinary);
+      
+    } catch (error) {
+        return res.status(500).send({ error: error.message });
+    }
+  }
   
   export async function getmyrequests(req,res){
     try{
