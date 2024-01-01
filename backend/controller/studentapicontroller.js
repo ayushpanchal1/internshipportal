@@ -110,6 +110,26 @@ export async function studentsignup(req, res) {
         return res.status(500).send({ error: error.message });
     }
   }
+
+  export async function removerequest(req,res){
+    try{
+
+      if(!req.body.id) return res.status(500).send({ error: "please give id of request to be deleted in req body"});
+
+      const delrequest = await Request.deleteOne({
+        _id: req.body.id,
+        studentid: req.user._id,
+      })
+
+      if(delrequest.deletedCount == 0) return res.status(500).send({ error: "no requests were deleted"});
+
+      return res.status(200).send({
+        status: 'ok, deleted '+delrequest.deletedCount+' requests'
+      })
+    } catch (error) {
+        return res.status(500).send({ error: error.message });
+    }
+  }
   
   export async function getmyrequests(req,res){
     try{
