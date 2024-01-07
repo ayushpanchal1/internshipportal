@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+
 export async function currentUser(req, res) {
   try {
     var user = null
