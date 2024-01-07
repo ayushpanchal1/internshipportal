@@ -104,6 +104,7 @@ export async function studentsignup(req, res) {
           companyaddress: req.body.CompanyAddress,
           whatfor: req.body.WhatFor,
           domain: req.body.Domain,
+          approvalstatus: 0, //initialised as zero 
         })
         return res.json({ status: 'ok' })
     } catch (error) {
