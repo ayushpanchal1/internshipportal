@@ -98,6 +98,8 @@ export async function teachersignup(req, res) {
             })
           }
   
+          if(!requests) return res.status(500).send({ error: "The teacher has no requests to approve" });
+
           return res.status(200).send({
             status: 'ok',
             requests: requests,
