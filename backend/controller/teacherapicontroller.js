@@ -132,6 +132,7 @@ export async function teachersignup(req, res) {
 
         const request = await Request.findOne({
           _id: req.body.id,
+          approvalstatus: aprlstts,
         }).select('-pdfdata') // exclude pdf binary to prevent recursively increasing size of field and corrupting it
 
         // console.log(request)
@@ -143,11 +144,63 @@ export async function teachersignup(req, res) {
       // Pipe the PDF output to the file stream
       pdfDoc.pipe(pdfStream);
       // Write data from MongoDB document to PDF
-      pdfDoc.text(JSON.stringify(request));
+      // pdfDoc.text(JSON.stringify(request));
+      // para = "$";
+
+      pdfDoc
+        .image("./media/logo.png", 50, 50, {
+          fit: [200, 200],
+          align: "left",
+          valign: "top",
+        })
+        .moveDown(8);
+
+      pdfDoc
+        .font("Helvetica-Bold")
+        .fontSize(20)
+        .text("Internship Approval Letter", { align: "center" })
+        .moveDown(1);
+
+      pdfDoc
+        .font("Helvetica-Bold")
+        .fontSize(13)
+        .text("To Whomsoever it may concern,")
+        .moveDown(2);
+
+      pdfDoc
+        .font("Helvetica")
+        .fontSize(13)
+        .text(
+          `This is to validate that the student ${request.firstname} ${request.lastname} has recieved the permission to intern at Amazon.Inc for the stipulated duration of 30 days from 01 - 01 - 2024 to 30 - 01 - 2024.`,
+          { align: "justify" }
+        )
+        .moveDown(1);
+
+      pdfDoc
+        .font("Helvetica")
+        .fontSize(13)
+        .text(
+          "Any extension to the internship will result in DIVINE PUNISHMENT from god",
+          { align: "justify" }
+        )
+        .moveDown(4);
+
+      pdfDoc
+        .font("Helvetica-Bold")
+        .fontSize(13)
+        .text("Yours Truly,", { align: "justify" });
+
+      pdfDoc.image("./media/fake.png", {
+        fit: [150, 150],
+        valign: "bottom",
+      });
+
+      
       // Finalize and close the PDF
       pdfDoc.end();
-      await new Promise(r => setTimeout(r, 2)); // DO NOT touch this ~~gives blank input if lower than 2
-      // Save PDF file in MongoDB
+
+      await new Promise(r => setTimeout(r, 20)); // DO NOT touch this ~~gives blank input if lower than 2
+      // Save PDF file in MongoDB                 //ye pehle 2 tha, image ke bad 15 kiya tha 
       const pdfBinary = fs.readFileSync(pdfFilename);
 
       var requests = await Request.findOneAndUpdate(
@@ -170,8 +223,9 @@ export async function teachersignup(req, res) {
       return res.status(200).send({
         status: 'ok, request approved'
       })
-    
+      
     } catch (error) {
         return res.status(500).send({ error: error.message });
+        // fs.unlinkSync(pdfFilename);                        DOESN'T WORK! should delete the pdf after an error
     }
   }
