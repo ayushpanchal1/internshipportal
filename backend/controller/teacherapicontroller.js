@@ -112,10 +112,13 @@ export async function teachersignup(req, res) {
   
   export async function teacherapprove(req,res){
     try{
+
       if(req.role != 'teacher'){
         return res.status(500).send({ error: 'User is not a teacher' });
       }
+
       const tchr = [req.user.firstname, req.user.lastname].join(' ')
+
       const aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
       if(aprlstts==0){
@@ -137,9 +140,11 @@ export async function teachersignup(req, res) {
 
         // console.log(request)
 
+      const pdfPath = `./media/pdf/`;
       const pdfFilename = `${req.body.id}.pdf`;
-      const pdfStream = fs.createWriteStream(pdfFilename);
-      const pdfDoc = new PDFDocument();
+      const pdfStream = fs.createWriteStream(`${pdfPath}${pdfFilename}`);
+      // const pdfDoc = new PDFDocument();
+      const pdfDoc = new PDFDocument({ size: "LETTER" });
 
       // Pipe the PDF output to the file stream
       pdfDoc.pipe(pdfStream);
@@ -148,60 +153,63 @@ export async function teachersignup(req, res) {
       // para = "$";
 
       pdfDoc
-        .image("./media/logo.png", 50, 50, {
-          fit: [200, 200],
-          align: "left",
-          valign: "top",
-        })
-        .moveDown(8);
-
-      pdfDoc
-        .font("Helvetica-Bold")
-        .fontSize(20)
-        .text("Internship Approval Letter", { align: "center" })
-        .moveDown(1);
-
-      pdfDoc
-        .font("Helvetica-Bold")
-        .fontSize(13)
-        .text("To Whomsoever it may concern,")
-        .moveDown(2);
-
-      pdfDoc
-        .font("Helvetica")
-        .fontSize(13)
-        .text(
-          `This is to validate that the student ${request.firstname} ${request.lastname} has recieved the permission to intern at Amazon.Inc for the stipulated duration of 30 days from 01 - 01 - 2024 to 30 - 01 - 2024.`,
-          { align: "justify" }
-        )
-        .moveDown(1);
-
-      pdfDoc
-        .font("Helvetica")
-        .fontSize(13)
-        .text(
-          "Any extension to the internship will result in DIVINE PUNISHMENT from god",
-          { align: "justify" }
-        )
-        .moveDown(4);
-
-      pdfDoc
-        .font("Helvetica-Bold")
-        .fontSize(13)
-        .text("Yours Truly,", { align: "justify" });
-
-      pdfDoc.image("./media/fake.png", {
-        fit: [150, 150],
-        valign: "bottom",
-      });
-
-      
-      // Finalize and close the PDF
-      pdfDoc.end();
+      .image("./media/logo.png", 50, 50, {
+        fit: [200, 200],
+        align: "left",
+        valign: "top",
+      })
+      .moveDown(8);
+    
+    pdfDoc
+      .font("Helvetica-Bold")
+      .fontSize(20)
+      .text("Internship Approval Letter", { align: "center" })
+      .moveDown(1);
+    
+    pdfDoc
+      .font("Helvetica-Bold")
+      .fontSize(13)
+      .text("To Whomsoever it may concern,")
+      .moveDown(2);
+    
+    pdfDoc
+      .font("Helvetica")
+      .fontSize(13)
+      .text(
+        `This is to validate that the student ${request.firstname} ${request.lastname} has recieved the permission to intern at ${request.companyname} from ${request.fromduration} to ${request.toduration}.`,
+        { align: "justify" }
+      )
+      .moveDown(1);
+    
+    pdfDoc
+      .font("Helvetica")
+      .fontSize(13)
+      .text(
+        "Any extension to the internship will result in DIVINE PUNISHMENT from god",
+        { align: "justify" }
+      )
+      .moveDown(4);
+    
+    pdfDoc.image("./media/fake.png", 40, 600, {
+      fit: [150, 150],
+    });
+    
+    pdfDoc.image("./media/fake.png", 430, 600, {
+      fit: [150, 150],
+    });
+    
+    pdfDoc.font("Helvetica-Bold").fontSize(13).text("Class Teacher", 80, 700);
+    
+    pdfDoc.font("Helvetica-Bold").fontSize(13).text("HOD", 490, 700);
+    
+    pdfDoc.lineWidth(2).rect(20, 20, 573, 750).stroke();
+    
+    // Finalize and close the PDF
+    pdfDoc.end();
 
       await new Promise(r => setTimeout(r, 20)); // DO NOT touch this ~~gives blank input if lower than 2
       // Save PDF file in MongoDB                 //ye pehle 2 tha, image ke bad 15 kiya tha 
-      const pdfBinary = fs.readFileSync(pdfFilename);
+      const pdfBinary = fs.readFileSync(`${pdfPath}${pdfFilename}`);
 
       var requests = await Request.findOneAndUpdate(
           {
@@ -209,14 +217,14 @@ export async function teachersignup(req, res) {
             hod: tchr,
             approvalstatus: aprlstts,
           },
-          // {$inc: {approvalstatus:1}},
           {$set: {pdfdata: pdfBinary},
             $inc: {approvalstatus:1}},
           {returnNewDocument:true}
         )
         // console.log(requests)
       // Delete the local PDF file
-        fs.unlinkSync(pdfFilename);
+      // throw new Error ('test error')
+        fs.unlinkSync(`${pdfPath}${pdfFilename}`);
       }
       if(!requests) return res.status(500).send({ error: 'No request found to approve' });
 
@@ -225,7 +233,10 @@ export async function teachersignup(req, res) {
       })
       
     } catch (error) {
+        let pdfFileToDel = `${req.body.id}.pdf`;
+        let pdfPathToDel = `./media/pdf/`
+        fs.unlinkSync(`${pdfPathToDel}${pdfFileToDel}`);                     //WORKS, deletes file after an error!!!!!!!
         return res.status(500).send({ error: error.message });
-        // fs.unlinkSync(pdfFilename);                        DOESN'T WORK! should delete the pdf after an error
+
     }
   }
