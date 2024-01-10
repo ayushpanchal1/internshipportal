@@ -1,91 +1,120 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useContext,useEffect } from "react";
 import loginSvg from "../../assets/login.svg";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import Task from "../showdata/Task";
+import Task from "../showdata/Card";
 import { addRequest } from "../../services/taskService";
 import SideNavbar from "../../components/SideNavbar";
+import {useRouter} from "next/navigation"
+
+import UserContext from "@/src/context/userContext";
 
 const AddData = () => {
-  
+  const context = useContext(UserContext);
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState(1);
+  useEffect(() => {
+    if (!context.user) {
+      router.push('/login'); // Redirect to the login page if the user is not logged in
+    }
+  }, [context.user, router]);
 
   const [personalInfo, setPersonalInfo] = useState({
-    name: "",
-    lastName: "",
-    seatNo: "",
-    email: "",
-    mobileNo: "",
+    firstname: "",
+    lastname: "",
+    seatno: "",
+    academicyear: "",
+    department:"",
+    semester:"",
+    division:"",
+    classteacher:"",
+    hod:"",
+    mothername:"",
+    fathername:"",
+    mobileno: "",
     dob: "",
   });
-
+  
   const [workDetails, setWorkDetails] = useState({
-    technology: "",
-    workplace: "",
-    companyName: "",
+    whatfor: "",
+    companyname: "",
+    companyaddress:"",
+    fromduration:"",
+    toduration:"",
+    domain:"",
   });
 
-  const [uploadedDocs, setUploadedDocs] = useState({
-    cv: null,
-    photo: null,
-  });
-
+  
   const handleNext = () => {
     setActiveSection((prevSection) => prevSection + 1);
   };
-
+  
   const handlePrevious = () => {
     setActiveSection((prevSection) => prevSection - 1);
   };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData ={
-      personalInfo,workDetails,uploadedDocs
-     }
+    const formData = {
+      ...personalInfo,
+      ...workDetails,
+    };
+    
     try {
-      // const result = await addTask(task);
-      // console.log(result);
-      const data = await addRequest(formData)
+      // Validation for work details
+      if (
+        !workDetails.whatfor ||
+        !workDetails.companyname ||
+        !workDetails.companyaddress ||
+        !workDetails.fromduration ||
+        !workDetails.toduration ||
+        !workDetails.domain
+      ) {
+        toast.error("Please fill in all required fields in Work Details", {
+          position: "top-center",
+        });
+        return; // Stop form submission
+      }
+  
+      const data = await addRequest(formData);
       console.log("Form submitted:", data);
       toast.success("Your Information is added !!", {
         position: "top-center",
       });
-
-      setPersonalInfo({   
-      firstname: "",
-      lastName: "",
-      seatNo: "",
-      academicyear: "",
-      deparment:"",
-      semester:"",
-      division:"",
-      classteacher:"",
-      hod:"",
-      mothername:"",
-      fathername:"",
-      mobileNo: "",
-      dob: "",
+  
+      // Clear form fields after successful submission
+      setPersonalInfo({
+        firstname: "",
+        lastname: "",
+        seatno: "",
+        academicyear: "",
+        department: "",
+        semester: "",
+        division: "",
+        classteacher: "",
+        hod: "",
+        mothername: "",
+        fathername: "",
+        mobileno: "",
+        dob: "",
+        email:"",
       });
       setWorkDetails({
-        technology: "",
-        workplace: "",
+        whatfor: "",
         companyname: "",
-        acompanyaddress:"",
-        fromduration:"",
-        toduration:"",
-      })
+        companyaddress: "",
+        fromduration: "",
+        toduration: "",
+        domain: "",
+      });
     } catch (error) {
       console.log(error);
       toast.error("Information not added !!", {
         position: "top-center",
       });
     }
-     // Logic to handle form submission
-    // Reset form or perform any other necessary actions
   };
-
   const renderSection = () => {
     switch (activeSection) {
       case 1:
@@ -99,60 +128,82 @@ const AddData = () => {
       Name
     </label>
     <input
-      type="text"
-      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="firstname"
-      name="firstname"
-      onChange={(event) => {
-        setPersonalInfo({
-          ...personalInfo,
-          name: event.target.value,
-        });
-      }}
-      value={personalInfo.firstname}
-    />
+  type="text"
+  className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+  id="firstname"
+  name="firstname"
+  onChange={(event) => {
+    setPersonalInfo({
+      ...personalInfo,
+      firstname: event.target.value,
+    });
+  }}
+  value={personalInfo.firstname || (context.user ? context.user.firstname : '')}
+    readOnly // To make the field read-only
+/>
   </div>
   <div>
   {/* ... */}
   <div className="mt-4">
-    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
+    <label htmlFor="lastname" className="block text-sm font-medium mb-2">
       Last Name
     </label>
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="lastName"
-      name="lastName"
+      id="lastname"
+      name="lastname"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
-          lastName: event.target.value,
+          lastname: event.target.value,
         });
       }}
-      value={personalInfo.lastName}
+    value={personalInfo.lastname || (context.user ? context.user.lastname : '')}
+    readOnly
     />
   </div>
   <div className="mt-4">
-    <label htmlFor="seatNo" className="block text-sm font-medium mb-2">
+    <label htmlFor="seatno" className="block text-sm font-medium mb-2">
       Seat No
     </label>
     <input
       type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="seatNo"
-      name="seatNo"
+      id="seatno"
+      name="seatno"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
-          seatNo: event.target.value,
+          seatno: event.target.value,
         });
       }}
-      value={personalInfo.seatNo}
+      defaultValue={personalInfo.seatno || (context.user ? context.user.seatno : '')}
+      readOnly
+    />
+  </div>
+  <div className="mt-4">
+    <label htmlFor="email" className="block text-sm font-medium mb-2">
+      Email
+    </label>
+    <input
+      type="text"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+      id="email"
+      name="email"
+      onChange={(event) => {
+        setPersonalInfo({
+          ...personalInfo,
+          email: event.target.value,
+        });
+      }}
+      defaultValue={personalInfo.email || (context.user ? context.user.email : '')}
+    readOnly
     />
   </div>
   <div className="mt-4">
     <label htmlFor="academicyear" className="block text-sm font-medium mb-2">
-      Seat No
+      Academic Year
     </label>
     <input
       type="number"
@@ -165,7 +216,8 @@ const AddData = () => {
           academicyear: event.target.value,
         });
       }}
-      value={personalInfo.academicyear}
+      defaultValue={personalInfo.academicyear || (context.user ? context.user.academicyear : '')}
+      readOnly
     />
   </div>
   <div>
@@ -185,7 +237,8 @@ const AddData = () => {
           department: event.target.value,
         });
       }}
-      value={personalInfo.department}
+      defaultValue={personalInfo.department || (context.user ? context.user.department : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -203,7 +256,8 @@ const AddData = () => {
           division: event.target.value,
         });
       }}
-      value={personalInfo.division}
+      defaultValue={personalInfo.division || (context.user ? context.user.division : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -221,7 +275,8 @@ const AddData = () => {
           classteacher: event.target.value,
         });
       }}
-      value={personalInfo.classteacher}
+      defaultValue={personalInfo.classteacher || (context.user ? context.user.classteacher : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -239,7 +294,8 @@ const AddData = () => {
           hod: event.target.value,
         });
       }}
-      value={personalInfo.hod}
+      defaultValue={personalInfo.hod || (context.user ? context.user.hod : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -249,15 +305,16 @@ const AddData = () => {
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="mothername"
       name="mothername"
+      id="mothername"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
           mothername: event.target.value,
         });
       }}
-      value={personalInfo.department}
+      defaultValue={personalInfo.mothername || (context.user ? context.user.mothername : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -266,16 +323,17 @@ const AddData = () => {
     </label>
     <input
       type="text"
-      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
       id="fathername"
       name="fathername"
+      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
           fathername: event.target.value,
         });
       }}
-      value={personalInfo.fathername}
+      defaultValue={personalInfo.fathername || (context.user ? context.user.fathername : '')}
+      readOnly
     />
   </div>
   <div className="mt-4">
@@ -286,14 +344,15 @@ const AddData = () => {
       type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
       id="semester"
-      name="semester"
+      name="semetser"
       onChange={(event) => {
         setPersonalInfo({
           ...personalInfo,
           semester: event.target.value,
         });
       }}
-      value={personalInfo.semester}
+      defaultValue={personalInfo.semester || (context.user ? context.user.semester : '')}
+      readOnly
     />
   </div>
   {/* <div className="mt-4">
@@ -343,184 +402,123 @@ const AddData = () => {
       case 2:
         return (
           <div>
+            <SideNavbar/>
             <div>
   <h2 className="text-2xl mb-4">Work Details</h2>
   <div className="mt-4">
-    <label htmlFor="technology" className="block text-sm font-medium mb-2">
+    <label htmlFor="whatfor" className="block text-sm font-medium mb-2">
       Technology
     </label>
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="technology"
-      name="technology"
+      id="whatfor"
+      name="whatfor"
       onChange={(event) => {
         setWorkDetails({
           ...workDetails,
-          technology: event.target.value,
+          whatfor: event.target.value,
         });
       }}
-      value={workDetails.technology}
+      value={workDetails.whatfor}
     />
   </div>
   <div className="mt-4">
-    <label htmlFor="workplace" className="block text-sm font-medium mb-2">
-      Workplace
+    <label htmlFor="domain" className="block text-sm font-medium mb-2">
+      Domain
     </label>
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="workplace"
-      name="workplace"
+      id="domain"
+      name="domain"
       onChange={(event) => {
         setWorkDetails({
           ...workDetails,
-          workplace: event.target.value,
+          domain: event.target.value,
         });
       }}
-      value={workDetails.workplace}
+      value={workDetails.domain}
     />
   </div>
   <div className="mt-4">
-    <label htmlFor="companyName" className="block text-sm font-medium mb-2">
+    <label htmlFor="companyname" className="block text-sm font-medium mb-2">
       Company Name
     </label>
     <input
       type="text"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="companyName"
-      name="companyName"
+      id="companyname"
+      name="companyname"
       onChange={(event) => {
         setWorkDetails({
           ...workDetails,
-          companyName: event.target.value,
+          companyname: event.target.value,
         });
       }}
-      value={workDetails.companyName}
+      value={workDetails.companyname}
     />
   </div>
   <div className="mt-4">
-    <label htmlFor="address1" className="block text-sm font-medium mb-2">
-      Address 1
-    </label>
-    <input
-      type="text"
-      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="address1"
-      name="address1"
-      onChange={(event) => {
-        setWorkDetails({
-          ...workDetails,
-          address1: event.target.value,
-        });
-      }}
-      value={workDetails.address1}
-    />
-  </div>
+  <label htmlFor="companyaddress" className="block text-sm font-medium mb-2">
+    Address
+  </label>
+  <input
+    type="text"
+    className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
+    id="companyaddress"
+    name="companyaddress"
+    onChange={(event) => {
+      setWorkDetails({
+        ...workDetails,
+        companyaddress: event.target.value
+      });
+    }}
+    value={workDetails.companyaddress}
+  />
+</div>
+
   <div className="mt-4">
-    <label htmlFor="address2" className="block text-sm font-medium mb-2">
-      Address 2
-    </label>
-    <input
-      type="text"
-      className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="address2"
-      name="address2"
-      onChange={(event) => {
-        setWorkDetails({
-          ...workDetails,
-          address2: event.target.value,
-        });
-      }}
-      value={workDetails.address2}
-    />
-  </div>
-  <div className="mt-4">
-    <label htmlFor="startDate" className="block text-sm font-medium mb-2">
+    <label htmlFor="fromduration" className="block text-sm font-medium mb-2">
       Start Date
     </label>
     <input
-      type="date"
+      type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="startDate"
-      name="startDate"
+      id="fromduration"
+      name="fromduration"
       onChange={(event) => {
         setWorkDetails({
           ...workDetails,
-          startDate: event.target.value,
+          fromduration: event.target.value,
         });
       }}
-      value={workDetails.startDate}
+      value={workDetails.fromduration}
     />
   </div>
   <div className="mt-4">
-    <label htmlFor="endDate" className="block text-sm font-medium mb-2">
+    <label htmlFor="toduration" className="block text-sm font-medium mb-2">
       End Date
     </label>
     <input
-      type="date"
+      type="number"
       className="w-full p-3 rounded-3xl bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="endDate"
-      name="endDate"
+      id="toduration"
+      name="toduration" 
       onChange={(event) => {
         setWorkDetails({
           ...workDetails,
-          endDate: event.target.value,
+          toduration: event.target.value,
         });
       }}
-      value={workDetails.endDate}
+      value={workDetails.toduration}
     />
   </div>
 </div>
 
           </div>
         );
-      case 3:
-        return (
-          <div>
-         <div>
-  <h2 className="text-2xl mb-4">Upload Documents</h2>
-  <div className="mt-4">
-    <label htmlFor="cv" className="block text-sm font-medium mb-2">
-      CV
-    </label>
-    <input
-      type="file"
-      accept=".pdf,.doc,.docx"
-      className="p-3 bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="cv"
-      name="cv"
-      onChange={(event) => {
-        setUploadedDocs({
-          ...uploadedDocs,
-          cv: event.target.files[0],
-        });
-      }}
-    />
-  </div>
-  <div className="mt-4">
-    <label htmlFor="photo" className="block text-sm font-medium mb-2">
-      Photo
-    </label>
-    <input
-      type="file"
-      accept="image/*"
-      className="p-3 bg-gray-100 focus:ring-gray-400-100 border border-gray-200"
-      id="photo"
-      name="photo"
-      onChange={(event) => {
-        setUploadedDocs({
-          ...uploadedDocs,
-          photo: event.target.files[0],
-        });
-      }}
-    />
-  </div>
-</div>
-
-          </div>
-        );
-      default:
+            default:
         return null;
     }
   };
@@ -540,7 +538,7 @@ const AddData = () => {
               Previous
             </button>
           )}
-          {activeSection !== 3 ? (
+          {activeSection !== 2 ? (
             <button
               type="button"
               className="bg-blue-600 py-2 px-3 rounded-lg hover:bg-blue-800 text-white ms-3"

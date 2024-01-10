@@ -8,12 +8,8 @@ const Teacher = new mongoose.Schema(
         department: { type: String, required: true },
         domain: { type: String, required: true }, //ex: ybersec, blockchain, webdev, database, dsa, web3, etc.
         role: { type: String, required: true }, //ex: prof, hod, principal, etc.
-        dateofjoin: { type: String, required: true },
-        address: {type: String, required: true},
-		mothername: { type: String, required: true },
-		fathername: { type: String, required: true },
-		mobileno: { type: Number, required: true },
-        dateofbirth: { type: String, required: true },
+        dateofjoining: { type: Number, required: true },
+        dateofbirth: { type: Number, required: true },
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 	},

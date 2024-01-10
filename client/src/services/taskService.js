@@ -1,4 +1,5 @@
 import { httpAxios } from '../helper/httpHelper';
+import { getCookie } from "../helper/cookieHelper";
 
 // export async function addTask(task) {
 //   const result = await httpAxios
@@ -26,5 +27,60 @@ export async function addRequest(requestData) {
     return result.data;
   } catch (error) {
     throw new Error(error.response.data.error || error.message);
+  }
+}
+
+
+export async function getAllRequestsForStudent(email, approvalStatus = 0) {
+  try {
+    const token = getCookie('token');
+    if (!token || !email) {
+      throw new Error('Token or email is missing');
+    }
+
+    const response = await httpAxios.post(
+      '/api/getmyrequests',
+      { email: email, approvalstatus: approvalStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+}
+export async function removerequest(requestId) {
+  try {
+    const response = await httpAxios.post('/api/removerequest', { id: requestId });
+
+    if (response.status === 200) {
+      return { status: 'ok' }; // Request successfully deleted
+    } else {
+      throw new Error('Failed to delete request');
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+}
+
+export async function teacherGetMyRequests() {
+  try {
+    const response = await httpAxios.get('/api/teachergetmyrequests');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+}
+
+export async function teacherApproveRequest(requestId) {
+  try {
+    const response = await httpAxios.post('/api/teacherapprove', { id: requestId });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
   }
 }

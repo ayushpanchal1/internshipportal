@@ -4,22 +4,22 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import signUpBanner from "../../assets/signup.svg";
+import { teacherSignup } from "@/src/services/userService";
+import { useRouter } from "next/navigation";
 
 const AdminSignup = () => {
+  const router = useRouter();
   const [data, setData] = useState({
-    FirstName: "",
-    LastName: "",
-    Gender: "",
-    Department: "",
-    Domain: "",
-    Role: "",
-    Address: "",
-    MotherName: "",
-    FatherName: "",
-    MobileNo: "",
-    DateofBirth: "",
-    Email: "",
-    Password: "",
+    firstname: "",
+    lastname: "",
+    gender: "",
+    department: "",
+    domain: "",
+    dateofbirth:"",
+    role: "",
+    dateofjoining: "",
+    email: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -31,79 +31,61 @@ const AdminSignup = () => {
       let valid = true;
       const newErrors = {};
 
-      if (data.FirstName.trim() === "" || data.FirstName === null) {
-        newErrors.FirstName = "First Name is required!";
+      if (data.firstname.trim() === "" || data.firstname === null) {
+        newErrors.firstname = "First Name is required!";
         valid = false;
       }
 
-      if (data.LastName.trim() === "" || data.LastName === null) {
-        newErrors.LastName = "Last Name is required!";
+      if (data.lastname.trim() === "" || data.lastname === null) {
+        newErrors.lastname = "Last Name is required!";
         valid = false;
       }
 
-      if (data.Email.trim() === "" || data.Email === null) {
-        newErrors.Email = "Email is required!";
+      if (data.email.trim() === "" || data.email === null) {
+        newErrors.email = "Email is required!";
         valid = false;
-      } else if (!/\S+@\S+\.\S+/.test(data.Email)) {
-        newErrors.Email = "Please enter a valid email address!";
-        valid = false;
-      }
-
-      if (data.Password.trim() === "" || data.Password === null) {
-        newErrors.Password = "Password is required!";
-        valid = false;
-      } else if (data.Password.length < 6) {
-        newErrors.Password = "Password should be at least 6 characters long!";
+      } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+        newErrors.email = "Please enter a valid email address!";
         valid = false;
       }
 
-      if (data.Gender.trim() === "") {
-        newErrors.Gender = "Please select a gender!";
+      if (data.password.trim() === "" || data.password === null) {
+        newErrors.password = "Password is required!";
+        valid = false;
+      } else if (data.password.length < 6) {
+        newErrors.password = "Password should be at least 6 characters long!";
         valid = false;
       }
 
-      if (data.DateofBirth.trim() === "") {
-        newErrors.DateofBirth = "Please provide your date of birth!";
+      if (data.gender.trim() === "") {
+        newErrors.gender = "Please select a gender!";
         valid = false;
       }
 
-      if (data.Department.trim() === "") {
-        newErrors.Department = "Department is required!";
+      if (data.dateofbirth.trim() === "") {
+        newErrors.dateofbirth = "Please provide your date of birth!";
+        valid = false;
+      }
+      if (data.dateofjoining.trim() === "") {
+        newErrors.dateofjoining = "Please provide your date of birth!";
         valid = false;
       }
 
-      if (data.Domain.trim() === "") {
-        newErrors.Domain = "Domain is required!";
+      if (data.department.trim() === "") {
+        newErrors.department = "Department is required!";
         valid = false;
       }
 
-      if (data.Role.trim() === "") {
-        newErrors.Role = "Role is required!";
+      if (data.domain.trim() === "") {
+        newErrors.domain = "Domain is required!";
         valid = false;
       }
 
-      if (data.Address.trim() === "") {
-        newErrors.Address = "Address is required!";
+      if (!data.role || data.role.trim() === "") {
+        newErrors.role = "Role is required!";
         valid = false;
       }
 
-      if (data.MotherName.trim() === "") {
-        newErrors.MotherName = "Mother's Name is required!";
-        valid = false;
-      }
-
-      if (data.FatherName.trim() === "") {
-        newErrors.FatherName = "Father's Name is required!";
-        valid = false;
-      }
-
-      if (data.MobileNo.trim() === "") {
-        newErrors.MobileNo = "Mobile Number is required!";
-        valid = false;
-      } else if (!/^\d{10}$/.test(data.MobileNo)) {
-        newErrors.MobileNo = "Please enter a valid 10-digit mobile number!";
-        valid = false;
-      }
 
       // Add any additional validations for other fields similarly
 
@@ -115,30 +97,20 @@ const AdminSignup = () => {
 
     if (isValid) {
       try {
-        // Make an API call to your server to sign up the admin user
-        const response = await fetch("/api/admin/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data), // Sending form data to the server
-        });
+        const response = await teacherSignup(data);
 
-        if (response.ok) {
-          // Handle successful signup
+        if (response.status === 'ok') {
           toast.success("Admin signup successful!");
+          router.push('/teacher_login'); // Redirect to login page upon successful signup
         } else {
-          // Handle signup failure
           toast.error("Admin signup failed. Please try again.");
         }
       } catch (error) {
-        // Handle error cases
         console.error("Error:", error);
         toast.error("Something went wrong. Please try again.");
       }
     }
   };
-
   const handleChange = (event) => {
     setData({
       ...data,
@@ -165,45 +137,93 @@ const AdminSignup = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="firstname"
                   className="block text-sm font-medium mb-2"
                 >
                   First Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="firstname"
                   className="w-full  px-4 py-3 mr-20 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Enter your first name"
-                  name="name"
-                  value={data.name}
+                  name="firstname"
+                  value={data.firstname}
                   onChange={handleChange}
                 />
-                {errors.name && (
+                {errors.firstname && (
                   <p className="error-message" style={{ color: "red" }}>
-                    {errors.name}
+                    {errors.firstname}
                   </p>
                 )}
               </div>
               <div className="mb-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="lastname"
                   className="block text-sm font-medium mb-2"
                 >
                   Last Name
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="lastname"
                   className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Enter your first name"
-                  name="name"
-                  value={data.name}
+                  placeholder="Enter your Last Name"
+                  name="lastname"
+                  value={data.lastname}
                   onChange={handleChange}
                 />
-                {errors.name && (
+                {errors.lastname && (
                   <p className="error-message" style={{ color: "red" }}>
-                    {errors.name}
+                    {errors.lastname}
+                  </p>
+                )}
+
+
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mb-2">
+                <label
+                  htmlFor="dateofbirth"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Date Of Birth
+                </label>
+                <input
+                  type="number"
+                  id="dateofbirth"
+                  className="w-full  px-4 py-3 mr-20 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Enter your DateofBirth"
+                  name="dateofbirth"
+                  value={data.dateofbirth}
+                  onChange={handleChange}
+                />
+                {errors.dateofbirth && (
+                  <p className="error-message" style={{ color: "red" }}>
+                    {errors.dateofbirth}
+                  </p>
+                )}
+              </div>
+              <div className="mb-2">
+                <label
+                  htmlFor="dateofjoining"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Date of Joining
+                </label>
+                <input
+                  type="number"
+                  id="dateofjoining"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Enter your Date of Joining"
+                  name="dateofjoining"
+                  value={data.dateofjoining}
+                  onChange={handleChange}
+                />
+                {errors.dateofjoining && (
+                  <p className="error-message" style={{ color: "red" }}>
+                    {errors.dateofjoining}
                   </p>
                 )}
 
@@ -241,6 +261,7 @@ const AdminSignup = () => {
                     Gender
                   </label>
                   <select
+
                     id="gender"
                     name="gender"
                     value={data.gender}
@@ -287,12 +308,11 @@ const AdminSignup = () => {
                     className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="">Select role</option>
-                    <option value="HOD">Head Of Department</option>
-                    <option value="Class Teacher">Class Teacher</option>
-                    <option value="Proctor">Proctor</option>
-                    <option value="other">Other</option>
+                    <option value="hod">Head Of Department</option>
+                    <option value="classteacher">Class Teacher</option>
                   </select>
                 </div>
+
 </div>
 <div className="grid grid-cols-2 gap-4">
                   <div className="mb-4">
@@ -303,7 +323,7 @@ const AdminSignup = () => {
                       Email
                     </label>
                     <input
-                      type="email"
+                      type="text"
                       id="email"
                       className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       placeholder="Enter your email"

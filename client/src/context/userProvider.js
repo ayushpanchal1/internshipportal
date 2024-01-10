@@ -1,31 +1,38 @@
-"use client";
-import React, { useState,useEffect } from "react";
+"use client"
+import React, { useState, useEffect } from "react";
 import UserContext from "./userContext";
 import { currentUser } from "../services/userService";
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Use null instead of undefined
-  
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    async function load() {
+    async function loadUser() {
       try {
         const tempUser = await currentUser();
-        console.log(tempUser);
-        setUser(tempUser); // Set the user directly without spreading
+        setUser({ ...tempUser });
       } catch (error) {
         console.log(error);
-        // Handle errors here, setUser(null) or other appropriate action
-        setUser(null); // For example, setting user state to null on error
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
     }
-    
-    load(); // Invoke the load function
-  }, []); // Empty dependency array to run only once on mount
-  
+
+    loadUser();
+  }, []);
+
+  useEffect(() => {
+    // Update user context whenever user state changes
+    UserContext.Provider.value = { user, setUser };
+  }, [user]);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      {children}
+      {!isLoading && children}
     </UserContext.Provider>
   );
 };
+
 export default UserProvider;

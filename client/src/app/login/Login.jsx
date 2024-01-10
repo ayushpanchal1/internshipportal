@@ -16,9 +16,10 @@ const Login = () => {
     email: "",
     password: "",
   });
+
   const loginFormSubmitted = async (event) => {
     event.preventDefault();
-    console.log(loginData);
+
     if (loginData.email.trim() === "" || loginData.password.trim() === "") {
       toast.info("Invalid Data !!", {
         position: "top-center",
@@ -26,14 +27,13 @@ const Login = () => {
       return;
     }
 
-    //validate Login
     try {
       const result = await studentLogin(loginData);
       console.log(result);
       toast.success("Logged In");
-      //redirect
-      context.setUser(result.user);
-      router.push("/adddata");
+      // Update user context after successful login
+      context.setUser(result.user); // Assuming `result.user` contains the user data
+      router.push("/showdata");
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message, {

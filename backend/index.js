@@ -35,7 +35,7 @@ connection.once('open', () => {
 app.get('/hello', (req, res) => {
   res.send('hello world')
 })
-app.use(cors({origin:'http://localhost:3000', credentials: true}))
+
 app.use('/api', apirouter)
 
 app.listen(1337, () => {

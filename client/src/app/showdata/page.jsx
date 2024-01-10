@@ -1,7 +1,7 @@
 import React from "react";
 import ShowTasks from "./ShowData";
 export const metadata = {
-  title: "All Tasks : Work Manager",
+  title: "All Internships : Internship Portal",
 };
 const ShowTasksPage = () => {
   return <ShowTasks />;
