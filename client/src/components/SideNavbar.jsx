@@ -37,7 +37,7 @@ function SideNavbar() {
               </div>
               <div className="flex  mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <CgProfile className="text-2xl text-gray-600 group-hover:text-white " />
-                <Link href="/" passHref>
+                <Link href="/Profile" passHref>
                 <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
                   Profile
                 </h3>

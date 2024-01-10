@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Request = new mongoose.Schema(
 	{
+        studentid: { type: String, required: true },
+        studentemail: { type: String, required: true },
 		firstname: { type: String, required: true },
         lastname: { type: String, required: true },
         seatno: {type: Number, required: true},
@@ -19,9 +21,13 @@ const Request = new mongoose.Schema(
         companyaddress: { type: String, required: true },
         whatfor: { type: String, required: true },
 		domain: { type: String, required: true },
+        approvalstatus: { type: Number, required: true },
+        pdfdata: {type: Buffer}, 
+                       //0 for none, 1 for classteacher, 2 for hod
 	},
 	{ collection: 'request-data' }
 )
 
 
 export default mongoose.model('RequestData', Request);
+ 

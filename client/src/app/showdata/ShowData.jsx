@@ -1,53 +1,54 @@
+// ShowData.jsx
 "use client";
-import UserContext from "@/src/context/userContext";
-import React, { useContext, useEffect, useState } from "react";
-import Task from "./Task";
-import { toast } from "react-toastify";
-import { getMyRequest } from "@/src/services/userService";
+import React, { useEffect, useState } from 'react';
+import { getAllRequestsForStudent, removerequest } from '@/src/services/taskService';
+import Card from './Card';
 
-const ShowTasks = () => {
-  const [tasks, setTasks] = useState([]);
-  const context = useContext(UserContext);
-  async function loadTasks(userId) {
+const ShowData = () => {
+  const [requests, setRequests] = useState([]);
+
+  const fetchData = async () => {
     try {
-      const tasks = await getMyRequest(userId);
-      setTasks([...tasks].reverse());
-      console.log(tasks);
+      const userEmail = localStorage.getItem('userEmail');
+      const response = await getAllRequestsForStudent(userEmail);
+
+      if (response.status === 'ok') {
+        const parsedRequests = response.requests || [];
+        setRequests(parsedRequests);
+      } else {
+        console.log('Error fetching requests');
+      }
     } catch (error) {
-      console.log(error);
-      toast.error("Error");
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
-    if (context.user) {
-      loadTasks(context.user._id);
+    fetchData();
+  }, []);
+
+  const handleDelete = async (index) => {
+    try {
+      await removerequest(requests[index]._id);
+    
+      // Update state immutably by filtering out the deleted request
+      setRequests((prevRequests) => prevRequests.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error('Error deleting request:', error.message);
     }
-  }, [context.user]);
-
-// async function deleteTaskParent(tasksId) {
-//   try {
-//     const result = await deleteTask(tasksId);
-//     console.log(result);
-//     const newTasks = tasks.filter((item) => item._id != tasksId);
-//     setTasks(newTasks);
-//     toast.success("Your task is deleted ");
-//   } catch (error) {
-//     console.log(error);
-//     toast.error("Error in deleting task !!");
-//   }
-// }
-
-  return (
-    <div className="grid grid-cols-12 mt-3">
-      <div className="col-span-6 col-start-4">
-        <h1 className="text-3xl mb-3 ">Your tasks ( {tasks.length} )</h1>
-
-        {tasks.map((task) => (
-          <Task
-            task={task}
-            key={task._id}
-            // deleteTaskParent={deleteTaskParent}
+  };
+  
+    return (
+    <div>
+      <h1>All Requests</h1>
+      <div className="card-container">
+        {requests.map((request, index) => (
+          <Card
+            key={index}
+            request={request}
+            index={index}
+            totalCards={requests.length}
+            onDelete={handleDelete}
           />
         ))}
       </div>
@@ -55,4 +56,4 @@ const ShowTasks = () => {
   );
 };
 
-export default ShowTasks;
+export default ShowData;

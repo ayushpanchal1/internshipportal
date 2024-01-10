@@ -2,11 +2,15 @@
 import Link from 'next/link';
 import React, { useState,useContext } from 'react';
 import UserContext from '../context/userContext';
-
+import { logout} from '../services/userService';
+import {useRouter} from 'next/navigation'
+import { toast } from "react-toastify";
 const CustomNavbar = () => {
   const context = useContext(UserContext);
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState('');
+  const isTeacher = context.user && context.user.role === 'teacher';
   async function handleLogout() {
     try {
       const result = await logout();
@@ -77,9 +81,7 @@ const CustomNavbar = () => {
         id="menu"
       >
         <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0 space">
-              {context.user && (
-              <>
-          <li>
+        <li>
             <Link href="/" passHref>
               <span
                 onClick={() => handleItemClick('Home')}
@@ -91,6 +93,10 @@ const CustomNavbar = () => {
               </span>
             </Link>
           </li>
+          
+         
+              {context.user && (
+              <>
           <li>
             <Link href="/adddata" passHref>
               <span
@@ -119,83 +125,61 @@ const CustomNavbar = () => {
           </>
           )}
           </ul>
-          <ul className="flex space-x-3">
-            {context.user && (
-              <>
-              {context.user ? 'Logout' : 'Login'}
-          <li>
-          <div className="relative inline-block">
-      <span
-        onClick={handleLoginDropdown}
-        className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
-      >
-      </span>
-      {showLoginOptions && (
-        <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
-          <Link href="/login" passHref>
-            <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
-          </Link>
-          <Link href="/teacher_login" passHref>
-            <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
-          </Link>
-          {/* Conditional rendering based on the user's role */}
-          {context.user && context.user.role === 'student' && (
-           <button onClick={handleLogout}> <span  className="block px-4 py-2 hover:bg-gray-200">Logout</span></button>
-          )}
-          {context.user && context.user.role === 'teacher' && (
-          <button onClick={handleLogout}><span  className="block px-4 py-2 hover:bg-gray-200">Logout</span></button>
+         <ul className="flex space-x-3">
+  {context.user && ( // Display only the logout button if the user is logged in
+    <li>
+      <button onClick={handleLogout} className="text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300">
+        Logout
+      </button>
+    </li>
+  ) }
+  {!context.user &&(
+    // Show login and signup options when the user is logged out
+    <>
+      <li>
+        <div className="relative inline-block">
+          <span
+            onClick={handleLoginDropdown}
+            className="block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer"
+          >
+            Login
+          </span>
+          {showLoginOptions && (
+            <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
+              <Link href="/login" passHref>
+                <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
+              </Link>
+              <Link href="/teacher_login" passHref>
+                <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
+              </Link>
+            </div>
           )}
         </div>
-      )}
-      </div>
       </li>
-    </> 
+      <li>
+        <div className="relative inline-block">
+          <span
+            onClick={handleSignupDropdown}
+            className="block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer"
+          >
+            Signup
+          </span>
+          {showSignupOptions && (
+            <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
+              <Link href="/signup" passHref>
+                <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
+              </Link>
+              <Link href="/admin_signup" passHref>
+                <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
+              </Link>
+            </div>
+          )}
+        </div>
+      </li>
+    </>
   )}
-  {!context.user &&( 
-  <>
-          <li>
-          <div className="relative inline-block">
-            <span
-              onClick={handleLoginDropdown}
-              className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
-            >
-              Login
-            </span>
-            {showLoginOptions && (
-              <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
-                <Link href="/login" passHref>
-                  <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
-                </Link>
-                <Link href="/teacher_login" passHref>
-                  <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
-                </Link>
-              </div>
-            )}
-          </div>
-        </li>
-          <li>
-          <div className="relative inline-block">
-            <span
-              onClick={handleSignupDropdown}
-              className={`block md:inline-block text-white hover:bg-blue-600 px-4 py-2 rounded transition duration-300 cursor-pointer`}
-            >
-              Signup
-            </span>
-            {showSignupOptions && (
-              <div className="absolute bg-white rounded shadow-lg mt-2 py-1 text-gray-800">
-                <Link href="/signup" passHref>
-                  <span className="block px-4 py-2 hover:bg-gray-200">Student</span>
-                </Link>
-                <Link href="/admin_signup" passHref>
-                  <span className="block px-4 py-2 hover:bg-gray-200">Teacher</span>
-                </Link>
-              </div>
-            )}
-          </div>
-        </li>
-        </>
-        )}
-        </ul>
+</ul>
+
         
       </div>
     </nav>
