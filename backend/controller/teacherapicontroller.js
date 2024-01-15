@@ -17,27 +17,23 @@ export async function teachersignup(req, res) {
       if (userexists) {
         return res.json({ status: 'error, user already exists' })
       }
-      bcrypt.hash(req.body.Password, 10, async (err, hashedPassword) => {
+      bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         if (!err) {
           await Teacher.create({
-            firstname: req.body.FirstName,
-            lastname: req.body.LastName,
-            gender: req.body.Gender,
-            department: req.body.Department,
-            domain: req.body.Domain,
-            role: req.body.Role,
-            address: req.body.Address,
-            mothername: req.body.MotherName,
-            fathername: req.body.FatherName,
-            mobileno: req.body.MobileNo,
-            dateofbirth: req.body.DateofBirth,
-            email: req.body.Email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            gender: req.body.gender,
+            department: req.body.department,
+            domain: req.body.domain,
+            role: req.body.role,
+            dateofbirth: req.body.dateofbirth,
+            email: req.body.email,
             password: hashedPassword,
           })
           return res.json({ status: 'ok' })
         } else {
           console.log(err)
-          return res.json({ status: 'error' })
+          return res.json({ status: 'error occured, '+err })
         }
       })
     } catch (error) {

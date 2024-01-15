@@ -98,12 +98,12 @@ export async function studentsignup(req, res) {
           hod: req.user.hod,
           mothername: req.user.mothername,
           fathername: req.user.fathername,
-          fromduration: req.body.FromDuration,
-          toduration: req.body.ToDuration,
-          companyname: req.body.CompanyName,
-          companyaddress: req.body.CompanyAddress,
-          whatfor: req.body.WhatFor,
-          domain: req.body.Domain,
+          fromduration: req.body.fromduration,
+          toduration: req.body.toduration,
+          companyname: req.body.companyname,
+          companyaddress: req.body.companyaddress,
+          whatfor: req.body.whatfor,
+          domain: req.body.domain,
           approvalstatus: 0, //initialised as zero 
         })
         return res.json({ status: 'ok' })

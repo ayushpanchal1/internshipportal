@@ -31,7 +31,7 @@ export async function currentUser(req, res) {
 
 export async function userlogout(req,res){
     try{
-      res.clearCookie('token')
+      res.clearCookie('token') 
       res.status(200).send({ status: 'ok, user logged out' })
     } catch (error) {
         res.status(500).send({ error: error.message });

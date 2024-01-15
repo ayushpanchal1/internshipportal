@@ -19,6 +19,7 @@ export default async function Auth(req, res, next) {
     req.user = decodedToken.userdata
     req.role = decodedToken.role
     // console.log(decodedToken);
+    // console.log(req.user)
 
     next()
   } catch (error) {
