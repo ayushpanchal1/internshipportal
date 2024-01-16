@@ -66,7 +66,7 @@ export async function testlogin(req, res) {
       email: req.body.Email,
     })
     if (!test) {
-      res.json({ status: 'error: account not found' })
+      res.json({ error: 'account not found' })
     } else {
       const match = await bcrypt.compare(req.body.Password, test.password)
       // console.log(match)
