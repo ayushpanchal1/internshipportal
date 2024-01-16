@@ -15,7 +15,7 @@ export async function teachersignup(req, res) {
         email: req.body.Email,
       })
       if (userexists) {
-        return res.json({ status: 'error, user already exists' })
+        return res.json({ error: 'user already exists' })
       }
       bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
         if (!err) {
@@ -33,7 +33,7 @@ export async function teachersignup(req, res) {
           return res.json({ status: 'ok' })
         } else {
           console.log(err)
-          return res.json({ status: 'error occured, '+err })
+          return res.json({ error: 'bcrypt error occured' })
         }
       })
     } catch (error) {
@@ -48,7 +48,7 @@ export async function teachersignup(req, res) {
       })
   
       if (!teacher) {
-        return res.json({ status: 'error: account not found' })
+        return res.json({ error: 'account not found' })
       } else {
         const match = await bcrypt.compare(req.body.password, teacher.password)
         if (!match) {
