@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import PDFDocument from 'pdfkit'
+import path from 'path'
+import multer from 'multer'
 import fs from 'fs'
 
 dotenv.config()
