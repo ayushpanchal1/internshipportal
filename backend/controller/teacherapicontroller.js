@@ -117,122 +117,58 @@ export async function teachersignup(req, res) {
 
       const aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
-      if(aprlstts==0){
-        var requests = await Request.findOneAndUpdate(
-          {
-            _id: req.body.id,
-            classteacher: tchr,
-            approvalstatus: aprlstts,
-          },
-          {$inc: {approvalstatus:1}},
-          {returnNewDocument:true}
-        )
-      } else {
-
-        const request = await Request.findOne({
-          _id: req.body.id,
-          approvalstatus: aprlstts,
-        }).select('-pdfdata') // exclude pdf binary to prevent recursively increasing size of field and corrupting it
-
-        // console.log(request)
-
-      const pdfPath = `./media/pdf/`;
-      const pdfFilename = `${req.body.id}.pdf`;
-      const pdfStream = fs.createWriteStream(`${pdfPath}${pdfFilename}`);
-      // const pdfDoc = new PDFDocument();
-      const pdfDoc = new PDFDocument({ size: "LETTER" });
-
-      // Pipe the PDF output to the file stream
-      pdfDoc.pipe(pdfStream);
-      // Write data from MongoDB document to PDF
-      // pdfDoc.text(JSON.stringify(request));
-      // para = "$";
-
-      pdfDoc
-      .image("./media/logo.png", 50, 50, {
-        fit: [200, 200],
-        align: "left",
-        valign: "top",
-      })
-      .moveDown(8);
-    
-    pdfDoc
-      .font("Helvetica-Bold")
-      .fontSize(20)
-      .text("Internship Approval Letter", { align: "center" })
-      .moveDown(1);
-    
-    pdfDoc
-      .font("Helvetica-Bold")
-      .fontSize(13)
-      .text("To Whomsoever it may concern,")
-      .moveDown(2);
-    
-    pdfDoc
-      .font("Helvetica")
-      .fontSize(13)
-      .text(
-        `This is to validate that the student ${request.firstname} ${request.lastname} has recieved the permission to intern at ${request.companyname} from ${request.fromduration} to ${request.toduration}.`,
-        { align: "justify" }
-      )
-      .moveDown(1);
-    
-    pdfDoc
-      .font("Helvetica")
-      .fontSize(13)
-      .text(
-        "Any extension to the internship will result in DIVINE PUNISHMENT from god",
-        { align: "justify" }
-      )
-      .moveDown(4);
-    
-    pdfDoc.image("./media/fake.png", 40, 600, {
-      fit: [150, 150],
-    });
-    
-    pdfDoc.image("./media/fake.png", 430, 600, {
-      fit: [150, 150],
-    });
-    
-    pdfDoc.font("Helvetica-Bold").fontSize(13).text("Class Teacher", 80, 700);
-    
-    pdfDoc.font("Helvetica-Bold").fontSize(13).text("HOD", 490, 700);
-    
-    pdfDoc.lineWidth(2).rect(20, 20, 573, 750).stroke();
-    
-    // Finalize and close the PDF
-    pdfDoc.end();
-
-      await new Promise(r => setTimeout(r, 20)); // DO NOT touch this ~~gives blank input if lower than 2
-      // Save PDF file in MongoDB                 //ye pehle 2 tha, image ke bad 15 kiya tha 
-      const pdfBinary = fs.readFileSync(`${pdfPath}${pdfFilename}`);
-
+    if (aprlstts == 0) {
       var requests = await Request.findOneAndUpdate(
-          {
-            _id: req.body.id,
-            hod: tchr,
-            approvalstatus: aprlstts,
-          },
-          {$set: {pdfdata: pdfBinary},
-            $inc: {approvalstatus:1}},
-          {returnNewDocument:true}
-        )
-        // console.log(requests)
-      // Delete the local PDF file
-      // throw new Error ('test error')
-        fs.unlinkSync(`${pdfPath}${pdfFilename}`);
-      }
-      if(!requests) return res.status(500).send({ error: 'No request found to approve' });
-
-      return res.status(200).send({
-        status: 'ok, request approved'
-      })
-      
-    } catch (error) {
-        let pdfFileToDel = `${req.body.id}.pdf`;
-        let pdfPathToDel = `./media/pdf/`
-        fs.unlinkSync(`${pdfPathToDel}${pdfFileToDel}`);                     //WORKS, deletes file after an error!!!!!!!
-        return res.status(500).send({ error: error.message });
-
+        {
+          _id: req.body.id,
+          classteacher: tchr,
+          approvalstatus: aprlstts,
+        },
+        { $inc: { approvalstatus: 1 } },
+        { returnNewDocument: true }
+      )
+    } else {
+      var requests = await Request.findOneAndUpdate(
+        {
+          _id: req.body.id,
+          hod: tchr,
+          approvalstatus: aprlstts,
+        },
+        { $set: { pdfdata: pdfBinary }, $inc: { approvalstatus: 1 } },
+        { returnNewDocument: true }
+      )
     }
+    if (!requests)
+      return res.status(500).send({ error: 'No request found to approve' })
+
+    return res.status(200).send({
+      status: 'ok, request approved',
+    })
+  } catch (error) {
+    return res.status(500).send({ error: error.message })
   }
+}
+
+const uploads = multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), './media/uploads/'),  //changed path
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+      cb(
+        null,
+        file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname)
+      )
+    },
+  }),
+})
+
+export async function uploadSingle(req, res) {
+  const handler = uploads.single('image')
+
+  handler(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message })
+    }
+    res.status(200).json({ message: 'File uploaded successfully.' })
+  })
+}
