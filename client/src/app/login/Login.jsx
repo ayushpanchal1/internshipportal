@@ -32,7 +32,7 @@ const Login = () => {
       console.log(result);
       toast.success("Logged In");
       // Update user context after successful login
-      context.setUser(result.user); // Assuming `result.user` contains the user data
+      context.setUser(result.status); // Assuming `result.user` contains the user data
       router.push("/showdata");
     } catch (error) {
       console.log(error);
