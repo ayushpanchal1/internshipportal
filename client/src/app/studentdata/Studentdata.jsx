@@ -68,9 +68,14 @@ const Studentdata = () => {
     try {
       if (confirm && pendingApprovalId) {
         const response = await teacherApproveRequest(pendingApprovalId);
-
+  
         if (response && response.status === 'ok') {
           setShowModal(false);
+  
+          // Add a delay of 2000ms before reloading the page
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 2000);
         }
       } else {
         setPendingApprovalId(null);
@@ -80,7 +85,6 @@ const Studentdata = () => {
       console.error('Error confirming approval:', error);
     }
   };
-
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Student Data</h1>

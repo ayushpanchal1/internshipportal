@@ -163,10 +163,16 @@ export async function studentsignup(req, res) {
   
   export async function getmyrequests(req,res){
     try{
-      const requests = await Request.find({
-        studentid: req.user._id,
-        approvalstatus: req.body.approvalstatus,
-      })
+      if(!req.body.approvalstatus){
+        var requests = await Request.find({
+          studentid: req.user._id,
+        })
+      } else {
+        var requests = await Request.find({
+          studentid: req.user._id,
+          approvalstatus: req.body.approvalstatus,
+        })
+      }
       return res.status(200).send({
         status: 'ok',
         requests: requests,

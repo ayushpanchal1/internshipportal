@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { AiOutlineDownload, AiOutlineDelete } from 'react-icons/ai';
 import { removerequest } from '@/src/services/taskService'; 
-
+import { downloadRequest } from '@/src/services/taskService'; // Import the downloadRequest function
 const Card = ({ request, index, onDelete }) => {
   const [expanded, setExpanded] = useState(false);
   const cardRef = useRef(null);
@@ -20,7 +20,21 @@ const Card = ({ request, index, onDelete }) => {
       console.error('Error deleting request:', error.message);
     }
   };
+  const handleDownload = async () => {
+    try {
+      const result = await downloadRequest(request._id);
 
+      // Check if the download request was successful
+      if (result.status === 'ok') {
+        // The download has been initiated, and the file will be opened
+        console.log('Download initiated successfully');
+      } else {
+        console.error('Failed to initiate download');
+      }
+    } catch (error) {
+      console.error('Error downloading request:', error.message);
+    }
+  };
   useEffect(() => {
     if (cardRef.current) {
       const tl = gsap.timeline();
@@ -58,16 +72,22 @@ const Card = ({ request, index, onDelete }) => {
                <AiOutlineDelete className="inline-block mr-2" />
                Delete
              </button>
-             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-               <AiOutlineDownload className="inline-block mr-2" />
-               Download
-             </button>
+             <button
+              onClick={handleDownload} // Call the handleDownload function
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              <AiOutlineDownload className="inline-block mr-2" />
+              Download
+            </button>
            </div>
         )}
       </div>
       {expanded && (
         <div className="p-4">
            <p>Student Id: {request.studentid}</p>
+           
+           <p>Student name: {request.academicyear}</p>
+
           <p>Technology: {request.whatfor}</p>
           <p>Domain: {request.domain}</p>
           <p>Email: {request.studentemail}</p>
