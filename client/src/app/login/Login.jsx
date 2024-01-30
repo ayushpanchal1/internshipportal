@@ -30,9 +30,10 @@ const Login = () => {
     try {
       const result = await studentLogin(loginData);
       console.log(result);
-      toast.success("Logged In");
       // Update user context after successful login
-      context.setUser(result.status); // Assuming `result.user` contains the user data
+      //result.user will have "student" or "teacher" - ayu
+      context.setUser(result.user);
+      toast.success("Logged In");
       router.push("/showdata");
     } catch (error) {
       console.log(error);

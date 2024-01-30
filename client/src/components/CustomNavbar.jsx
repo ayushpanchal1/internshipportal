@@ -81,6 +81,8 @@ const CustomNavbar = () => {
         id="menu"
       >
         <ul className="md:flex items-center justify-between text-base pt-4 md:pt-0 space">
+          {(!context.user && 
+          <>
         <li>
             <Link href="/" passHref>
               <span
@@ -93,7 +95,8 @@ const CustomNavbar = () => {
               </span>
             </Link>
           </li>
-          
+          </>
+          )}
          
               {context.user && (
               <>

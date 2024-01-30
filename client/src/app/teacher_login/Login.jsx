@@ -1,14 +1,17 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import signUpBanner from "../../assets/login.svg";
 // Import your httpAxios function
 import { useRouter } from "next/navigation";
 import { teacherLogin } from "@/src/services/userService";
+import UserContext from "@/src/context/userContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const router = useRouter();
+  const context = useContext(UserContext);
   const [formData, setFormData] = useState({
     secretKey: "1234", // Fixed secret key
     email: "",
@@ -21,7 +24,10 @@ const Login = () => {
       // Call your teacherLogin function using httpAxios
       const result = await teacherLogin(formData);
       console.log(result); // Optional: Check the result in the console
-
+      // Update user context after successful login
+      //result.user will have "student" or "teacher" - ayu
+      context.setUser(result.user);      
+      toast.success("Logged In");
       router.push("/studentdata"); // Redirect to /studentdata upon successful login
     } catch (error) {
       console.error("Login error:", error);

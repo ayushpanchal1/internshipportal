@@ -31,16 +31,19 @@ export async function addRequest(requestData) {
 }
 
 
-export async function getAllRequestsForStudent(email, approvalStatus = 0) {
+export async function getAllRequestsForStudent(approvalStatus = 0) {
   try {
+    //Email is not required in request body, only send approvalstatus
+    //and when approvalstatus is not sent in requestbody, 
+    //all cards are fetched regardless of their approval status - ayush
     const token = getCookie('token');
-    if (!token || !email) {
-      throw new Error('Token or email is missing');
+    if (!token) {
+      throw new Error('Token is missing');
     }
 
     const response = await httpAxios.post(
       '/api/getmyrequests',
-      { email: email, approvalstatus: approvalStatus },
+      { approvalstatus: approvalStatus },
       {
         headers: {
           Authorization: `Bearer ${token}`,

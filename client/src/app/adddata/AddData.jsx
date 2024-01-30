@@ -120,7 +120,7 @@ const AddData = () => {
       case 1:
         return (
           <div>
-            <SideNavbar/>
+            {/* <SideNavbar/> */}
        <div>
   <h2 className="text-2xl mb-4">Personal Information</h2>
   <div className="mt-4">
@@ -402,7 +402,7 @@ const AddData = () => {
       case 2:
         return (
           <div>
-            <SideNavbar/>
+            {/* <SideNavbar/> */}
             <div>
   <h2 className="text-2xl mb-4">Work Details</h2>
   <div className="mt-4">

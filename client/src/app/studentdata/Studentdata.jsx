@@ -11,14 +11,15 @@ const Studentdata = () => {
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userEmail = localStorage.getItem('userEmail');
+      //no need, token is a cookie and no useremail comes with response - ayu
+      // const token = localStorage.getItem('token');
+      // const userEmail = localStorage.getItem('userEmail');
 
-      if (!token || !userEmail) {
-        throw new Error('Token or email is missing');
-      }
+      // if (!token || !userEmail) {
+      //   throw new Error('Token or email is missing');
+      // }
 
-      const response = await teacherGetMyRequests(userEmail);
+      const response = await teacherGetMyRequests();
       const fetchedRequests = response.requests || [];
       setRequests(fetchedRequests);
       localStorage.setItem('fetchedRequests', JSON.stringify(fetchedRequests));
@@ -39,6 +40,8 @@ const Studentdata = () => {
     fetchRequests();
   }, []);
 
+
+  //REMINDER TO CHECK THIS LATER, should be a better way of doing this - ayush
   const handleApproval = async (id, approvalStatus) => {
     try {
       let newApprovalStatus = approvalStatus;

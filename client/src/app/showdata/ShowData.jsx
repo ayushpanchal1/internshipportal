@@ -1,12 +1,16 @@
 // ShowData.jsx
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { getAllRequestsForStudent, removerequest } from '@/src/services/taskService';
+// import UserContext from '../../context/userContext';
+// import { useRouter } from "next/navigation";
 
 import Card from './Card';
 
 const ShowData = () => {
   const [requests, setRequests] = useState([]);
+  // const context = useContext(UserContext);
+  // const router = useRouter();
 
   const fetchData = async () => {
     try {
@@ -25,7 +29,10 @@ const ShowData = () => {
   };
 
   useEffect(() => {
+    //shitty middleware hack fix
+    // if (!context.user) router.push("/")
     fetchData();
+    
   }, []);
 
   const handleDelete = async (index) => {
@@ -41,7 +48,7 @@ const ShowData = () => {
   
     return (
     <div>
-      <h1>All Requests</h1>
+      {/* <h1>All Requests</h1> */}
       <div className="card-container">
         {requests.map((request, index) => (
           <Card

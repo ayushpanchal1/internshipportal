@@ -40,8 +40,9 @@ export async function studentSignup(userData) {
 export async function studentLogin(loginData) {
   try {
     const result = await httpAxios.post('/api/studentlogin', loginData);
-    const { userEmail } = result.data; // Assuming the response includes the user's email
-    localStorage.setItem('userEmail', userEmail); // Set userEmail in localStorage
+    //no useremail is returned in response, this is no need
+    // const { userEmail } = result.data; // Assuming the response includes the user's email
+    // localStorage.setItem('userEmail', userEmail); // Set userEmail in localStorage
     return result.data;
   } catch (error) {
     throw new Error(error.response.data.error || error.message);
@@ -61,15 +62,16 @@ export async function teacherLogin(loginData) {
   try {
     const result = await httpAxios.post('/api/teacherlogin', loginData);
     
-    const { token, userRole, userEmail } = result.data;
+    //no need for any of this - ayush
+    // const { token, userRole, userEmail } = result.data;
 
-    if (!token || !userRole || !userEmail) {
-      throw new Error('Token, user role, or email is missing');
-    }
+    // if (!token || !userRole || !userEmail) {
+    //   throw new Error('Token, user role, or email is missing');
+    // }
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('userRole', userRole);
-    localStorage.setItem('userEmail', userEmail);
+    // localStorage.setItem('token', token);
+    // localStorage.setItem('userRole', userRole);
+    // localStorage.setItem('userEmail', userEmail);
 
     return result.data;
   } catch (error) {
