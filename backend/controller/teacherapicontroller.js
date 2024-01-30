@@ -68,6 +68,7 @@ export async function teachersignup(req, res) {
           )
           return res.cookie('token',token).status(200).send({
             status: 'ok, teacher logged in',
+            user: 'teacher',
           })
         }
       }

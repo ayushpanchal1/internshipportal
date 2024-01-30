@@ -75,6 +75,7 @@ export async function studentsignup(req, res) {
   
           return res.cookie('token',token).status(200).send({
             status: 'ok, student logged in',
+            user: 'student',
           })
         }
       }
