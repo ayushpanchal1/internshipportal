@@ -4,6 +4,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { getAllRequestsForStudent, removerequest } from '@/src/services/taskService';
 // import UserContext from '../../context/userContext';
 // import { useRouter } from "next/navigation";
+// import { middleware } from '../../middleware/middleware';
 
 import Card from './Card';
 
@@ -14,8 +15,9 @@ const ShowData = () => {
 
   const fetchData = async () => {
     try {
-      const userEmail = localStorage.getItem('userEmail');
-      const response = await getAllRequestsForStudent(userEmail);
+      //not required as api uses student modal id from token - ayush
+      // const userEmail = localStorage.getItem('userEmail');
+      const response = await getAllRequestsForStudent(/*userEmail*/);
 
       if (response.status === 'ok') {
         const parsedRequests = response.requests || [];
@@ -29,6 +31,7 @@ const ShowData = () => {
   };
 
   useEffect(() => {
+    // middleware();
     //shitty middleware hack fix
     // if (!context.user) router.push("/")
     fetchData();
