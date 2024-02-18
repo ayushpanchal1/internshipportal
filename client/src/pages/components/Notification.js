@@ -9,11 +9,12 @@ function Notification() {
     }, []);
 
     const fetchnotif = () => {
-        fetch("http://localhost:1337/api/getnotifs")
+        fetch("http://localhost:1337/api/getnotifs", { credentials: 'include' })
             .then(response => {
                 return response.json()
             })
             .then(data => {
+              
                 data.reverse()
                 setnotifs(data)
             })

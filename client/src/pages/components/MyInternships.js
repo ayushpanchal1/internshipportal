@@ -16,19 +16,20 @@ function MyInternships() {
 
     async function getmyinterns() {
         //const stuname = `${FirstName} ${LastName}`
-        const response = await fetch('http://localhost:1337/api/getmyinterns', {
-            method: 'POST',
+        const response = await fetch('http://localhost:1337/api/studentgetmyinterns', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                Email
-            }),
+            credentials: 'include',
         })
 
         const data = await response.json()
-        data.reverse()
-        console.log(data)
+
+        if (Array.isArray(data)) {
+            // `data` is an array, you can safely call reverse on it
+            data.reverse();
+          }
         setinterns(data)
     }
 

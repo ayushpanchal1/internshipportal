@@ -12,18 +12,15 @@ function UserProfile(){
     }, []);
 
     async function getuserdata() {
-        const response = await fetch('http://localhost:1337/api/getuser', {
-          method: 'POST',
+        const response = await fetch('http://localhost:1337/api/current-user', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            Email
-          }),
-        },)
+          credentials: 'include',
+        })
     
         const data = await response.json()
-        console.log(data)
         setUserData(data)
       }
 

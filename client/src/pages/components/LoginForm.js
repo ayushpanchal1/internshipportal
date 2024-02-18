@@ -11,25 +11,26 @@ function LoginForm() {
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
 
+    const requestBody = {
+        email: Email,
+        password: Password,
+      };
+
     async function loginAdmin(event) {
         event.preventDefault()
 
-        const response = await fetch('http://localhost:1337/api/adminlogin', {
+        const response = await fetch('http://localhost:1337/api/teacherlogin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                Email,
-                Password,
-            }),
+            body: JSON.stringify(requestBody),
+            credentials: 'include', // Include cookies in the request
         })
 
         const data = await response.json()
 
-        console.log(data)
-
-        if (data.token !== false) {
+        if (!data.error) {
             signIn({
                 token: data.token,
                 expiresIn: 3600,
@@ -41,7 +42,7 @@ function LoginForm() {
             alert("Admin Log in successful")
             navigate("/admindashboard")
         } else {
-            alert("Log in credentials are incorrect! Sign up if you do not have an account")
+            alert(`Log in credentials are incorrect! Sign up if you do not have an account! ${data.error}`)
         }
 
 
@@ -50,22 +51,19 @@ function LoginForm() {
     async function loginUser(event) {
         event.preventDefault()
 
-        const response = await fetch('http://localhost:1337/api/login', {
+        const response = await fetch('http://localhost:1337/api/studentlogin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                Email,
-                Password,
-            }),
+            body: JSON.stringify(requestBody),
+            credentials: 'include', // Include cookies in the request
         })
 
         const data = await response.json()
 
-        console.log(data)
-
-        if (data.token !== false) {
+        if (!data.error) {
+            console.log(data)
             signIn({
                 token: data.token,
                 expiresIn: 3600,
@@ -77,7 +75,7 @@ function LoginForm() {
             // alert("Log in successful")
             navigate("/dashboard")
         } else {
-            alert("Log in credentials are incorrect! Sign up if you do not have an account")
+            alert(`Log in credentials are incorrect! Sign up if you do not have an account! ${data.error}`)
         }
 
 

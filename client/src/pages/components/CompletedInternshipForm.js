@@ -2,8 +2,6 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 
 function CompletedinternshipForm() {
-    const Email = localStorage.getItem('SessionEmail')
-
     const [UserData, setUserData] = useState('')
 
     const [Provider, setProvider] = useState('')
@@ -15,39 +13,31 @@ function CompletedinternshipForm() {
     useEffect(() => {
         //Runs on every render
         getuserdata()
-    });
+    }, []);
 
     //this works?????
     async function getuserdata() {
-        const response = await fetch('http://localhost:1337/api/getuser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                Email
-            }),
+        const response = await fetch('http://localhost:1337/api/current-user', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
         })
-
+    
         const data = await response.json()
-        console.log(data)
         setUserData(data)
-
-    }
+      }
 
     async function submitint(event) {
         event.preventDefault()
-
-        const stuname = `${UserData.firstname} ${UserData.lastname}`
-
-        const response = await fetch('http://localhost:1337/api/subintern', {
+        const response = await fetch('http://localhost:1337/api/studentsubcompintern', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({
-                Email,
-                stuname,
                 Provider,
                 FromDuration,
                 ToDuration,
