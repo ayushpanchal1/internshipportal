@@ -9,7 +9,9 @@ import Auth from '../middleware/auth.js'
 
 //student related requests ------------------------------------------------------------ in ../controller/studentapicontroller.js
 router.post('/studentsignup', studentcontroller.studentsignup)  
-router.post('/studentlogin', studentcontroller.studentlogin)   
+router.post('/studentlogin', studentcontroller.studentlogin)
+router.get('/studentgetmyinterns', Auth, studentcontroller.studentgetmyinterns)
+router.post('/studentsubcompintern', Auth, studentcontroller.studentsubcompintern)
 router.post('/getmyrequests', Auth, studentcontroller.getmyrequests)
 router.post('/addrequest', Auth, studentcontroller.addrequest)
 router.post('/removerequest', Auth, studentcontroller.removerequest)
@@ -24,6 +26,7 @@ router.post('/teacherapprove', Auth, teachercontroller.teacherapprove)
 //testing and general / common requests ----------------------------------------------- in ../controller/apicontroller.js
 router.get('/userlogout', controller.userlogout)
 router.get('/current-user', Auth, controller.currentUser)
+router.get('/getnotifs', Auth, controller.getnotifs)
 
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)

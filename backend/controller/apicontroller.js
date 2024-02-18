@@ -1,6 +1,7 @@
 import Student from '../models/student.model.js'
 import Teacher from '../models/teacher.model.js'
 // import Request from '../models/request.model.js'
+import Notif from '../models/notification.model.js'
 import Test from '../models/test.model.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -99,6 +100,15 @@ export async function testmiddleware(req,res){
       res.status(200).send({status: 'ok, middleware works!'})
     } catch (error) {
         res.status(500).send({ error: error.message });
+    }
+}
+
+export async function getnotifs(req, res){
+    try{
+      const notifs = await Notif.find()
+      return res.json(notifs)
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
     }
 }
 
