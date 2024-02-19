@@ -73,7 +73,7 @@ export async function testlogin(req, res) {
       // console.log(match)
       if (!match) {
         // passwords do not match!
-        res.json({ status: 'error' })
+        res.json({ error: 'incorrect username or password' })
       } else {
         const token = jwt.sign(
           {

@@ -94,7 +94,7 @@ export async function studentlogin(req, res) {
       const match = await bcrypt.compare(req.body.password, student.password)
       if (!match) {
         // passwords do not match!
-        return res.json({ status: 'error' })
+        return res.json({ error: 'incorrect username or password' })
       } else {
         const token = jwt.sign(
           {
