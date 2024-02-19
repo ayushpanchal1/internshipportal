@@ -47,9 +47,12 @@ export async function studentsignup(req, res) {
       return res.json({ error: 'user already exists' })
     }
 
+    const stuname = [req.body.fname, req.body.lname].join(' ')
+
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (!err) {
         await Student.create({
+          stuname: stuname,
           firstname: req.body.fname,
           lastname: req.body.lname,
           gender: req.body.gender,

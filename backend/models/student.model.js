@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const Student = new mongoose.Schema(
 	{
+        stuname: { type: String, required: true },
 		firstname: { type: String, required: true },
         lastname: { type: String, required: true },
         gender: { type: String, enum: ['male','female','other']},

@@ -22,6 +22,10 @@ router.post('/teachersignup', teachercontroller.teachersignup)
 router.post('/teacherlogin', teachercontroller.teacherlogin)
 router.get('/teachergetmyrequests', Auth, teachercontroller.teachergetmyrequests)
 router.post('/teacherapprove', Auth, teachercontroller.teacherapprove)
+router.get('/teachergetmynotifs', Auth, teachercontroller.teachergetmynotifs)
+router.post('/teacherpostnotif', Auth, teachercontroller.teacherpostnotif)
+router.post('/teacherfetchstudents', Auth, teachercontroller.teacherfetchstudents)
+router.post('/teacherfetchastudent', Auth, teachercontroller.teacherfetchastudent)
 
 //testing and general / common requests ----------------------------------------------- in ../controller/apicontroller.js
 router.get('/userlogout', controller.userlogout)
