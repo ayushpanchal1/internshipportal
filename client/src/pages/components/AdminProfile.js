@@ -12,14 +12,12 @@ function AdminProfile() {
     }, []);
 
     async function getadmindata() {
-        const response = await fetch('http://localhost:1337/api/getadmin', {
-            method: 'POST',
+        const response = await fetch('http://localhost:1337/api/current-user', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                Email
-            }),
+            credentials: 'include',
         })
 
         const data = await response.json()
@@ -46,7 +44,7 @@ function AdminProfile() {
                             <div className='d-flex'>
                                 <div className='col md-3'>
                                     <h4>First Name: {AdminData.firstname}</h4>
-                                    <h4>Mobile Number: {AdminData.mobileno}</h4>
+                                    <h4>Department: {AdminData.department}</h4>
                                 </div>
                                 <div className='col md-3'>
                                     <h4>Last Name: {AdminData.lastname}</h4>

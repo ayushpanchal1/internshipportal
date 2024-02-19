@@ -35,7 +35,7 @@ function App() {
     }, []);
     
     const getalluserforadmin = () => {
-      fetch("http://localhost:1337/api/getalluserforadmin")
+      fetch("http://localhost:1337/api/teacherfetchstudents", {method: 'POST', credentials: 'include',})
         .then(response => {
           return response.json()
         })
@@ -47,37 +47,25 @@ function App() {
     async function searchq(event) {
       event.preventDefault()
 
-      const response1 = await fetch('http://localhost:1337/api/getuserforadmin', {
+      const response1 = await fetch('http://localhost:1337/api/teacherfetchastudent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({
         searchquery
       }),
     },)
 
-    const data1 = await response1.json()
-
+    const data = await response1.json()
+    const data1 = data.student
     setuserdata(data1)
 
-    const response2 = await fetch('http://localhost:1337/api/getinternsforadmin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        searchquery
-      }),
-    })
-
-    const data = await response2.json()
-
-    data.reverse()
-    
-    console.log(data)
-    
-    setinterns(data)
+    const data2 = data.interns
+    data2.reverse()
+    console.log(data2)
+    setinterns(data2)
       
     }
 
@@ -116,30 +104,33 @@ function App() {
 
 
       <Container style={{ marginTop: '48px' }}>
-      {!userdata && ( <>
+    {!userdata && (
+    <>
       <Col md={8} lg={12} xs={12} > 
-      <h1><b>Students</b></h1>
-      <div className="border border-2 border-primary"></div>
-      <br/>
-      <div>
-        {(alluser && (
-        <div className='row mx-md-n5 gy-4'>
-        {alluser.map(auser => (
-          <Col lg={4}>
-            <div className='card shadow'>
-              <div className='card-body'>
-                <h4 className="card-title">
-                  <b>{auser.stuname}</b>
-                </h4>
-                <div className="btn btn-primary" onClick={() => {setsearchquery(auser.stuname);}}>view</div>
-              </div>
-            </div>
-          </Col>
-        ))}
-        </div>))}
+        <h1><b>Students</b></h1>
+        <div className="border border-2 border-primary"></div>
         <br/>
-      </div>
-      </Col></>)}
+        <div>
+          {alluser && alluser.length > 0 && (
+            <div className='row mx-md-n5 gy-4'>
+              {alluser.map(auser => (
+                <Col lg={4}>
+                  <div className='card shadow'>
+                    <div className='card-body'>
+                      <h4 className="card-title">
+                        <b>{auser.stuname}</b>
+                      </h4>
+                      <div className="btn btn-primary" onClick={() => {setsearchquery(auser.stuname);}}>view</div>
+                    </div>
+                  </div>
+                </Col>
+              ))}
+            </div>
+          )}
+        </div>
+      </Col>
+    </>
+  )}
       </Container>
       
 

@@ -16,15 +16,12 @@ function AdminMyNotifs() {
     }, []);
 
     async function getmynotifs() {
-        //const stuname = `${FirstName} ${LastName}`
-        const response = await fetch('http://localhost:1337/api/getmynotifs', {
-            method: 'POST',
+        const response = await fetch('http://localhost:1337/api/teachergetmynotifs', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                Email
-            }),
+            credentials: 'include',
         })
 
         const data = await response.json()
