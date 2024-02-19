@@ -6,18 +6,18 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'; // DO NOT remove this
 
 
-import './pages/style/custom.scss'
+import './style/custom.scss'
 import { BrowserRouter, Routes, Route,} from 'react-router-dom';
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Dashboard from './pages/Dashboard'
-import Homepage from './pages/Homepage'
-import Notifs from './pages/Notifs'
-import CompletedInternship from './pages/CompletedInternship'
-import AdminDashboard from './pages/AdminDashboard'
-import AdminLogin from './pages/AdminLogin'
-import AdminPostNotifs from './pages/AdminPostNotifs'
-import AdminSearch from './pages/AdminSearch'
+import StudentLogin from './pages/student/StudentLogin'
+import Signup from './pages/common/Signup'
+import StudentDashboard from './pages/student/StudentDashboard'
+import Homepage from './pages/common/Homepage'
+import Notifs from './pages/common/Notifs'
+import StudentCompletedInternship from './pages/student/StudentCompletedInternship'
+import TeacherDashboard from './pages/teacher/TeacherDashboard'
+import TeacherLogin from './pages/teacher/TeacherLogin'
+import TeacherPostNotifs from './pages/teacher/TeacherPostNotifs'
+import TeacherSearch from './pages/teacher/TeacherSearch'
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
 
 
@@ -33,15 +33,15 @@ const App = () => {
         <BrowserRouter>
         <Routes>
           <Route path="/" exact element={<Homepage/>} />
-          <Route path="/Login" exact element={<Login/>} />
-          <Route path="/AdminLogin" exact element={<AdminLogin/>} />
+          <Route path="/student/StudentLogin" exact element={<StudentLogin/>} />
+          <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />
           <Route path="/Signup" exact element={<Signup/>} />
-          <Route path="/dashboard" exact element={<RequireAuth loginPath='/Login'><Dashboard/></RequireAuth>} />
-          <Route path="/notifications" exact element={<RequireAuth loginPath='/Login'><Notifs/></RequireAuth>} />
-          <Route path="/completedinternship" exact element={<RequireAuth loginPath='/Login'><CompletedInternship/></RequireAuth>} />
-          <Route path="/admindashboard" exact element={<RequireAuth loginPath='/AdminLogin'><AdminDashboard/></RequireAuth>} />
-          <Route path="/adminpostnotifs" exact element={<RequireAuth loginPath='/AdminLogin'><AdminPostNotifs/></RequireAuth>} />
-          <Route path="/adminsearch" exact element={<RequireAuth loginPath='/AdminLogin'><AdminSearch/></RequireAuth>} />
+          <Route path="/student/StudentDashboard" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentDashboard/></RequireAuth>} />
+          <Route path="/Notifications" exact element={<RequireAuth loginPath='/student/StudentLogin'><Notifs/></RequireAuth>} />
+          <Route path="/student/StudentCompletedInternship" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentCompletedInternship/></RequireAuth>} />
+          <Route path="/teacher/TeacherDashboard" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherDashboard/></RequireAuth>} />
+          <Route path="/teacher/TeacherPostNotifs" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherPostNotifs/></RequireAuth>} />
+          <Route path="/teacher/TeacherSearch" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherSearch/></RequireAuth>} />
         </Routes>
         </BrowserRouter>
       </AuthProvider>

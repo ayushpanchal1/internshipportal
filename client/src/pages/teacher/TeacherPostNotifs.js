@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
-import CNavbar from './components/CNavbar';
-import AdminPostNotifsForm from './components/AdminPostNotifsForm';
+import CNavbar from '../common/components/CNavbar';
+import AdminPostNotifsForm from './components/TeacherPostNotifsForm';
 
 function App() {
     const auth = useAuthUser()

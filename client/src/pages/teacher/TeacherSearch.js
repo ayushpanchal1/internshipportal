@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
-import IMAGE from '../media/user.png'
-import CNavbar from './components/CNavbar';
+import IMAGE from '../../media/user.png'
+import CNavbar from '../common/components/CNavbar';
 
 function App() {
     const auth = useAuthUser()

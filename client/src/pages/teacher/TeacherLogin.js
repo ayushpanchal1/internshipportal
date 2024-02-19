@@ -1,8 +1,8 @@
 import React from 'react'
-import CNavbar from './components/CNavbar'; // Import the Navbar component
-import LoginForm from './components/LoginForm';
+import CNavbar from '../common/components/CNavbar'; // Import the Navbar component
+import LoginForm from '../common/components/LoginForm';
 // import './components/red.css'
-import './style/custom.scss'
+// import './style/custom.scss'
 
 function App() {
   

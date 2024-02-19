@@ -1,6 +1,7 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { registerStudent } from "../../../services/StudentServices"
 
 function SignupForm() {
     const [fname, setfname] = useState('')
@@ -17,58 +18,40 @@ function SignupForm() {
     const [mothername, setmothername] = useState('')
     const [fathername, setfathername] = useState('')
     const [mobileno, setmobileno] = useState('')
-    const [dateofbirth, setdateofbirth]  = useState('')
+    const [dateofbirth, setdateofbirth] = useState('')
     const [email, setemail] = useState('')
     const [password, setpassword] = useState('')
 
     const navigate = useNavigate();
 
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const requestBody = {
+            fname,
+            lname,
+            gender,
+            seatno,
+            academic,
+            department,
+            semester,
+            division,
+            classteacher,
+            hod,
+            address,
+            mothername,
+            fathername,
+            mobileno,
+            dateofbirth,
+            email,
+            password,
+        };
 
-    async function registerUser(event) {
-        event.preventDefault()
-        const stuname = `${fname} ${lname}`
-
-        const response = await fetch('http://localhost:1337/api/studentsignup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                fname,
-                lname,
-                gender,
-                seatno,
-                academic,
-                department,
-                semester,
-                division,
-                classteacher,
-                hod,
-                address,
-                mothername,
-                fathername,
-                mobileno,
-                dateofbirth,
-                email,
-                password,
-            }),
-        })
-
-        const data = await response.json()
-
-        if (data.error) {
-            alert(`Error Signing up! ${data.error}`)
-        } else {
-            alert(`Sign up complete! Please log in`)
-            navigate("/login")
-        }
-
-        console.log(data)
+        registerStudent(requestBody, navigate);
     }
 
     return (
         <div>
-            <Container style={{marginTop: '100px'}}>
+            <Container style={{ marginTop: '100px' }}>
                 <Row className="vh-100 d-flex justify-content-center align-items-center">
                     <Col md={8} lg={6} xs={12}>
                         <div className="border border-2 border-primary"></div>
@@ -77,7 +60,7 @@ function SignupForm() {
                                 <div className="mb-3 mt-md-4">
                                     <h2 className="fw-bold mb-2 text-center text-uppercase ">Sign Up</h2>
                                     <div className="mb-3">
-                                        <Form onSubmit={registerUser}>
+                                        <Form onSubmit={handleSubmit}>
                                             <Form.Group className="mb-3" controlId="fname">
                                                 <Form.Label className="text-center">
                                                     First Name
@@ -108,7 +91,10 @@ function SignupForm() {
                                                 <Form.Label className="text-center">
                                                     Seat No
                                                 </Form.Label>
-                                                <Form.Control value={seatno} onChange={(e) => setseatno(e.target.value)} type="number" placeholder="Enter Seat No" />
+                                                <Form.Control value={seatno} onChange={(e) => setseatno(e.target.value)} type="number" placeholder="Enter Seat No" style={{
+                                                    WebkitAppearance: 'none', // Remove arrow buttons in Firefox
+                                                    MozAppearance: 'textfield',
+                                                }} />
                                             </Form.Group>
 
                                             <Form.Group className="mb-3" controlId="academic">
@@ -185,7 +171,7 @@ function SignupForm() {
                                                 </Form.Label>
                                                 <Form.Control value={address} onChange={(e) => setaddress(e.target.value)} type="text" placeholder="Enter Address" />
                                             </Form.Group>
-                                            
+
                                             <Form.Group className="mb-3" controlId="mothername">
                                                 <Form.Label className="text-center">
                                                     Mother's Name
@@ -204,7 +190,7 @@ function SignupForm() {
                                                 <Form.Label className="text-center">
                                                     Phone Number
                                                 </Form.Label>
-                                                <Form.Control value={mobileno} onChange={(e) => setmobileno(e.target.value)} type="tel" placeholder="Enter Your Phone Number" />
+                                                <Form.Control value={mobileno} onChange={(e) => setmobileno(e.target.value)} type="tel" pattern="[0-9]{10}" placeholder="Enter Your Phone Number" />
                                             </Form.Group>
 
                                             <Form.Group className="mb-3" controlId="dateofbirth">

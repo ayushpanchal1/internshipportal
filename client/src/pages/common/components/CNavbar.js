@@ -16,13 +16,21 @@ function CNavbar() {
     signOut();
     localStorage.removeItem('SessionInfo');
     localStorage.removeItem('SessionEmail');
-    navigate("/Login");
+    navigate("/student/StudentLogin");
   }
 
   return (
     <Container>
       <Navbar className="navbar fixed-top navbar-expand navbar-dark bg-primary">
-        <Navbar.Brand href="/" style={{ paddingLeft: "10px" }}>
+        <Navbar.Brand style={{ paddingLeft: "10px" }}>
+        <Link
+            to="/"
+            style={{
+              color: "inherit",
+              textDecoration: "none", // Adjust as needed
+            }}
+          >
+          
           <img
             src="https://president.somaiya.edu.in/assets/oop/img/Homepage/Somaiya-logo-01.svg"
             width="40"
@@ -31,14 +39,16 @@ function CNavbar() {
             alt="Logo"
             style={{ backgroundColor: "white" }}
           ></img>
-          &nbsp; <b1>Internship Management Portal</b1>
+          &nbsp; <b1>Internship Management Portal</b1>         
+          </Link>
         </Navbar.Brand>
+
         <Nav className="me-auto">
           {!Session && (
             <>
               <li className="nav-item">
-                <Link to={"/Login"} className="nav-link">
-                  Login
+                <Link to={"/student/StudentLogin"} className="nav-link">
+                  Student Login
                 </Link>
               </li>
               <li className="nav-item">
@@ -47,43 +57,43 @@ function CNavbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to={"/AdminLogin"} className="nav-link">
-                  AdminLogin
+                <Link to={"/teacher/TeacherLogin"} className="nav-link">
+                  Teacher Login
                 </Link>
               </li>
             </>)}
           {Session === 'user' && (<><li className="nav-item">
-            <Link to={"/dashboard"} className="nav-link">
+            <Link to={"/student/StudentDashboard"} className="nav-link">
               Dashboard
             </Link>
           </li>
             <li className="nav-item">
-              <Link to={"/completedinternship"} className="nav-link">
+              <Link to={"/student/StudentCompletedInternship"} className="nav-link">
                 Update
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/notifications"} className="nav-link">
+              <Link to={"/Notifications"} className="nav-link">
                 Notifications
               </Link>
             </li></>)}
           {Session === 'admin' && (<><li className="nav-item">
-            <Link to={"/admindashboard"} className="nav-link">
+            <Link to={"/teacher/TeacherDashboard"} className="nav-link">
               Dashboard
             </Link>
           </li>
             <li className="nav-item">
-              <Link to={"/adminsearch"} className="nav-link">
+              <Link to={"/teacher/TeacherSearch"} className="nav-link">
                 Manage
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/adminpostnotifs"} className="nav-link">
+              <Link to={"/TeacherPostNotifs"} className="nav-link">
                 Post
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/notifications"} className="nav-link">
+              <Link to={"/Notifications"} className="nav-link">
                 Notifications
               </Link>
             </li></>)}

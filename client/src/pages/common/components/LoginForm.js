@@ -2,6 +2,8 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSignIn } from 'react-auth-kit';
+import { loginStudent } from "../../../services/StudentServices"
+import { loginTeacher } from "../../../services/TeacherServices"
 
 function LoginForm() {
     const signIn = useSignIn();
@@ -14,71 +16,15 @@ function LoginForm() {
     const requestBody = {
         email: Email,
         password: Password,
-      };
+    };
 
-    async function loginAdmin(event) {
-        event.preventDefault()
-
-        const response = await fetch('http://localhost:1337/api/teacherlogin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody),
-            credentials: 'include', // Include cookies in the request
-        })
-
-        const data = await response.json()
-
-        if (!data.error) {
-            signIn({
-                token: data.token,
-                expiresIn: 3600,
-                tokenType: "Bearer",
-                authState: { email: Email, session: "admin" },
-            });
-            localStorage.setItem('SessionInfo', 'admin');
-            localStorage.setItem('SessionEmail', Email);
-            alert("Admin Log in successful")
-            navigate("/admindashboard")
+    function handleSubmit(event) {
+        event.preventDefault();
+        if (location.pathname === '/student/StudentLogin') {
+            loginStudent(requestBody, navigate, signIn);
         } else {
-            alert(`Log in credentials are incorrect! Sign up if you do not have an account! ${data.error}`)
+            loginTeacher(requestBody, navigate, signIn);
         }
-
-
-    }
-
-    async function loginUser(event) {
-        event.preventDefault()
-
-        const response = await fetch('http://localhost:1337/api/studentlogin', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody),
-            credentials: 'include', // Include cookies in the request
-        })
-
-        const data = await response.json()
-
-        if (!data.error) {
-            console.log(data)
-            signIn({
-                token: data.token,
-                expiresIn: 3600,
-                tokenType: "Bearer",
-                authState: { email: Email, session: "user" },
-            });
-            localStorage.setItem('SessionInfo', 'user');
-            localStorage.setItem('SessionEmail', Email);
-            // alert("Log in successful")
-            navigate("/dashboard")
-        } else {
-            alert(`Log in credentials are incorrect! Sign up if you do not have an account! ${data.error}`)
-        }
-
-
     }
 
     return (
@@ -96,7 +42,7 @@ function LoginForm() {
                                         }
                                     </h2>
                                     <div className="mb-3">
-                                        <Form onSubmit={location.pathname === '/Login' ? loginUser : loginAdmin}>
+                                        <Form onSubmit={handleSubmit}>
 
                                             <Form.Group className="mb-3" controlId="Email">
                                                 <Form.Label className="text-center">

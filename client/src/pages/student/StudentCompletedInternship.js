@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
-import CNavbar from './components/CNavbar';
-import CompletedinternshipForm from './components/CompletedInternshipForm';
+import CNavbar from '../common/components/CNavbar';
+import CompletedinternshipForm from './components/StudentCompletedInternshipForm';
 
 function App() {
   const auth = useAuthUser()

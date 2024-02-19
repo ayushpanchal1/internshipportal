@@ -1,6 +1,6 @@
 import { Col, Container, Card } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import IMAGE from '../../media/user.png'
+import IMAGE from '../../../media/user.png'
 
 function AdminProfile() {
     const Email = localStorage.getItem('SessionEmail');

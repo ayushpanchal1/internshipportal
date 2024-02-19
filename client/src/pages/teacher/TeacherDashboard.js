@@ -1,10 +1,12 @@
+
 import React from 'react'
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useSignOut, useAuthUser } from 'react-auth-kit';
-import CNavbar from './components/CNavbar';
-import UserProfile from './components/UserProfile';
-import MyInternships from './components/MyInternships';
+import { useSignOut } from 'react-auth-kit';
+import { useAuthUser } from 'react-auth-kit';
+import CNavbar from '../common/components/CNavbar';
+import AdminProfile from './components/TeacherProfile';
+import AdminMyNotifs from './components/TeacherMyNotifs';
 
 function App() {
   const auth = useAuthUser()
@@ -21,19 +23,17 @@ function App() {
   }
 
   useEffect(() => {
-    if (Session === "admin") {
+    //Runs on every render
+    if (Session === "user") {
       logout()
     }
-  });
+  }, []);
 
   return (
     <div>
       <CNavbar />
-
-      <UserProfile />
-
-      <MyInternships />
-
+      <AdminProfile />
+      <AdminMyNotifs />
     </div>
   );
 }
