@@ -40,3 +40,21 @@ export async function registerStudent(requestBody, navigate) {
   }
 }
 
+export async function getMyInternsStudent(setInterns) {
+  try {
+    const response = await httpAxios.get('/api/studentgetmyinterns');
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      if (Array.isArray(data)) {
+        // `data` is an array, you can safely call reverse on it
+        data.reverse();
+      }
+      setInterns(data)
+    }
+  } catch (error) {
+    alert(`Error fetching studentmyinterns! ${error}`);
+  }
+}

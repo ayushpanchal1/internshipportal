@@ -4,11 +4,13 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSignIn } from 'react-auth-kit';
 import { loginStudent } from "../../../services/StudentServices"
 import { loginTeacher } from "../../../services/TeacherServices"
+// import { useRole } from '../../../services/RoleContext';
 
 function LoginForm() {
     const signIn = useSignIn();
     const navigate = useNavigate();
     const location = useLocation();
+    // const { setRole } = useRole();
 
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')

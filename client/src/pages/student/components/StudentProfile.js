@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Col, Container, Card } from "react-bootstrap";
 import IMAGE from '../../../media/user.png'
+import { getUserData } from "../../../services/Services"
 
 function UserProfile() {
   const Email = localStorage.getItem('SessionEmail');
@@ -8,21 +9,8 @@ function UserProfile() {
 
   useEffect(() => {
     //Runs on every render
-    getuserdata()
+    getUserData(setUserData)
   }, []);
-
-  async function getuserdata() {
-    const response = await fetch('http://localhost:1337/api/current-user', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-
-    const data = await response.json()
-    setUserData(data)
-  }
 
   return (
     <Container style={{ marginTop: '100px' }} >

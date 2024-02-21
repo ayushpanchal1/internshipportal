@@ -1,9 +1,10 @@
 import { Col, Button, Container, Card, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+import { getMyInternsStudent } from "../../../services/StudentServices";
 
 function MyInternships() {
     const Email = localStorage.getItem('SessionEmail');
-    const [interns, setinterns] = useState('')
+    const [interns, setInterns] = useState('')
     const [wfordelintern, setwfordelintern] = useState('')
 
     const [show, setShow] = useState(false);
@@ -11,32 +12,13 @@ function MyInternships() {
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        getmyinterns()
+        getMyInternsStudent(setInterns)
     }, []);
-
-    async function getmyinterns() {
-        //const stuname = `${FirstName} ${LastName}`
-        const response = await fetch('http://localhost:1337/api/studentgetmyinterns', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        })
-
-        const data = await response.json()
-
-        if (Array.isArray(data)) {
-            // `data` is an array, you can safely call reverse on it
-            data.reverse();
-          }
-        setinterns(data)
-    }
 
     async function deletemyinterns(wfor) {
         console.log(wfor)
         //const stuname = `${FirstName} ${LastName}`
-        const response = await fetch('http://localhost:1337/api/deletemyinterns', {
+        const response = await fetch('http://localhost:1337/api/studentdelmyinterns', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -45,9 +27,10 @@ function MyInternships() {
                 Email,
                 wfor,
             }),
+            credentials: 'include',
         })
         const data = await response.json()
-        getmyinterns()
+        getMyInternsStudent(setInterns)
         handleClose()
     }
 

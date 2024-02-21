@@ -19,7 +19,8 @@ import TeacherLogin from './pages/teacher/TeacherLogin'
 import TeacherPostNotifs from './pages/teacher/TeacherPostNotifs'
 import TeacherSearch from './pages/teacher/TeacherSearch'
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
-
+// import { RoleProvider } from './services/RoleContext'
+// import { RedirectStudent, RedirectTeacher } from './services/RedirectBasedOnRole'
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         cookieDomain={window.location.hostname}
         cookieSecure={false}
       >
+      {/* <RoleProvider> */}
         <BrowserRouter>
         <Routes>
           <Route path="/" exact element={<Homepage/>} />
@@ -44,6 +46,7 @@ const App = () => {
           <Route path="/teacher/TeacherSearch" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherSearch/></RequireAuth>} />
         </Routes>
         </BrowserRouter>
+        {/* </RoleProvider> */}
       </AuthProvider>
     </div>
   )
