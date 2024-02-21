@@ -38,7 +38,7 @@ function LoginForm() {
                                 <div className="mb-3 mt-md-4">
                                     <h2 className="fw-bold mb-2 text-center text-uppercase ">
                                         {
-                                            location.pathname === '/Login' ? (<div>Log in</div>) : (<div>Admin Log in</div>)
+                                            location.pathname === '/student/StudentLogin' ? (<div>Log in</div>) : (<div>Admin Log in</div>)
                                         }
                                     </h2>
                                     <div className="mb-3">
@@ -69,7 +69,7 @@ function LoginForm() {
                                                 </Button>
                                             </div>
                                         </Form>
-                                        {location.pathname === '/Login' ? (<div className="mt-3">
+                                        {location.pathname === '/student/StudentLogin' ? (<div className="mt-3">
                                             <p className="mb-0  text-center">
                                                 Don't have an account?{" "}
                                                 <Link to={"/Signup"} className="text-primary fw-bold">

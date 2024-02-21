@@ -23,7 +23,7 @@ function App() {
     if (Session === "admin") {
       logout()
     }
-  });
+  }, []);
 
   return (
     <div>

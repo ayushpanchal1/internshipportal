@@ -33,12 +33,12 @@ const App = () => {
         <BrowserRouter>
         <Routes>
           <Route path="/" exact element={<Homepage/>} />
-          <Route path="/student/StudentLogin" exact element={<StudentLogin/>} />
-          <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />
           <Route path="/Signup" exact element={<Signup/>} />
-          <Route path="/student/StudentDashboard" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentDashboard/></RequireAuth>} />
           <Route path="/Notifications" exact element={<RequireAuth loginPath='/student/StudentLogin'><Notifs/></RequireAuth>} />
+          <Route path="/student/StudentLogin" exact element={<StudentLogin/>} />
+          <Route path="/student/StudentDashboard" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentDashboard/></RequireAuth>} />
           <Route path="/student/StudentCompletedInternship" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentCompletedInternship/></RequireAuth>} />
+          <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />          
           <Route path="/teacher/TeacherDashboard" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherDashboard/></RequireAuth>} />
           <Route path="/teacher/TeacherPostNotifs" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherPostNotifs/></RequireAuth>} />
           <Route path="/teacher/TeacherSearch" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherSearch/></RequireAuth>} />

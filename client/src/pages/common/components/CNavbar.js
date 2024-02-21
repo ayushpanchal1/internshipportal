@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Navbar, Nav, Modal, Button } from "react-bootstrap"
 import { useSignOut } from 'react-auth-kit';
+import { logout } from "../../../services/Services"
 
 function CNavbar() {
   const Session = localStorage.getItem('SessionInfo');
@@ -12,12 +13,16 @@ function CNavbar() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  function logout() {
-    signOut();
-    localStorage.removeItem('SessionInfo');
-    localStorage.removeItem('SessionEmail');
-    navigate("/student/StudentLogin");
+  function handleSubmit(event){
+    logout(navigate, signOut);
   }
+
+  // function logout() {
+  //   signOut();
+  //   localStorage.removeItem('SessionInfo');
+  //   localStorage.removeItem('SessionEmail');
+  //   navigate("/student/StudentLogin");
+  // }
 
   return (
     <Container>
@@ -116,7 +121,7 @@ function CNavbar() {
                   <Button variant="secondary" onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button variant="primary" onClick={() => { logout() }}>
+                  <Button variant="primary" onClick={handleSubmit}>
                     Yes, Proceed
                   </Button>
                 </Modal.Footer>
