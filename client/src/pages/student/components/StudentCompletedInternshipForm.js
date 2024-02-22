@@ -1,5 +1,7 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+import { getUserData } from "../../../services/Services";
+import { subCompInternStudent } from "../../../services/StudentServices";
 
 function CompletedinternshipForm() {
     const [UserData, setUserData] = useState('')
@@ -12,48 +14,19 @@ function CompletedinternshipForm() {
 
     useEffect(() => {
         //Runs on every render
-        getuserdata()
+        getUserData(setUserData)
     }, []);
 
-    //this works?????
-    async function getuserdata() {
-        const response = await fetch('http://localhost:1337/api/current-user', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        })
-    
-        const data = await response.json()
-        setUserData(data)
-      }
-
-    async function submitint(event) {
+    function handleSubmit(event) {
         event.preventDefault()
-        const response = await fetch('http://localhost:1337/api/studentsubcompintern', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                Provider,
-                FromDuration,
-                ToDuration,
-                WhatFor,
-                Domain,
-            }),
-        })
-
-        const data = await response.json()
-
-        if (data.error) {
-            alert("Error ocurred while posting!")
-        } else {
-            alert("Submitted!")
-        }
-
+        const requestBody = {
+            Provider,
+            FromDuration,
+            ToDuration,
+            WhatFor,
+            Domain,
+        };
+        subCompInternStudent(requestBody)
     }
 
     return (
@@ -67,7 +40,7 @@ function CompletedinternshipForm() {
                             <div className="mb-3 mt-md-4">
                                 <h2 className="fw-bold mb-2 text-center text-uppercase ">Enter details about completed internship</h2>
                                 <div className="mb-3">
-                                    <Form onSubmit={submitint}>
+                                    <Form onSubmit={handleSubmit}>
                                         <br />
                                         <Form.Group className="mb-3" controlId="Provider">
                                             <Form.Label className="text-center">

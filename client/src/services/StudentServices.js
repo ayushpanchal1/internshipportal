@@ -58,3 +58,33 @@ export async function getMyInternsStudent(setInterns) {
     alert(`Error fetching studentmyinterns! ${error}`);
   }
 }
+
+export async function delMyInternsStudent(setInterns, getMyInternsStudent, delinternid) {
+  try {
+    const response = await httpAxios.post('/api/studentdelmyinterns', ({_id: delinternid}));
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      getMyInternsStudent(setInterns)
+    }
+  } catch (error) {
+    alert(`Error while deleting studentmyintern! ${error}`);
+  }
+}
+
+export async function subCompInternStudent(requestBody) {
+  try {
+    const response = await httpAxios.post('/api/studentsubcompintern', requestBody);
+    const data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      alert("Submitted!")
+    }
+  } catch (error) {
+    alert(`Error occured while posting! ${error}`);
+  }
+}

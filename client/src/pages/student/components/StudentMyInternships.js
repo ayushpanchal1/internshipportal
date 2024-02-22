@@ -1,11 +1,10 @@
 import { Col, Button, Container, Card, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { getMyInternsStudent } from "../../../services/StudentServices";
+import { getMyInternsStudent, delMyInternsStudent } from "../../../services/StudentServices";
 
 function MyInternships() {
-    const Email = localStorage.getItem('SessionEmail');
     const [interns, setInterns] = useState('')
-    const [wfordelintern, setwfordelintern] = useState('')
+    const [delinternid, setdelinternid] = useState('')
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -15,24 +14,11 @@ function MyInternships() {
         getMyInternsStudent(setInterns)
     }, []);
 
-    async function deletemyinterns(wfor) {
-        console.log(wfor)
-        //const stuname = `${FirstName} ${LastName}`
-        const response = await fetch('http://localhost:1337/api/studentdelmyinterns', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                Email,
-                wfor,
-            }),
-            credentials: 'include',
-        })
-        const data = await response.json()
-        getMyInternsStudent(setInterns)
+    function handleSubmit() {
+        delMyInternsStudent(setInterns, getMyInternsStudent, delinternid)
         handleClose()
     }
+
 
     return (
         <Container style={{ marginTop: '48px' }}>
@@ -48,39 +34,39 @@ function MyInternships() {
                             <li>
                                 <Card className="shadow">
 
-                                <div className="card-header">
-                                    From {intern.provider}
-                                </div>
-                                <div className="card-body">
-                                    <h3 className="card-title"><b>{intern.whatfor}</b></h3>
-                                    <h4 className="card-title">{intern.domain}</h4>
-                                    <div className='d-flex'>
-                                        <div className='col-md-3'>
-                                            <h4>From: {intern.fromduration}</h4>
-                                        </div>
-                                        <div className='col-md-3'>
-                                            <h4>To: {intern.toduration}</h4>
-                                        </div>
+                                    <div className="card-header">
+                                        From {intern.provider}
                                     </div>
-                                    <div className="btn btn-primary" onClick={() => { handleShow(); setwfordelintern(intern.whatfor); }}>delete</div>
-                                    <Modal show={show} onHide={handleClose}>
-                                        <Modal.Header closeButton>
-                                            <Modal.Title style={{ color: "#802121" }}>Delete Internship report</Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body>Are you sure you want to delete this?</Modal.Body>
-                                        <Modal.Footer>
-                                            <Button variant="secondary" onClick={handleClose}>
-                                                Cancel
-                                            </Button>
-                                            <Button variant="primary" onClick={() => { deletemyinterns(wfordelintern) }}>
-                                                Yes, Proceed
-                                            </Button>
-                                        </Modal.Footer>
-                                    </Modal>
-                                </div>
-                            </Card>
+                                    <div className="card-body">
+                                        <h3 className="card-title"><b>{intern.whatfor}</b></h3>
+                                        <h4 className="card-title">{intern.domain}</h4>
+                                        <div className='d-flex'>
+                                            <div className='col-md-3'>
+                                                <h4>From: {intern.fromduration}</h4>
+                                            </div>
+                                            <div className='col-md-3'>
+                                                <h4>To: {intern.toduration}</h4>
+                                            </div>
+                                        </div>
+                                        <div className="btn btn-primary" onClick={() => { handleShow(); setdelinternid(intern._id); }}>delete</div>
+                                        <Modal show={show} onHide={handleClose}>
+                                            <Modal.Header closeButton>
+                                                <Modal.Title style={{ color: "#802121" }}>Delete Internship report</Modal.Title>
+                                            </Modal.Header>
+                                            <Modal.Body>Are you sure you want to delete this?</Modal.Body>
+                                            <Modal.Footer>
+                                                <Button variant="secondary" onClick={handleClose}>
+                                                    Cancel
+                                                </Button>
+                                                <Button variant="primary" onClick={handleSubmit}>
+                                                    Yes, Proceed
+                                                </Button>
+                                            </Modal.Footer>
+                                        </Modal>
+                                    </div>
+                                </Card>
                                 <br />
-                                </li>
+                            </li>
                         ))}
                     </ul>
                 )}

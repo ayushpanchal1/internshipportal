@@ -4,7 +4,6 @@ import IMAGE from '../../../media/user.png'
 import { getUserData } from "../../../services/Services"
 
 function UserProfile() {
-  const Email = localStorage.getItem('SessionEmail');
   const [UserData, setUserData] = useState('');
 
   useEffect(() => {
@@ -38,7 +37,7 @@ function UserProfile() {
                 <div className='col md-3'>
                   <h4>Last Name: {UserData.lastname}</h4>
                   <h4>Mother's Name: {UserData.mothername}</h4>
-                  <h4>Email: {Email}</h4>
+                  <h4>Email: {UserData.email}</h4>
                   <h4>Department: {UserData.department}</h4>
                 </div>
               </div>
