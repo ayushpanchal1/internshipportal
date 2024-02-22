@@ -1,39 +1,20 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+import { postNotifTeacher } from "../../../services/TeacherServices";
 
-function AdminPostNotifsForm() {
+function TeacherPostNotifsForm() {
   const [Title, setTitle] = useState('')
   const [Info, setInfo] = useState('')
   const [iLink, setiLink] = useState('')
 
-  useEffect(() => {
-    //Runs on every render
-  }, []);
-
-  async function postNotif(event) {
+  function handleSubmit(event) {
     event.preventDefault()
-
-    const response = await fetch('http://localhost:1337/api/teacherpostnotif', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        Title,
-        Info,
-        iLink,
-      }),
-    })
-
-    const data = await response.json()
-
-    if (data.error) {
-      alert(`Error ocurred while posting! ${data.error}`)
-    } else {
-      alert("Post successful!")
-    }
-
+    const requestBody = {
+      Title,
+      Info,
+      iLink,
+    };
+    postNotifTeacher(requestBody)
   }
 
   return (
@@ -46,7 +27,7 @@ function AdminPostNotifsForm() {
               <div className="mb-3 mt-md-4">
                 <h2 className="fw-bold mb-2 text-center text-uppercase ">Enter details about your post</h2>
                 <div className="mb-3">
-                  <Form onSubmit={postNotif}>
+                  <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="Title">
                       <Form.Label className="text-center">
                         Title
@@ -84,4 +65,4 @@ function AdminPostNotifsForm() {
   )
 }
 
-export default AdminPostNotifsForm;
+export default TeacherPostNotifsForm;

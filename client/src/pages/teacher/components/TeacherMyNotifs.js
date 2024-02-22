@@ -1,10 +1,10 @@
 import { Col, Button, Row, Container, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
+import { getMyNotifsTeacher, delMyNotifsTeacher } from "../../../services/TeacherServices";
 
-function AdminMyNotifs() {
-    const Email = localStorage.getItem('SessionEmail');
-    const [notifs, setnotifs] = useState('')
-    const [titledelnotif, settitledelnotif] = useState('')
+function TeacherMyNotifs() {
+    const [Notifs, setNotifs] = useState('')
+    const [delnotifid, setdelnotifid] = useState('')
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -12,39 +12,11 @@ function AdminMyNotifs() {
 
     useEffect(() => {
         //Runs on every render
-        getmynotifs()
+        getMyNotifsTeacher(setNotifs)
     }, []);
 
-    async function getmynotifs() {
-        const response = await fetch('http://localhost:1337/api/teachergetmynotifs', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        })
-
-        const data = await response.json()
-        data.reverse()
-        console.log(data)
-        setnotifs(data)
-    }
-
-    async function deletemynotifs(thetitle) {
-        console.log(thetitle)
-        const response = await fetch('http://localhost:1337/api/deletemynotifs', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                Email,
-                thetitle,
-            }),
-        })
-
-        const data = await response.json()
-        getmynotifs()
+    function handleSubmit() {
+        delMyNotifsTeacher(setNotifs, getMyNotifsTeacher, delnotifid)
         handleClose()
     }
 
@@ -59,9 +31,9 @@ function AdminMyNotifs() {
                 <Col md={8} lg={12} xs={12}>
 
                     <div>
-                        {notifs.length > 0 && (
+                        {Notifs.length > 0 && (
                             <ul className='list-unstyled'>
-                                {notifs.map(notif => (
+                                {Notifs.map(notif => (
                                     <li><div className="card shadow">
                                         {/*<div className="border border-2 border-primary"></div>*/}
                                         <div className="card-header">
@@ -70,7 +42,7 @@ function AdminMyNotifs() {
                                         <div className="card-body">
                                             <h3 className="card-title"><b>{notif.title}</b></h3>
                                             <p className="card-text">{notif.info}</p>
-                                            <div className="btn btn-primary" onClick={() => { handleShow(); settitledelnotif(notif.title); }}>delete</div>
+                                            <div className="btn btn-primary" onClick={() => { handleShow(); setdelnotifid(notif._id); }}>delete</div>
                                         </div>
                                         <Modal show={show} onHide={handleClose}>
                                             <Modal.Header closeButton>
@@ -81,7 +53,7 @@ function AdminMyNotifs() {
                                                 <Button variant="secondary" onClick={handleClose}>
                                                     Cancel
                                                 </Button>
-                                                <Button variant="primary" onClick={() => { deletemynotifs(titledelnotif) }}>
+                                                <Button variant="primary" onClick={handleSubmit}>
                                                     Yes, Proceed
                                                 </Button>
                                             </Modal.Footer>
@@ -100,4 +72,4 @@ function AdminMyNotifs() {
     )
 }
 
-export default AdminMyNotifs;
+export default TeacherMyNotifs;

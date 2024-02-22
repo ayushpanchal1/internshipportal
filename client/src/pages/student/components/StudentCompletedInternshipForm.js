@@ -4,18 +4,12 @@ import { getUserData } from "../../../services/Services";
 import { subCompInternStudent } from "../../../services/StudentServices";
 
 function CompletedinternshipForm() {
-    const [UserData, setUserData] = useState('')
 
     const [Provider, setProvider] = useState('')
     const [FromDuration, setFromDuration] = useState('')
     const [ToDuration, setToDuration] = useState('')
     const [WhatFor, setWhatFor] = useState('')
     const [Domain, setDomain] = useState('')
-
-    useEffect(() => {
-        //Runs on every render
-        getUserData(setUserData)
-    }, []);
 
     function handleSubmit(event) {
         event.preventDefault()

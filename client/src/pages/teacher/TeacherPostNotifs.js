@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
 import CNavbar from '../common/components/CNavbar';
-import AdminPostNotifsForm from './components/TeacherPostNotifsForm';
+import TeacherPostNotifsForm from './components/TeacherPostNotifsForm';
+import { logout } from '../../services/Services';
 
 function App() {
     const auth = useAuthUser()
@@ -12,16 +13,11 @@ function App() {
 
     const signOut = useSignOut();
     const navigate = useNavigate();
-
-    function logout() {
-        signOut();
-        navigate("/login");
-    }
     
     useEffect(() => {
       //Runs on every render
       if(Session==="user"){
-        logout()
+        logout(navigate, signOut);
       }
     });
 
@@ -29,7 +25,7 @@ function App() {
     <div>
       <CNavbar />
 
-      <AdminPostNotifsForm />
+      <TeacherPostNotifsForm />
     </div>
   );
 }
