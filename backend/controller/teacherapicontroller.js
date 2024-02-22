@@ -184,7 +184,7 @@ export async function teachergetmynotifs(req, res) {
   try {
     if (req.role != 'teacher') {
       return res.status(500).send({ error: 'User is not a teacher' });
-    } 
+    }
     const mynotifsdata = await Notif.find({
       teacher_id: req.user._id,
     })
@@ -198,7 +198,7 @@ export async function teacherpostnotif(req, res) {
   try {
     if (req.role != 'teacher') {
       return res.status(500).send({ error: 'User is not a teacher' });
-    } 
+    }
     await Notif.create({
       teacher_id: req.user._id,
       email: req.user.email,
@@ -218,7 +218,7 @@ export async function teacherfetchstudents(req, res) {
   try {
     if (req.role != 'teacher') {
       return res.status(500).send({ error: 'User is not a teacher' });
-    } 
+    }
     if (!req.body.searchquery) {
       var students = await Student.find()
     } else {
@@ -236,19 +236,32 @@ export async function teacherfetchastudent(req, res) {
   try {
     if (req.role != 'teacher') {
       return res.status(500).send({ error: 'User is not a teacher' });
-    } 
-      var student = await Student.findOne({
-        stuname: req.body.searchquery,
-      })
+    }
+    
+    var student = await Student.findOne({
+      stuname: req.body.searchquery,
+    })
 
-      var interns = await CompIntern.find({
-        stuname: req.body.searchquery,
-      })
+    var interns = await CompIntern.find({
+      stuname: req.body.searchquery,
+    })
 
     return res.status(200).send({
       student,
       interns,
     })
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
+
+export async function teacherdelmynotifs(req, res) {
+  try {
+    const mynotifdata = await Notif.deleteOne({
+      teacher_id: req.user._id,
+      _id: req.body._id,
+    })
+    return res.json(mynotifdata)
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }

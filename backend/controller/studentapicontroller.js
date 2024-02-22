@@ -325,3 +325,16 @@ export async function studentsubcompintern(req, res) {
     return res.status(500).send({ error: error.message });
   }
 }
+
+export async function studentdelmyinterns(req, res){
+  try {
+    const myinternsdata = await CompIntern.deleteOne({
+      stu_id: req.user._id,
+      _id: req.body._id,
+  })
+  // console.log(myinternsdata)
+  return res.json(myinternsdata)
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
