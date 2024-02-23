@@ -118,7 +118,7 @@ export async function studentlogin(req, res) {
   }
 }
 
-export async function addrequest(req, res) {
+export async function studentaddrequest(req, res) {
   try {
     //console.log(req.body)
     await Request.create({
@@ -149,7 +149,7 @@ export async function addrequest(req, res) {
   }
 }
 
-export async function removerequest(req, res) {
+export async function studentremoverequest(req, res) {
   try {
 
     if (!req.body.id) return res.status(500).send({ error: "please give id of request to be deleted in req body" });
@@ -169,7 +169,7 @@ export async function removerequest(req, res) {
   }
 }
 
-export async function downloadrequest(req, res) {
+export async function studentdownloadrequest(req, res) {
   try {
     // console.log(req.body)
     if (!req.body.id) return res.status(500).send({ error: "please give id of the request whose pdf is to be downloaded" });

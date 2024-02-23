@@ -15,6 +15,24 @@ dotenv.config()
 
 export async function teachersignup(req, res) {
   try {
+    const requiredFields = [
+      'firstname',
+      'lastname',
+      'gender',
+      'department',
+      'domain',
+      'role',
+      'dateofbirth',
+      'email',
+      'password',
+    ];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ error: `${field} is required` });
+      }
+    }
+
     // console.log(req.body)
     const userexists = await Teacher.findOne({
       email: req.body.Email,
@@ -237,7 +255,7 @@ export async function teacherfetchastudent(req, res) {
     if (req.role != 'teacher') {
       return res.status(500).send({ error: 'User is not a teacher' });
     }
-    
+
     var student = await Student.findOne({
       stuname: req.body.searchquery,
     })
