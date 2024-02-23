@@ -272,7 +272,7 @@ export async function studentdownloadrequest(req, res) {
   }
 }
 
-export async function getmyrequests(req, res) {
+export async function studentgetmyrequests(req, res) {
   try {
     if (!req.body.approvalstatus) {
       var requests = await Request.find({
@@ -338,3 +338,4 @@ export async function studentdelmyinterns(req, res){
     return res.status(500).send({ error: error.message });
   }
 }
+
