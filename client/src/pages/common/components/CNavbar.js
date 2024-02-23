@@ -78,10 +78,16 @@ function CNavbar() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to={"/student/StudentAddRequest"} className="nav-link">
+                Add Request
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/Notifications"} className="nav-link">
                 Notifications
               </Link>
-            </li></>)}
+            </li>
+            </>)}
           {Session === 'admin' && (<><li className="nav-item">
             <Link to={"/teacher/TeacherDashboard"} className="nav-link">
               Dashboard

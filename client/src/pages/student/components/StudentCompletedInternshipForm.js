@@ -1,6 +1,5 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import { useState, useEffect } from 'react';
-import { getUserData } from "../../../services/Services";
+import { useState } from 'react';
 import { subCompInternStudent } from "../../../services/StudentServices";
 
 function CompletedinternshipForm() {
@@ -40,7 +39,7 @@ function CompletedinternshipForm() {
                                             <Form.Label className="text-center">
                                                 Whom was the internship provided by?
                                             </Form.Label>
-                                            <Form.Control value={Provider} onChange={(e) => setProvider(e.target.value)} type="text" placeholder="i.e. Name of Company, Person, University, etc." />
+                                            <Form.Control value={Provider} onChange={(e) => setProvider(e.target.value)} type="text" placeholder="i.e. Name of Company, Person, University, Institution etc." />
                                         </Form.Group>
 
                                         <div className='d-flex'>

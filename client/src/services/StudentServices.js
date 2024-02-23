@@ -88,3 +88,18 @@ export async function subCompInternStudent(requestBody) {
     alert(`Error occured while posting! ${error}`);
   }
 }
+
+export async function addRequestStudent(requestBody) {
+  try {
+    const response = await httpAxios.post('/api/studentaddrequest', requestBody);
+    const data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      alert("Submitted!")
+    }
+  } catch (error) {
+    alert(`Error occured while posting! ${error}`);
+  }
+}

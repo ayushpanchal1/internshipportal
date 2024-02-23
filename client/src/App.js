@@ -14,6 +14,7 @@ import StudentDashboard from './pages/student/StudentDashboard'
 import Homepage from './pages/common/Homepage'
 import Notifs from './pages/common/Notifs'
 import StudentCompletedInternship from './pages/student/StudentCompletedInternship'
+import StudentAddRequest from './pages/student/StudentAddRequest'
 import TeacherDashboard from './pages/teacher/TeacherDashboard'
 import TeacherLogin from './pages/teacher/TeacherLogin'
 import TeacherPostNotifs from './pages/teacher/TeacherPostNotifs'
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/student/StudentLogin" exact element={<StudentLogin/>} />
           <Route path="/student/StudentDashboard" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentDashboard/></RequireAuth>} />
           <Route path="/student/StudentCompletedInternship" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentCompletedInternship/></RequireAuth>} />
+          <Route path="/student/StudentAddRequest" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentAddRequest/></RequireAuth>} />
           <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />          
           <Route path="/teacher/TeacherDashboard" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherDashboard/></RequireAuth>} />
           <Route path="/teacher/TeacherPostNotifs" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherPostNotifs/></RequireAuth>} />
