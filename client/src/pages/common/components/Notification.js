@@ -1,4 +1,4 @@
-import { Col, Row, Container, Card, Form } from "react-bootstrap";
+import { Col, Row, Container } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getNotifs } from "../../../services/Services";
 

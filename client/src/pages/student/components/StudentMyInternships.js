@@ -15,7 +15,7 @@ function MyInternships() {
     }, []);
 
     function handleSubmit() {
-        delMyInternsStudent(setInterns, getMyInternsStudent, delinternid)
+        delMyInternsStudent(setInterns, delinternid)
         handleClose()
     }
 

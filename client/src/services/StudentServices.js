@@ -59,7 +59,7 @@ export async function getMyInternsStudent(setInterns) {
   }
 }
 
-export async function delMyInternsStudent(setInterns, getMyInternsStudent, delinternid) {
+export async function delMyInternsStudent(setInterns, delinternid) {
   try {
     const response = await httpAxios.post('/api/studentdelmyinterns', ({_id: delinternid}));
     var data = response.data;
@@ -101,5 +101,59 @@ export async function addRequestStudent(requestBody) {
     }
   } catch (error) {
     alert(`Error occured while posting! ${error}`);
+  }
+}
+
+export async function getMyRequestsStudent(setRequests) {
+  try {
+    const response = await httpAxios.post('/api/studentgetmyrequests');
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      data = data.requests
+      if (Array.isArray(data)) {
+        // `data` is an array, you can safely call reverse on it
+        data.reverse();
+      }
+      setRequests(data)
+    }
+  } catch (error) {
+    alert(`Error fetching usermyrequests! ${error}`);
+  }
+}
+
+export async function removeRequestStudent(setRequests, RemoveReqId) {
+  try {
+    const response = await httpAxios.post('/api/studentremoverequest', ({id: RemoveReqId}));
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      getMyRequestsStudent(setRequests)
+    }
+  } catch (error) {
+    alert(`Error while removing studentmyrequest! ${error}`);
+  }
+}
+
+export async function downloadRequest(requestId) {
+  try {
+    const response = await httpAxios.post('/api/downloadrequest', { id: requestId }, { responseType: 'arraybuffer' });
+    if (response.status === 200) {
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'document.pdf';
+      link.click();
+
+      return { status: 'ok' };
+    } else {
+      throw new Error('Failed to download request');
+    }
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
   }
 }

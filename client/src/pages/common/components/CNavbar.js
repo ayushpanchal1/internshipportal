@@ -83,6 +83,11 @@ function CNavbar() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to={"/student/StudentViewRequests"} className="nav-link">
+                View Requests
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/Notifications"} className="nav-link">
                 Notifications
               </Link>
