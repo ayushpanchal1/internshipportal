@@ -138,20 +138,3 @@ export async function removeRequestStudent(setRequests, RemoveReqId) {
     alert(`Error while removing studentmyrequest! ${error}`);
   }
 }
-
-export async function downloadRequestStudent(DownloadReqId) {
-  try {
-    const response = await httpAxios.post('/api/studentdownloadrequest', { id: DownloadReqId }, { responseType: 'arraybuffer' });
-    if (response.status === 200) {
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'document.pdf';
-      link.click();
-    } else {
-      throw new Error('Failed to download request');
-    }
-  } catch (error) {
-    alert(`Error while downloading pdf! ${error}`);
-  }
-}

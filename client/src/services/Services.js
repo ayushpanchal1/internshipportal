@@ -52,3 +52,20 @@ export async function getNotifs(setNotifs) {
     alert(`Error fetching userdata! ${error}`);
   }
 }
+
+export async function downloadRequest(DownloadReqId) {
+  try {
+    const response = await httpAxios.post('/api/downloadrequest', { id: DownloadReqId }, { responseType: 'arraybuffer' });
+    if (response.status === 200) {
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'document.pdf';
+      link.click();
+    } else {
+      throw new Error('Failed to download request');
+    }
+  } catch (error) {
+    alert(`Error while downloading pdf! ${error}`);
+  }
+}

@@ -2,7 +2,7 @@ import { Col, Row, Container, Button, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyRequestsStudent } from "../../../services/StudentServices";
 import { removeRequestStudent } from "../../../services/StudentServices";
-import { downloadRequestStudent } from "../../../services/StudentServices";
+import { downloadRequest } from "../../../services/Services";
 
 function Requests() {
     const [Requests, setRequests] = useState('')
@@ -26,7 +26,7 @@ function Requests() {
     }
 
     function handleDownload(DownloadReqId){
-        downloadRequestStudent(DownloadReqId)
+        downloadRequest(DownloadReqId)
     }
 
     return (
