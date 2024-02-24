@@ -16,7 +16,6 @@ router.post('/studentdelmyinterns', Auth, studentcontroller.studentdelmyinterns)
 router.post('/studentgetmyrequests', Auth, studentcontroller.studentgetmyrequests)
 router.post('/studentaddrequest', Auth, studentcontroller.studentaddrequest)
 router.post('/studentremoverequest', Auth, studentcontroller.studentremoverequest)
-router.post('/studentdownloadrequest', Auth, studentcontroller.studentdownloadrequest)
 
 //teacher related requests ------------------------------------------------------------ in ../controller/teacherapicontroller.js
 router.post('/teachersignup', teachercontroller.teachersignup)  
@@ -33,6 +32,7 @@ router.post('/teacherdelmynotifs', Auth, teachercontroller.teacherdelmynotifs)
 router.get('/userlogout', controller.userlogout)
 router.get('/current-user', Auth, controller.currentUser)
 router.get('/getnotifs', Auth, controller.getnotifs)
+router.post('/downloadrequest', Auth, controller.downloadrequest)
 
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)
