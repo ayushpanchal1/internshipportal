@@ -159,7 +159,7 @@ export async function teacherapproverequest(req, res) {
           hod: tchr,
           approvalstatus: aprlstts,
         },
-        { $set: { pdfdata: pdfBinary }, $inc: { approvalstatus: 1 } },
+        { $inc: { approvalstatus: 1 } },
         { returnNewDocument: true }
       )
     }
