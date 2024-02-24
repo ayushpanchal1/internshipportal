@@ -139,21 +139,19 @@ export async function removeRequestStudent(setRequests, RemoveReqId) {
   }
 }
 
-export async function downloadRequest(requestId) {
+export async function downloadRequestStudent(DownloadReqId) {
   try {
-    const response = await httpAxios.post('/api/downloadrequest', { id: requestId }, { responseType: 'arraybuffer' });
+    const response = await httpAxios.post('/api/studentdownloadrequest', { id: DownloadReqId }, { responseType: 'arraybuffer' });
     if (response.status === 200) {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
       link.download = 'document.pdf';
       link.click();
-
-      return { status: 'ok' };
     } else {
       throw new Error('Failed to download request');
     }
   } catch (error) {
-    throw new Error(error.response?.data?.error || error.message);
+    alert(`Error while downloading pdf! ${error}`);
   }
 }

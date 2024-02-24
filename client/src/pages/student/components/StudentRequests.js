@@ -2,22 +2,31 @@ import { Col, Row, Container, Button, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyRequestsStudent } from "../../../services/StudentServices";
 import { removeRequestStudent } from "../../../services/StudentServices";
+import { downloadRequestStudent } from "../../../services/StudentServices";
 
 function Requests() {
     const [Requests, setRequests] = useState('')
     const [RemoveReqId, setRemoveReqId] = useState('')
 
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setRemoveReqId('')
+        setShow(false);
+    }
     const handleShow = () => setShow(true);
 
     useEffect(() => {
         getMyRequestsStudent(setRequests)
     }, []);
 
-    function handleSubmit() {
+    function handleRemove() {
         removeRequestStudent(setRequests, RemoveReqId)
+        setRemoveReqId('')
         handleClose()
+    }
+
+    function handleDownload(DownloadReqId){
+        downloadRequestStudent(DownloadReqId)
     }
 
     return (
@@ -38,7 +47,8 @@ function Requests() {
                                                 <h3 className="card-title"><b>{request.whatfor}</b></h3>
                                                 <p className="card-text">{request.domain}</p>
                                                 <p className="card-text">Approval Status: {request.approvalstatus}</p>
-                                                <Button className="btn btn-primary" onClick={() => { handleShow(); setRemoveReqId(request._id); }}>Remove</Button>
+                                                <Button className="btn btn-primary" onClick={() => { handleShow(); setRemoveReqId(request._id); }}>Remove</Button> &nbsp;
+                                                { request.approvalstatus === 2 && <Button className="btn btn-primary" onClick={() => { handleDownload(request._id) }}>Download</Button>}
                                             </div>
                                         </div>
                                     </li>
@@ -55,7 +65,8 @@ function Requests() {
                                                     <h3 className="card-title"><b>{Requests[index + 1].whatfor}</b></h3>
                                                     <p className="card-text">{Requests[index + 1].domain}</p>
                                                     <p className="card-text">Approval Status: {Requests[index + 1].approvalstatus}</p>
-                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setRemoveReqId(Requests[index + 1]._id); }}>Remove</Button>
+                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setRemoveReqId(Requests[index + 1]._id); }}>Remove</Button> &nbsp; 
+                                                    { Requests[index + 1].approvalstatus === 2 && <Button className="btn btn-primary" onClick={() => { handleDownload(Requests[index + 1]._id) }}>Download</Button>}
                                                 </div>
                                             </div>
                                         </li>
@@ -77,7 +88,7 @@ function Requests() {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
+                    <Button variant="primary" onClick={handleRemove}>
                         Yes, Proceed
                     </Button>
                 </Modal.Footer>
