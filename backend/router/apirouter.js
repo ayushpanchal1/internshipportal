@@ -21,7 +21,7 @@ router.post('/studentremoverequest', Auth, studentcontroller.studentremovereques
 router.post('/teachersignup', teachercontroller.teachersignup)  
 router.post('/teacherlogin', teachercontroller.teacherlogin)
 router.get('/teachergetmyrequests', Auth, teachercontroller.teachergetmyrequests)
-router.post('/teacherapprove', Auth, teachercontroller.teacherapprove)
+router.post('/teacherapproverequest', Auth, teachercontroller.teacherapproverequest)
 router.get('/teachergetmynotifs', Auth, teachercontroller.teachergetmynotifs)
 router.post('/teacherpostnotif', Auth, teachercontroller.teacherpostnotif)
 router.post('/teacherfetchstudents', Auth, teachercontroller.teacherfetchstudents)

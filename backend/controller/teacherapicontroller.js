@@ -131,7 +131,7 @@ export async function teachergetmyrequests(req, res) {
   }
 }
 
-export async function teacherapprove(req, res) {
+export async function teacherapproverequest(req, res) {
   try {
 
     if (req.role != 'teacher') {
