@@ -112,3 +112,38 @@ export async function getAStudentforTeacher(setUserData, setInterns, searchquery
     alert(`Error while fetching a student's profile! ${error}`);
   }
 }
+
+export async function getMyRequestsTeacher(setRequests) {
+  try {
+    const response = await httpAxios.get('/api/teachergetmyrequests');
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      data = data.requests
+      if (Array.isArray(data)) {
+        // `data` is an array, you can safely call reverse on it
+        data.reverse();
+      }
+      setRequests(data)
+    }
+  } catch (error) {
+    alert(`Error fetching teachermyrequests! ${error}`);
+  }
+}
+
+export async function approveRequestTeacher(setRequests, ApproveReqId) {
+  try {
+    const response = await httpAxios.post('/api/teacherapproverequest', ({id: ApproveReqId}));
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      getMyRequestsTeacher(setRequests)
+    }
+  } catch (error) {
+    alert(`Error while approving a request! ${error}`);
+  }
+}

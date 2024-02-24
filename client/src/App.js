@@ -19,6 +19,7 @@ import StudentViewRequests from './pages/student/StudentViewRequests'
 import TeacherDashboard from './pages/teacher/TeacherDashboard'
 import TeacherLogin from './pages/teacher/TeacherLogin'
 import TeacherPostNotifs from './pages/teacher/TeacherPostNotifs'
+import TeacherApproveRequests from './pages/teacher/TeacherApproveRequests'
 import TeacherSearch from './pages/teacher/TeacherSearch'
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
 // import { RoleProvider } from './services/RoleContext'
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />          
           <Route path="/teacher/TeacherDashboard" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherDashboard/></RequireAuth>} />
           <Route path="/teacher/TeacherPostNotifs" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherPostNotifs/></RequireAuth>} />
+          <Route path="/teacher/TeacherApproveRequests" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherApproveRequests/></RequireAuth>} />
           <Route path="/teacher/TeacherSearch" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherSearch/></RequireAuth>} />
         </Routes>
         </BrowserRouter>

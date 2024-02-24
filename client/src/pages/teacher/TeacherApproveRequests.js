@@ -5,7 +5,7 @@ import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
 import { logout } from '../../services/Services';
 import CNavbar from '../common/components/CNavbar';
-import Requests from './components/StudentMyRequests';
+import Requests from './components/TeacherMyRequests';
 
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
     useEffect(() => {
         //Runs on every render
-        if (Session === "admin") {
+        if (Session === "user") {
             logout(navigate, signOut)
         }
     }, []);

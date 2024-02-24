@@ -104,6 +104,11 @@ function CNavbar() {
               </Link>
             </li>
             <li className="nav-item">
+              <Link to={"/teacher/TeacherApproveRequests"} className="nav-link">
+                Approve
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/teacher/TeacherPostNotifs"} className="nav-link">
                 Post
               </Link>
