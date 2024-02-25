@@ -26,7 +26,7 @@ function CNavbar() {
 
   return (
     <Container>
-      <Navbar className="navbar fixed-top navbar-expand navbar-dark bg-primary">
+      <Navbar collapseOnSelect expand="lg" className="navbar fixed-top navbar-dark bg-primary">
         <Navbar.Brand style={{ paddingLeft: "10px" }}>
         <Link
             to="/"
@@ -47,7 +47,8 @@ function CNavbar() {
           &nbsp; <b1>Internship Management Portal</b1>         
           </Link>
         </Navbar.Brand>
-
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav" style={{ paddingLeft: "10px" }}>
         <Nav className="me-auto">
           {!Session && (
             <>
@@ -144,6 +145,7 @@ function CNavbar() {
               </Modal>
             </>)}
         </Nav>
+        </Navbar.Collapse>
       </Navbar>
     </Container>
   )

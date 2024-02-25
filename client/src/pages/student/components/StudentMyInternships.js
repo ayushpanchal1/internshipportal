@@ -42,7 +42,7 @@ function MyInternships() {
                                         <h4 className="card-title">{intern.domain}</h4>
                                         <div className='d-flex'>
                                             <div className='col-md-3'>
-                                                <h4>From: {intern.fromduration}</h4>
+                                                <h4>From: {intern.fromduration} &nbsp;</h4>
                                             </div>
                                             <div className='col-md-3'>
                                                 <h4>To: {intern.toduration}</h4>
