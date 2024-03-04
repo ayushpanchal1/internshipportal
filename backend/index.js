@@ -8,7 +8,7 @@ dotenv.config()
 import cookieParser from 'cookie-parser'
 // import session from 'express-session' //not using it for now, 25th dec
 const MONGO_URI = process.env.MONGO_URI
-app.use(cors({origin:'http://localhost:3000', credentials: true})) //origin is frontend route
+app.use(cors({origin:'https://internship-portal-kmce.onrender.com', credentials: true})) //origin is frontend route
 app.use(express.json())
 app.use(cookieParser())
 // app.use(session({  
