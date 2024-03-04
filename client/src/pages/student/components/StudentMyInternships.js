@@ -21,7 +21,7 @@ function MyInternships() {
 
 
     return (
-        <Container style={{ marginTop: '48px' }}>
+        <Container style={{ marginTop: '48px', fontFamily:"Poppins" }}>
             <Col md={8} lg={12} xs={12}>
                 <h1><b>Completed Internships</b></h1>
             </Col>

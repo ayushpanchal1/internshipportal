@@ -42,7 +42,7 @@ function Requests() {
   }
 
   return (
-    <Container style={{ marginTop: "100px" }}>
+    <Container style={{ marginTop: "100px", fontFamily:"Poppins", fontSize:"18px" }}>
       {Requests.length > 0 && (
         <ul className="list-unstyled">
           {Requests.map((request, index) =>
@@ -143,7 +143,7 @@ function Requests() {
           )}
         </ul>
       )}
-      <Modal show={showDetailsModal} onHide={handleCloseDetails}>
+      <Modal show={showDetailsModal} onHide={handleCloseDetails} style={{fontFamily:'poppins', fontSize:"18px"}}>
         <Modal.Header closeButton>
           <Modal.Title>Request Details</Modal.Title>
         </Modal.Header>

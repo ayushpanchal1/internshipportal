@@ -12,7 +12,7 @@ function UserProfile() {
   }, []);
 
   return (
-    <Container style={{ marginTop: '100px' }}>
+    <Container style={{ marginTop: '100px', fontFamily:"Poppins" }}>
       <Row>
         <Col>
           <Card className='shadow'>

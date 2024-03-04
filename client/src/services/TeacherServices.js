@@ -90,29 +90,25 @@ export async function getAllStudentsForTeacher(setAllUser) {
 
 export async function getAStudentforTeacher(setUserData, setInterns, searchquery) {
   try {
-    const response = await httpAxios.post('/api/teacherfetchastudent', ({ searchquery: searchquery }));
-    var data = response.data;
+    const response = await httpAxios.post('/api/teacherfetchastudent', { searchquery: searchquery });
+    const data = response.data;
 
     if (data.error) {
       throw new Error(data.error);
     } else {
-      
-      const data1 = data.student
-      setUserData(data1)
+      const userData = data.student;
+      setUserData(userData);
 
-      const data2 = data.interns
-      
-      if (Array.isArray(data2)) {
-        // `data` is an array, you can safely call reverse on it
-        data2.reverse();
+      const internsData = data.interns;
+      if (Array.isArray(internsData)) {
+        internsData.reverse();
       }
-      setInterns(data2)
+      setInterns(internsData);
     }
   } catch (error) {
     alert(`Error while fetching a student's profile! ${error}`);
   }
 }
-
 export async function getMyRequestsTeacher(setRequests) {
   try {
     const response = await httpAxios.get('/api/teachergetmyrequests');

@@ -22,21 +22,26 @@ import TeacherPostNotifs from './pages/teacher/TeacherPostNotifs'
 import TeacherApproveRequests from './pages/teacher/TeacherApproveRequests'
 import TeacherSearch from './pages/teacher/TeacherSearch'
 import { AuthProvider, RequireAuth } from 'react-auth-kit';
+import { ToastContainer } from 'react-toastify';
+
 // import { RoleProvider } from './services/RoleContext'
 // import { RedirectStudent, RedirectTeacher } from './services/RedirectBasedOnRole'
 
 const App = () => {
   return (
     <div>
+      <ToastContainer position='top-center' autoClose={2000} hideProgressBar />
       <AuthProvider
         authType={"cookie"}
         authName={"_auth"}
         cookieDomain={window.location.hostname}
         cookieSecure={false}
       >
+
       {/* <RoleProvider> */}
         <BrowserRouter>
         <Routes>
+
           <Route path="/" exact element={<Homepage/>} />
           <Route path="/Signup" exact element={<Signup/>} />
           <Route path="/Notifications" exact element={<RequireAuth loginPath='/student/StudentLogin'><Notifs/></RequireAuth>} />

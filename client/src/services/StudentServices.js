@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { httpAxios } from './httpAxios';
 
 export async function loginStudent(requestBody, navigate, signIn) {
@@ -19,7 +20,7 @@ export async function loginStudent(requestBody, navigate, signIn) {
       navigate('/student/StudentDashboard');
     }
   } catch (error) {
-    alert(`Log in credentials are incorrect! Sign up if you do not have an account! ${error}`);
+    toast.error(`Login credentials are incorrect!`);
   }
 }
 
