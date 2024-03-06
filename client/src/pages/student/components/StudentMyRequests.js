@@ -37,8 +37,8 @@ function Requests() {
     handleCloseDetails();
   }
 
-  function handleDownload() {
-    downloadRequest(selectedRequest._id);
+  function handleDownload(DownloadReqId) {
+    downloadRequest(DownloadReqId);
   }
 
   return (
@@ -212,7 +212,9 @@ function Requests() {
           <Button variant="secondary" onClick={handleCloseDetails}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleRemove}>
+          <Button variant="primary" onClick={handleRemove}
+          
+          >
             Remove
           </Button>
           <Button className="btn btn-primary" onClick={handleDownload}>
