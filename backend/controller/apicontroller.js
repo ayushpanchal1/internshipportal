@@ -221,6 +221,11 @@ export async function downloadrequest(req, res) {
       // Delete the local PDF file
       fs.unlinkSync(`${pdfPath}${pdfFilename}`);
 
+          // Set CORS headers
+      res.setHeader('Access-Control-Allow-Origin', 'https://internship-portal-kmce.onrender.com');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", 'inline; filename="document.pdf"');
       return res.end(pdfBinary);
