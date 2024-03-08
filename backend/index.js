@@ -8,7 +8,9 @@ dotenv.config()
 import cookieParser from 'cookie-parser'
 // import session from 'express-session' //not using it for now, 25th dec
 const MONGO_URI = process.env.MONGO_URI
-app.use(cors({origin:'https://internship-portal-kmce.onrender.com', credentials: true})) //origin is frontend route
+const FRONTEND_ADDRESS = process.env.FRONTEND_ADDRESS
+const BACKEND_PORT = process.env.BACKEND_PORT
+app.use(cors({origin: FRONTEND_ADDRESS, credentials: true})) //origin is frontend route
 app.use(express.json())
 app.use(cookieParser())
 // app.use(session({  
@@ -38,6 +40,6 @@ app.get('/hello', (req, res) => {
 
 app.use('/api', apirouter)
 
-app.listen(1337, () => {
-  console.log('server started on port 1337')
+app.listen(BACKEND_PORT, () => {
+  console.log(`server started on port ${BACKEND_PORT}`)
 })

@@ -11,6 +11,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 
 dotenv.config();
+const FRONTEND_ADDRESS = process.env.FRONTEND_ADDRESS
 
 export async function currentUser(req, res) {
   try {
@@ -222,7 +223,7 @@ export async function downloadrequest(req, res) {
       fs.unlinkSync(`${pdfPath}${pdfFilename}`);
 
           // Set CORS headers
-      res.setHeader('Access-Control-Allow-Origin', 'https://internship-portal-kmce.onrender.com');
+      res.setHeader('Access-Control-Allow-Origin', FRONTEND_ADDRESS);
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       
