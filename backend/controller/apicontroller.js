@@ -6,12 +6,12 @@ import Notif from "../models/notification.model.js";
 import Test from "../models/test.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import PDFDocument from "pdfkit";
 import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config()
 
-dotenv.config();
-const FRONTEND_ADDRESS = process.env.FRONTEND_ADDRESS
+// const FRONTEND_ADDRESS process.env.FRONTEND_ADDRESS
 
 export async function currentUser(req, res) {
   try {
@@ -223,7 +223,7 @@ export async function downloadrequest(req, res) {
       fs.unlinkSync(`${pdfPath}${pdfFilename}`);
 
           // Set CORS headers
-      res.setHeader('Access-Control-Allow-Origin', FRONTEND_ADDRESS);
+      res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_ADDRESS);
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       

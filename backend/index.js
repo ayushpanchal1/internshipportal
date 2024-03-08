@@ -3,13 +3,13 @@ import express from 'express'
 const app = express()
 import cors from 'cors'
 import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 dotenv.config()
-import cookieParser from 'cookie-parser'
 // import session from 'express-session' //not using it for now, 25th dec
 const MONGO_URI = process.env.MONGO_URI
 const FRONTEND_ADDRESS = process.env.FRONTEND_ADDRESS
-const BACKEND_PORT = process.env.BACKEND_PORT
+const PORT = process.env.PORT
 app.use(cors({origin: FRONTEND_ADDRESS, credentials: true})) //origin is frontend route
 app.use(express.json())
 app.use(cookieParser())
@@ -40,6 +40,6 @@ app.get('/hello', (req, res) => {
 
 app.use('/api', apirouter)
 
-app.listen(BACKEND_PORT, () => {
-  console.log(`server started on port ${BACKEND_PORT}`)
+app.listen(PORT, () => {
+  console.log(`server started on port ${PORT}`)
 })
