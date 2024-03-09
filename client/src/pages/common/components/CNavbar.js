@@ -186,7 +186,6 @@ function CNavbar() {
         expand="lg"
         className="navbar fixed-top navbar-dark bg-primary"
         style={{
-          fontFamily: "Poppins",
           fontSize: "18px",
           justifyContent: "space-between",
           display: "flex",

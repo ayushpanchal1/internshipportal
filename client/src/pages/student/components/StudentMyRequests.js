@@ -42,7 +42,7 @@ function Requests() {
   }
 
   return (
-    <Container style={{ marginTop: "100px", fontFamily:"Poppins", fontSize:"18px" }}>
+    <Container style={{ marginTop: "100px", fontSize:"18px" }}>
       {Requests.length > 0 && (
         <ul className="list-unstyled">
           {Requests.map((request, index) =>

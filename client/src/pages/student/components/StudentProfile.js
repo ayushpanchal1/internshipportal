@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Col, Container, Card, Row } from "react-bootstrap";
 import IMAGE from '../../../media/user.png'
 import { getUserData } from "../../../services/Services"
+import UploadProfilePicture from '../../common/components/UploadProfilePic';
 
 function UserProfile() {
   const [UserData, setUserData] = useState('');
@@ -12,14 +13,14 @@ function UserProfile() {
   }, []);
 
   return (
-    <Container style={{ marginTop: '100px', fontFamily:"Poppins" }}>
+    <Container style={{ marginTop: '100px' }}>
       <Row>
         <Col>
           <Card className='shadow'>
             <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
               <Col md={3} className='d-flex justify-content-center'>
                 <br />
-                <img class="media-object mw150" width="256" src={IMAGE} />
+                <img class="media-object mw150" width="310" height="310" src={IMAGE} />
               </Col>
               <Col md={9} style={{ paddingLeft: '26px'}}>
                 <br />
@@ -39,6 +40,8 @@ function UserProfile() {
                     <h4>Department: {UserData.department}</h4>
                   </Col>
                 </Row>
+                <br />
+                <UploadProfilePicture />
               </Col>
             </Row>
           </Card>

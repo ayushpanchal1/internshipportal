@@ -69,3 +69,21 @@ export async function downloadRequest(DownloadReqId) {
     alert(`Error while downloading pdf! ${error}`);
   }
 }
+
+export async function uploadProfilePicture(formData) {
+  try {
+    const response = await httpAxios.post('http://localhost:1337/api/uploadprofilepicture', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data' // Set the content type for FormData
+      }
+    });
+    var data = response.data;
+    if (response.status === 200) {
+      alert (data.status)
+    } else {
+      throw new Error('Failed to upload profile picture');
+    }
+  } catch (error) {
+    alert(`Error while uploading profile picture! ${error}`);
+  }
+}
