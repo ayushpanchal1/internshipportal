@@ -72,7 +72,7 @@ export async function downloadRequest(DownloadReqId) {
 
 export async function uploadProfilePicture(formData) {
   try {
-    const response = await httpAxios.post('http://localhost:1337/api/uploadprofilepicture', formData, {
+    const response = await httpAxios.post('/api/uploadprofilepicture', formData, {
       headers: {
         'Content-Type': 'multipart/form-data' // Set the content type for FormData
       }
