@@ -33,6 +33,7 @@ router.get('/userlogout', controller.userlogout)
 router.get('/current-user', Auth, controller.currentUser)
 router.get('/getnotifs', Auth, controller.getnotifs)
 router.post('/downloadrequest', Auth, controller.downloadrequest)
+router.post('/uploadprofilepicture', Auth, controller.uploadProfilePicture)
 
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)

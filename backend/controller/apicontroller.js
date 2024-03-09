@@ -8,6 +8,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import PDFDocument from "pdfkit";
 import fs from "fs";
+import path from "path";
+import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config()
 
@@ -237,6 +239,31 @@ export async function downloadrequest(req, res) {
     fs.unlinkSync(`${pdfPathToDel}${pdfFileToDel}`); //WORKS, deletes file after an error!!!!!!!
     return res.status(500).send({ error: error.message });
   }
+}
+
+const upload = (prefix, req) => multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), `./media/uploads/${req.role}/${prefix}`), //changed path
+    filename: (req, file, cb) => {
+      // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(
+        null,
+        // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+        req.role + prefix + req.user._id + path.extname(file.originalname)
+      );
+    },
+  }),
+});
+
+export async function uploadProfilePicture(req, res) {
+  const handler = upload("profile", req).single("image");
+
+  handler(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ status: `${req.role} Profile picture uploaded successfully.` });
+  });
 }
 
 // //template

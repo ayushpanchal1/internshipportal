@@ -7,8 +7,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 // import PDFDocument from 'pdfkit'
-import path from "path";
-import multer from "multer";
+// import path from "path";
+// import multer from "multer";
 // import fs from 'fs'
 
 dotenv.config();
@@ -183,30 +183,6 @@ export async function teacherapproverequest(req, res) {
   }
 }
 
-const uploads = multer({
-  storage: multer.diskStorage({
-    destination: path.join(process.cwd(), "./media/uploads/"), //changed path
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(
-        null,
-        file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-      );
-    },
-  }),
-});
-
-export async function uploadSingle(req, res) {
-  const handler = uploads.single("image");
-
-  handler(req, res, (err) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(200).json({ message: "File uploaded successfully." });
-  });
-}
-
 export async function teachergetmynotifs(req, res) {
   try {
     if (req.role != "teacher") {
@@ -293,3 +269,15 @@ export async function teacherdelmynotifs(req, res) {
     return res.status(500).send({ error: error.message });
   }
 }
+
+// upload template
+// export async function uploadSingle(req, res) {
+//   const handler = uploads.single("image");
+
+//   handler(req, res, (err) => {
+//     if (err) {
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res.status(200).json({ message: "File uploaded successfully." });
+//   });
+// }
