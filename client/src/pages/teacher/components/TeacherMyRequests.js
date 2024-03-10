@@ -3,31 +3,70 @@ import { useState, useEffect } from 'react';
 import { getMyRequestsTeacher, approveRequestTeacher } from "../../../services/TeacherServices";
 
 function Requests() {
-    const [Requests, setRequests] = useState('')
-    const [ApproveReqId, setApproveReqId] = useState('')
-
+    const [requests, setRequests] = useState('');
+    const [approveReqId, setApproveReqId] = useState('');
     const [show, setShow] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredRequests, setFilteredRequests] = useState([]);
+
     const handleClose = () => {
-        setApproveReqId('')
+        setApproveReqId('');
         setShow(false);
     }
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        getMyRequestsTeacher(setRequests)
+        getMyRequestsTeacher(setRequests);
     }, []);
 
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setFilteredRequests(requests);
+        } else {
+            setFilteredRequests(requests.filter(request =>
+                request.companyname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                request.whatfor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                request.domain.toLowerCase().includes(searchQuery.toLowerCase())
+            ));
+        }
+    }, [searchQuery, requests]);
+
     function handleApprove() {
-        approveRequestTeacher(setRequests, ApproveReqId)
-        setApproveReqId('')
-        handleClose()
+        approveRequestTeacher(setRequests, approveReqId);
+        setApproveReqId('');
+        handleClose();
+    }
+
+    function handleSearch() {
+        setFilteredRequests(requests.filter(request =>
+            request.companyname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            request.whatfor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            request.domain.toLowerCase().includes(searchQuery.toLowerCase())
+        ));
+    }
+
+    function handleClear() {
+        setSearchQuery('');
+        setFilteredRequests(requests);
     }
 
     return (
         <Container style={{ marginTop: '100px' }}>
-            {Requests.length > 0 && (
+            <div className="d-flex mb-3">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className="form-control me-2"
+                    style={{marginLeft:"700px"}}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Button variant="primary" className="me-2" onClick={handleSearch}>Search</Button>
+                <Button variant="secondary" onClick={handleClear}>Clear</Button>
+            </div>
+            {filteredRequests.length > 0 && (
                 <ul className='list-unstyled'>
-                    {Requests.map((request, index) => (
+                    {filteredRequests.map((request, index) => (
                         (index % 2 === 0) ?
                             <Row className="d-flex">
                                 <Col md={6} lg={6} xs={12}>
@@ -46,19 +85,19 @@ function Requests() {
                                         </div>
                                     </li>
                                 </Col>
-                                {Requests[index + 1] &&
+                                {filteredRequests[index + 1] &&
                                     <Col md={6} lg={6} xs={12}>
                                         <li style={{ marginTop: '25px' }}>
                                             <div className="card shadow">
                                                 <div className="border border-2 border-primary"></div>
                                                 <div className="card-header">
-                                                    For {Requests[index + 1].companyname}
+                                                    For {filteredRequests[index + 1].companyname}
                                                 </div>
                                                 <div className="card-body">
-                                                    <h3 className="card-title"><b>{Requests[index + 1].whatfor}</b></h3>
-                                                    <p className="card-text">{Requests[index + 1].domain}</p>
-                                                    <p className="card-text">Approval Status: {Requests[index + 1].approvalstatus}</p>
-                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(Requests[index + 1]._id); }}>Approve</Button> &nbsp;  
+                                                    <h3 className="card-title"><b>{filteredRequests[index + 1].whatfor}</b></h3>
+                                                    <p className="card-text">{filteredRequests[index + 1].domain}</p>
+                                                    <p className="card-text">Approval Status: {filteredRequests[index + 1].approvalstatus}</p>
+                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Approve</Button> &nbsp;  
                                                 </div>
                                             </div>
                                         </li>

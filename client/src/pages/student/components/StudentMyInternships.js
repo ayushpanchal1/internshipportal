@@ -3,22 +3,27 @@ import { useState, useEffect } from 'react';
 import { getMyInternsStudent, delMyInternsStudent } from "../../../services/StudentServices";
 
 function MyInternships() {
-    const [interns, setInterns] = useState('')
-    const [delinternid, setdelinternid] = useState('')
-
+    const [interns, setInterns] = useState('');
+    const [delinternid, setDelInternId] = useState('');
     const [show, setShow] = useState(false);
+    const [selectedIntern, setSelectedIntern] = useState(null);
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        getMyInternsStudent(setInterns)
+        getMyInternsStudent(setInterns);
     }, []);
 
-    function handleSubmit() {
-        delMyInternsStudent(setInterns, delinternid)
-        handleClose()
+    function handleDelete() {
+        delMyInternsStudent(setInterns, delinternid);
+        handleClose();
     }
 
+    function handleView(intern) {
+        setSelectedIntern(intern);
+        handleShow();
+    }
 
     return (
         <Container style={{ marginTop: '48px' }}>
@@ -31,9 +36,8 @@ function MyInternships() {
                 {interns.length > 0 && (
                     <ul className='list-unstyled'>
                         {interns.map(intern => (
-                            <li>
+                            <li key={intern._id}>
                                 <Card className="shadow">
-
                                     <div className="card-header">
                                         From {intern.provider}
                                     </div>
@@ -48,21 +52,10 @@ function MyInternships() {
                                                 <h4>To: {intern.toduration}</h4>
                                             </div>
                                         </div>
-                                        <div className="btn btn-primary" onClick={() => { handleShow(); setdelinternid(intern._id); }}>delete</div>
-                                        <Modal show={show} onHide={handleClose}>
-                                            <Modal.Header closeButton>
-                                                <Modal.Title style={{ color: "#802121" }}>Delete Internship report</Modal.Title>
-                                            </Modal.Header>
-                                            <Modal.Body>Are you sure you want to delete this?</Modal.Body>
-                                            <Modal.Footer>
-                                                <Button variant="secondary" onClick={handleClose}>
-                                                    Cancel
-                                                </Button>
-                                                <Button variant="primary" onClick={handleSubmit}>
-                                                    Yes, Proceed
-                                                </Button>
-                                            </Modal.Footer>
-                                        </Modal>
+                                        <div>
+                                            <Button className="btn btn-primary" style= {{mr:2}}onClick={() => handleView(intern)}>View</Button>&nbsp;
+                                            <Button className="btn btn-primary" onClick={() => { setDelInternId(intern._id); handleShow(); }}>Delete</Button>
+                                        </div>
                                     </div>
                                 </Card>
                                 <br />
@@ -71,8 +64,34 @@ function MyInternships() {
                     </ul>
                 )}
             </div>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title style={{ color: "#802121" }}>Internship Details</Modal.Title>
+                </Modal.Header>
+                {selectedIntern && (
+                    <Modal.Body>
+                        <p><strong>Student ID:</strong> {selectedIntern.stu_id}</p>
+                        <p><strong>Student Name:</strong> {selectedIntern.stuname}</p>
+                        <p><strong>Student Father's Name:</strong> {selectedIntern.stufname}</p>
+                        <p><strong>Student Last Name:</strong> {selectedIntern.stulname}</p>
+                        <p><strong>Email:</strong> {selectedIntern.email}</p>
+                        <p><strong>Provider:</strong> {selectedIntern.provider}</p>
+                        <p><strong>From Duration:</strong> {selectedIntern.fromduration}</p>
+                        <p><strong>To Duration:</strong> {selectedIntern.toduration}</p>
+                        <p><strong>What For:</strong> {selectedIntern.whatfor}</p>
+                        <p><strong>Domain:</strong> {selectedIntern.domain}</p>
+                        {selectedIntern.quote && (
+                            <p><strong>Quote:</strong> {selectedIntern.quote}</p>
+                        )}
+                    </Modal.Body>
+                )}
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>Close</Button>
+                    <Button variant="primary" onClick={handleDelete}>Delete</Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
-    )
+    );
 }
 
 export default MyInternships;

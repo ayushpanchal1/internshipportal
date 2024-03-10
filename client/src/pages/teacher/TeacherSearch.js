@@ -19,6 +19,7 @@ import {
   getAllStudentsForTeacher,
   getAStudentforTeacher,
 } from "../../services/TeacherServices";
+import { getMyInternsStudent } from "../../services/StudentServices";
 
 function App() {
   const auth = useAuthUser();
@@ -29,18 +30,22 @@ function App() {
   const [Interns, setInterns] = useState("");
   const [searchquery, setsearchquery] = useState("");
   const [AllUser, setAllUser] = useState("");
-  //console.log(Email)
 
   const signOut = useSignOut();
   const navigate = useNavigate();
 
   useEffect(() => {
-    //Runs on every render
     getAllStudentsForTeacher(setAllUser);
     if (Session === "user") {
       logout(navigate, signOut);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedStudent) {
+      getMyInternsStudent(setInterns, selectedStudent.stu_id);
+    }
+  }, [selectedStudent]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -70,8 +75,7 @@ function App() {
                   id="button-addon2"
                   value="searchq"
                   type="submit"
-                  style={{marginRight:"2px"}}
-                
+                  style={{ marginRight: "2px" }}
                 >
                   Search
                 </Button>
@@ -157,6 +161,27 @@ function App() {
                   {/* Add more details as needed */}
                 </>
               )}
+              <h4>Internship Data:</h4>
+              {Interns && Interns.length > 0 ? (
+                <ul>
+                  {Interns.map((internship) => (
+                    <li key={internship._id}>
+                      <b>Provider:</b> {internship.provider}
+                      <br />
+                      <b>From:</b> {internship.fromduration}
+                      <br />
+                      <b>To:</b> {internship.toduration}
+                      <br />
+                      <b>What For:</b> {internship.whatfor}
+                      <br />
+                      <b>Domain:</b> {internship.domain}
+                      <br />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No internship data available.</p>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={() => setShowModal(false)}>
@@ -165,50 +190,6 @@ function App() {
             </Modal.Footer>
           </Modal>
         </Col>
-      </Container>
-
-      <br />
-      <br />
-      <br />
-
-      <Container>
-        <Col md={8} lg={12} xs={12}>
-          {UserData && (
-            <h1>
-              <b>Completed Internships</b>
-            </h1>
-          )}
-        </Col>
-        {UserData && <div className="border border-2 border-primary"></div>}
-        <br />
-        <div>
-          {Interns.length > 0 && (
-            <ul className="list-unstyled">
-              {Interns.map((intern) => (
-                <li>
-                  <div className="card shadow">
-                    <div className="card-header">From {intern.provider}</div>
-                    <div className="card-body">
-                      <h3 className="card-title">
-                        <b>{intern.whatfor}</b>
-                      </h3>
-                      <h4 className="card-title">{intern.domain}</h4>
-                      <div className="d-flex">
-                        <div className="col-md-3">
-                          <h4>From: {intern.fromduration}</h4>
-                        </div>
-                        <div className="col-md-3">
-                          <h4>To: {intern.toduration}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <br />
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       </Container>
     </div>
   );
