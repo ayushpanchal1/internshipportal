@@ -222,13 +222,9 @@ export async function teacherfetchstudents(req, res) {
     if (req.role != "teacher") {
       return res.status(500).send({ error: "User is not a teacher" });
     }
-    if (!req.body.searchquery) {
-      var students = await Student.find();
-    } else {
-      var students = await Student.find({
-        stuname: req.body.searchquery,
-      });
-    }
+
+    var students = await Student.find();
+
     return res.status(200).send(students);
   } catch (error) {
     return res.status(500).send({ error: error.message });
@@ -242,17 +238,23 @@ export async function teacherfetchastudent(req, res) {
     }
 
     var student = await Student.findOne({
-      stuname: req.body.searchquery,
+      _id: req.body.id,
     });
 
     var interns = await CompIntern.find({
-      stuname: req.body.searchquery,
+      stu_id: req.body.id,
     });
+
+    var internreqs = await Request.find({
+      studentid: req.body.id,
+    })
 
     return res.status(200).send({
       student,
       interns,
+      internreqs,
     });
+
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
