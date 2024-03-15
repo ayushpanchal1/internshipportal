@@ -4,12 +4,13 @@ import CompIntern from "../models/compintern.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { verifyOTP } from "../otpGenerator.js";
 
 dotenv.config();
 
 export async function studentsignup(req, res) {
   try {
-    console.log(req.body);
+    // console.log(req.body);
 
     // Check if any of the required fields are missing or empty
     const requiredFields = [
@@ -30,6 +31,7 @@ export async function studentsignup(req, res) {
       "dateofbirth",
       "email",
       "password",
+      "otp",
     ];
 
     for (const field of requiredFields) {
@@ -38,6 +40,10 @@ export async function studentsignup(req, res) {
       }
     }
 
+    // Validate OTP
+    const OTPcheck = verifyOTP(req.body.email, req.body.otp)
+    if(OTPcheck == false) {  return res.status(400).json({ error: `otp error` }); }
+    
     const userexists = await Student.findOne({
       email: req.body.email,
     });

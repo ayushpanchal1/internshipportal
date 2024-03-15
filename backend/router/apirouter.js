@@ -3,6 +3,7 @@ const router = Router()
 import * as controller from '../controller/apicontroller.js'
 import * as studentcontroller from '../controller/studentapicontroller.js'
 import * as teachercontroller from '../controller/teacherapicontroller.js'
+import { generateOtp } from '../otpGenerator.js'
 import Auth from '../middleware/auth.js'
 
 //removed auth middleware from all login and signup as token is received after login
@@ -31,6 +32,7 @@ router.post('/teacherdelmynotifs', Auth, teachercontroller.teacherdelmynotifs)
 //testing and general / common requests ----------------------------------------------- in ../controller/apicontroller.js
 router.get('/userlogout', controller.userlogout)
 router.get('/current-user', Auth, controller.currentUser)
+router.post('/generateotp', generateOtp)
 router.get('/getnotifs', Auth, controller.getnotifs)
 router.post('/downloadrequest', Auth, controller.downloadrequest)
 router.post('/uploadprofilepicture', Auth, controller.uploadProfilePicture)
