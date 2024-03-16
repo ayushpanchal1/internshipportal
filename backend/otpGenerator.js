@@ -2,6 +2,7 @@
 import otpGenerator from 'otp-generator'
 import OTPModel from './models/OTPModel.model.js'
 import sendOTPEmail from './mail/mailer.js'
+import moment from 'moment';
 
 export async function generateOtp(req, res) {
     try {
@@ -13,8 +14,12 @@ export async function generateOtp(req, res) {
             expiresAt: moment().add(5, 'minutes'), // OTP expiration time
         });
 
-        await sendOTPEmail(req.body.email, otp)
-        return res.json({ status: 'otp was sent' });
+        var mailstatus = await sendOTPEmail(req.body.email, otp)
+        if(mailstatus == true ) {
+          return res.json({ status: 'otp was sent' });
+        } else {
+          throw new Error("Error sending the OTP");
+        }
     } catch (error) {
         return res.status(500).send({ error: error.message });
     }
@@ -26,9 +31,15 @@ export async function verifyOTP(email, otp) {
       // Find the OTP record in the database
       const otpRecord = await OTPModel.findOne({ email: email });
   
-      // Check if OTP record exists and is not expired
-      if (!otpRecord || moment().isAfter(otpRecord.expiresAt)) {
-        throw new Error ('OTP expired or invalid')
+      // Check if OTP record exists 
+      if (!otpRecord) {
+        throw new Error ('OTP invalid')
+      }
+
+      // check if OTP is not expired
+      if (moment().isAfter(otpRecord.expiresAt)){
+        await OTPModel.deleteOne({ email: email }); 
+        throw new Error ('OTP invalid')
       }
   
       // Check if the entered OTP matches the stored OTP
