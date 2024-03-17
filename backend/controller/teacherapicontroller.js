@@ -272,6 +272,55 @@ export async function teacherdelmynotifs(req, res) {
   }
 }
 
+export async function teacherdeclinerequest(req, res) {
+  try {
+    if (req.role != "teacher") {
+      return res.status(500).send({ error: "User is not a teacher" });
+    }
+
+    const tchr = [req.user.firstname, req.user.lastname].join(" ");
+
+    const aprlstts = req.user.role == "classteacher" ? 0 : 1;
+
+    if (aprlstts == 0) {
+      var requests = await Request.findOneAndUpdate(
+        {
+          _id: req.body.id,
+          classteacher: tchr,
+          approvalstatus: aprlstts,
+        },
+        { 
+          $inc: { approvalstatus: 3 },
+          $set: { declinemsg: req.body.declinemsg } 
+        },
+        { returnNewDocument: true }
+      );
+    } else {
+      var requests = await Request.findOneAndUpdate(
+        {
+          _id: req.body.id,
+          hod: tchr,
+          approvalstatus: aprlstts,
+        },
+        { 
+          $inc: { approvalstatus: 2 },
+          $set: { declinemsg: req.body.declinemsg } 
+        },
+        { returnNewDocument: true }
+      );
+    }
+
+    if (!requests)
+      return res.status(500).send({ error: "No request found to decline" });
+
+    return res.status(200).send({
+      status: "ok, request successfully deleted",
+    });
+
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
 // upload template
 // export async function uploadSingle(req, res) {
 //   const handler = uploads.single("image");

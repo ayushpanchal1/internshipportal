@@ -28,6 +28,7 @@ router.post('/teacherpostnotif', Auth, teachercontroller.teacherpostnotif)
 router.post('/teacherfetchstudents', Auth, teachercontroller.teacherfetchstudents)
 router.post('/teacherfetchastudent', Auth, teachercontroller.teacherfetchastudent)
 router.post('/teacherdelmynotifs', Auth, teachercontroller.teacherdelmynotifs)
+router.post('/teacherdeclinerequest', Auth, teachercontroller.teacherdeclinerequest)
 
 //testing and general / common requests ----------------------------------------------- in ../controller/apicontroller.js
 router.get('/userlogout', controller.userlogout)

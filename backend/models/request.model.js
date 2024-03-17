@@ -21,11 +21,11 @@ const Request = new mongoose.Schema(
         companyaddress: { type: String, required: true },
         whatfor: { type: String, required: true },
 		domain: { type: String, required: true },
-        approvalstatus: { type: Number, required: true },
-        pdfdata: {type: Buffer},                //0 for none, 1 for classteacher, 2 for hod
+        approvalstatus: { type: Number, required: true }, //0 for none, 1 for classteacher, 2 for hod, 3 for declined
+        declinemsg: { type: String },   
+        pdfdata: {type: Buffer},
 	},
 	{ collection: 'request-data' }
 )
-
 
 export default mongoose.model('RequestData', Request);
