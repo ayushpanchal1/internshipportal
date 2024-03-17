@@ -41,7 +41,7 @@ export async function studentsignup(req, res) {
     }
 
     // Validate OTP
-    const OTPcheck = verifyOTP(req.body.email, req.body.otp)
+    const OTPcheck = await verifyOTP(req.body.email, req.body.otp)
     if(OTPcheck == false) {  return res.status(400).json({ error: `otp error` }); }
     
     const userexists = await Student.findOne({

@@ -30,7 +30,7 @@ export async function generateOtp(req, res) {
 
 export async function verifyOTP(email, otp) {
     try {
-
+      
       // Find the OTP record in the database
       const otpRecord = await OTPModel.findOne({ email: email });
   
