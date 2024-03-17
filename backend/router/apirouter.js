@@ -36,6 +36,7 @@ router.post('/generateotp', generateOtp)
 router.get('/getnotifs', Auth, controller.getnotifs)
 router.post('/downloadrequest', Auth, controller.downloadrequest)
 router.post('/uploadprofilepicture', Auth, controller.uploadProfilePicture)
+router.get('/fetchprofilepicture/:userId', Auth, controller.fetchProfilePicture)
 
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)

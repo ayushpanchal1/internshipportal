@@ -266,6 +266,27 @@ export async function uploadProfilePicture(req, res) {
   });
 }
 
+export async function fetchProfilePicture(req, res) {
+  const userId = req.params.userId;
+  const role = req.role;
+  
+  // Construct the file path
+  const filePath = path.resolve(`./media/uploads/${role}/profile/${role}profile${userId}.png`);
+
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // If the file doesn't exist, send the default image
+      const defaultImagePath = path.resolve('./media/user.png');
+      res.sendFile(defaultImagePath);
+    } else {
+      // If the file exists, send it
+      res.sendFile(filePath);
+    }
+  });
+}
+
+
 // //template
 // export async function testlogin(req,res){
 //     try{
