@@ -88,6 +88,7 @@ export async function uploadProfilePicture(formData) {
   }
 }
 
+
 export async function generateOTP(requestBody) {
   try {
     const response = await httpAxios.post('/api/generateotp', requestBody);

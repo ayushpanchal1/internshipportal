@@ -1,11 +1,12 @@
-import { Col, Row, Container, Button, Modal } from "react-bootstrap";
+import { Col, Row, Container, Button, Modal, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { getMyRequestsTeacher, approveRequestTeacher } from "../../../services/TeacherServices";
+import { getMyRequestsTeacher, approveRequestTeacher, declineRequestTeacher } from "../../../services/TeacherServices";
 
 function Requests() {
     const [requests, setRequests] = useState('');
     const [approveReqId, setApproveReqId] = useState('');
     const [show, setShow] = useState(false);
+    const [declineMsg, setDeclineMsg] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredRequests, setFilteredRequests] = useState([]);
 
@@ -33,6 +34,12 @@ function Requests() {
 
     function handleApprove() {
         approveRequestTeacher(setRequests, approveReqId);
+        setApproveReqId('');
+        handleClose();
+    }
+
+    function handleDecline() {
+        declineRequestTeacher(setRequests, approveReqId, declineMsg);
         setApproveReqId('');
         handleClose();
     }
@@ -81,6 +88,7 @@ function Requests() {
                                                 <p className="card-text">{request.domain}</p>
                                                 <p className="card-text">Approval Status: {request.approvalstatus}</p>
                                                 <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(request._id); }}>Approve</Button> &nbsp;
+                                                <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(request._id); }}>Decline</Button>
                                             </div>
                                         </div>
                                     </li>
@@ -97,7 +105,8 @@ function Requests() {
                                                     <h3 className="card-title"><b>{filteredRequests[index + 1].whatfor}</b></h3>
                                                     <p className="card-text">{filteredRequests[index + 1].domain}</p>
                                                     <p className="card-text">Approval Status: {filteredRequests[index + 1].approvalstatus}</p>
-                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Approve</Button> &nbsp;  
+                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Approve</Button> &nbsp;
+                                                    <Button className="btn btn-danger" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Decline</Button>
                                                 </div>
                                             </div>
                                         </li>
@@ -114,13 +123,26 @@ function Requests() {
                 <Modal.Header closeButton>
                     <Modal.Title style={{ color: "#802121" }}>Approve Internship Request</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to approve this request?</Modal.Body>
+                <Modal.Body>
+                    Are you sure you want to {declineMsg ? 'decline' : 'approve'} this request?
+                    {declineMsg && (
+                        <Form.Group controlId="declineMsg">
+                            <Form.Label>Decline Message</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={declineMsg}
+                                onChange={(e) => setDeclineMsg(e.target.value)}
+                            />
+                        </Form.Group>
+                    )}
+                </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleApprove}>
-                        Yes, Proceed
+                    <Button variant="primary" onClick={declineMsg ? handleDecline : handleApprove}>
+                        {declineMsg ? 'Yes, Decline' : 'Yes, Approve'}
                     </Button>
                 </Modal.Footer>
             </Modal>

@@ -1,6 +1,7 @@
 import { Col, Button, Container, Card, Modal } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyInternsStudent, delMyInternsStudent } from "../../../services/StudentServices";
+import { FaCheckDouble } from "react-icons/fa";
 
 function MyInternships() {
     const [interns, setInterns] = useState('');
@@ -63,6 +64,8 @@ function MyInternships() {
                         ))}
                     </ul>
                 )}
+                {/* {interns.stu_id === 2 && <FaCheckDouble />}  */}
+             
             </div>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -85,6 +88,7 @@ function MyInternships() {
                         )}
                     </Modal.Body>
                 )}
+
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleClose}>Close</Button>
                     <Button variant="primary" onClick={handleDelete}>Delete</Button>

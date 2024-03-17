@@ -43,7 +43,7 @@ export async function getMyNotifsTeacher(setNotifs) {
   }
 }
 
-export async function delMyNotifsTeacher(setNotifs, getMyNotifsTeacher, delnotifid) {
+export async function delMyNotifsTeacher(setNotifs, delnotifid) {
   try {
     const response = await httpAxios.post('/api/teacherdelmynotifs', ({ _id: delnotifid }));
     var data = response.data;
@@ -57,7 +57,23 @@ export async function delMyNotifsTeacher(setNotifs, getMyNotifsTeacher, delnotif
     alert(`Error while deleting teachermynotif! ${error}`);
   }
 }
-
+export async function uploadSignaturePicture(formData) {
+  try {
+    const response = await httpAxios.post('/api/teacheruploadsign', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data' // Set the content type for FormData
+      }
+    });
+    var data = response.data;
+    if (response.status === 200) {
+      alert (data.status)
+    } else {
+      throw new Error('Failed to upload profile picture');
+    }
+  } catch (error) {
+    alert(`Error while uploading profile picture! ${error}`);
+  }
+}
 export async function postNotifTeacher(requestBody) {
   try {
     const response = await httpAxios.post('/api/teacherpostnotif', requestBody);
@@ -141,5 +157,23 @@ export async function approveRequestTeacher(setRequests, ApproveReqId) {
     }
   } catch (error) {
     alert(`Error while approving a request! ${error}`);
+  }
+}
+
+export async function declineRequestTeacher(setRequests, DeclineReqId, DeclineMsg) {
+  try {
+    const response = await httpAxios.post('/api/teacherdeclinerequest', {
+      id: DeclineReqId,
+      declinemsg: DeclineMsg
+    });
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      getMyRequestsTeacher(setRequests);
+    }
+  } catch (error) {
+    alert(`Error while declining a request! ${error}`);
   }
 }

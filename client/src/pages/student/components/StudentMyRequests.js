@@ -1,10 +1,14 @@
 import { Col, Row, Container, Button, Modal, Tab, Tabs } from "react-bootstrap";
+import { FaCheck, FaTimes, FaCheckDouble, FaClock } from "react-icons/fa";
+
+
 import { useState, useEffect } from "react";
 import {
   getMyRequestsStudent,
   removeRequestStudent,
 } from "../../../services/StudentServices";
 import { downloadRequest } from "../../../services/Services";
+import { declineRequestTeacher } from "../../../services/TeacherServices";
 
 function Requests() {
   const [Requests, setRequests] = useState([]);
@@ -44,6 +48,10 @@ function Requests() {
     downloadRequest(DownloadReqId);
   }
 
+  async function handleDecline(DeclineReqId, DeclineMsg) {
+    await declineRequestTeacher(setRequests, DeclineReqId, DeclineMsg);
+  }
+
   const completedRequests = Requests.filter(
     (request) => request.approvalstatus === 2
   );
@@ -54,6 +62,10 @@ function Requests() {
 
   const approvedByTeacherRequests = Requests.filter(
     (request) => request.approvalstatus === 1
+  );
+
+  const declinedRequests = Requests.filter(
+    (request) => request.approvalstatus === 3
   );
 
   const renderRequestCards = (requests) => {
@@ -72,31 +84,44 @@ function Requests() {
                 <p className="card-text">
                   Approval Status: {request.approvalstatus}
                 </p>
-                <Button
-                  className="btn btn-primary"
-                  onClick={() => handleShow(request)}
-                >
-                  View
-                </Button>{" "}
-                &nbsp;
-                <Button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    handleShow();
-                    setRemoveReqId(request._id);
-                  }}
-                >
-                  Remove
-                </Button>{" "}
-                &nbsp;
-                {request.approvalstatus === 2 && (
-                  <Button
-                    className="btn btn-primary"
-                    onClick={() => handleDownload(request._id)}
-                  >
-                    Download
-                  </Button>
+                {request.approvalstatus !== 3 && (
+                  <>
+                    <Button
+                      className="btn btn-primary"
+                      onClick={() => handleShow(request)}
+                    >
+                      View
+                    </Button>{" "}
+                    &nbsp;
+                    <Button
+                      className="btn btn-primary"
+                      onClick={
+                      handleRemove
+                    
+                    }
+                    >
+                      Remove
+                    </Button>{" "}
+                    &nbsp;
+                    {request.approvalstatus === 2 && (
+                      <Button
+                        className="btn btn-primary"
+                        onClick={() => handleDownload(request._id)}
+                      >
+                        Download
+                      </Button>
+                    )}
+                  </>
                 )}
+                {request.approvalstatus === 3 && (
+                  <>
+                    <strong>Decline Reason: {request.declinemsg}</strong>
+                  </>
+                )}
+                 {request.approvalstatus === 1 && <FaCheck />} 
+                 {request.approvalstatus === 0 && <FaClock/>} 
+              {request.approvalstatus === 2 && <FaCheckDouble />} 
+              {request.approvalstatus === 3 && <FaTimes />} 
               </div>
             </div>
           </Col>
@@ -116,6 +141,9 @@ function Requests() {
         </Tab>
         <Tab eventKey="completed" title="Approved By Hod">
           {completedRequests.length > 0 && renderRequestCards(completedRequests)}
+        </Tab>
+        <Tab eventKey="declined" title="Declined">
+          {declinedRequests.length > 0 && renderRequestCards(declinedRequests)}
         </Tab>
       </Tabs>
 

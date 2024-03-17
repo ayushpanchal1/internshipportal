@@ -1,30 +1,39 @@
 import { Col, Container, Card, Row } from "react-bootstrap";
-import { useState, useEffect } from 'react';
-import IMAGE from '../../../media/user.png'
+import { useState, useEffect } from "react";
+import IMAGE from "../../../media/user.png";
 import { getUserData } from "../../../services/Services";
 import UploadProfilePicture from "../../common/components/UploadProfilePic";
+import UploadSignImage from "./TeacherSign";
 
 function TeacherProfile() {
-  const [UserData, setUserData] = useState('');
+  const [UserData, setUserData] = useState("");
 
   useEffect(() => {
     //Runs on every render
-    getUserData(setUserData)
+    getUserData(setUserData);
   }, []);
 
   return (
-    <Container style={{ marginTop: '100px' }}>
+    <Container style={{ marginTop: "100px" }}>
       <Row>
         <Col>
-          <Card className='shadow'>
-            <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
-              <Col md={3} className='d-flex justify-content-center'>
+          <Card className="shadow">
+            <Row style={{ marginTop: "18px", marginBottom: "18px" }}>
+              <Col md={3} className="d-flex justify-content-center">
                 <br />
-                <img className="media-object mw150" width="256" src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${UserData._id}`} />
+                <img
+                  className="media-object mw150"
+                  width="256"
+                  src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${UserData._id}`}
+                />
               </Col>
-              <Col md={9} style={{ paddingLeft: '26px' }}>
+              <Col md={9} style={{ paddingLeft: "26px" }}>
                 <br />
-                <h1><b>{UserData.firstname} {UserData.lastname}</b></h1>
+                <h1>
+                  <b>
+                    {UserData.firstname} {UserData.lastname}
+                  </b>
+                </h1>
                 <br />
                 <Row>
                   <Col md={6}>
@@ -37,14 +46,17 @@ function TeacherProfile() {
                   </Col>
                 </Row>
                 <br />
-                <UploadProfilePicture />
+                <div className="d-flex">
+                 <div> <UploadProfilePicture /></div>
+                  <div><UploadSignImage /></div>
+                </div>
               </Col>
             </Row>
           </Card>
         </Col>
       </Row>
     </Container>
-  )
+  );
 }
 
 export default TeacherProfile;

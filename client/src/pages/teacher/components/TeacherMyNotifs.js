@@ -17,9 +17,10 @@ function TeacherMyNotifs() {
     }, []);
 
     const handleSubmit = () => {
-        delMyNotifsTeacher(setNotifs, getMyNotifsTeacher, delnotifid);
+        delMyNotifsTeacher(setNotifs, delnotifid);
         handleClose();
     };
+    
 
     const handleSearch = () => {
         const newFilteredNotifs = Notifs.filter(notif => {
@@ -66,7 +67,7 @@ function TeacherMyNotifs() {
                                 <div className="card-body">
                                     <h3 className="card-title"><b>{notif.title}</b></h3>
                                     <p className="card-text">{notif.info}</p>
-                                    <div className="btn btn-primary" onClick={() => { handleShow(); setDelNotifId(notif._id); }}>Delete</div>
+                                    <div className="btn btn-secondary" onClick={() => { handleShow(); setDelNotifId(notif._id); }}>Delete</div>
                                 </div>
                             </div>
                         ))}

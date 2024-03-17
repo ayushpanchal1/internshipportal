@@ -69,7 +69,7 @@ function Notification() {
                   <p className="card-text">{notif.info}</p>
                   <a href={notif.link} className="btn btn-primary">Learn More</a>
                   {localStorage.getItem('SessionEmail') === notif.email && (
-                    <Button variant="danger" className="ms-2" onClick={() => handleDelete(notif._id)}>Delete</Button>
+                    <Button  className="ms-2 btn btn-primary" onClick={() => handleDelete(notif._id)}>Delete</Button>
                   )}
                 </div>
               </div>

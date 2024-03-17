@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Col,
-  Button,
-  Row,
-  Container,
-  Form,
-  InputGroup,
-  Modal,
-} from "react-bootstrap";
+import { Col, Button, Row, Container, Form, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-auth-kit";
 import { useAuthUser } from "react-auth-kit";
-import IMAGE from "../../media/user.png";
 import CNavbar from "../common/components/CNavbar";
 import { logout } from "../../services/Services";
 import {
@@ -22,12 +13,12 @@ import {
 function App() {
   const auth = useAuthUser();
   const Session = auth().session;
-  const [showModal, setShowModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [userData, setUserData] = useState("");
   const [interns, setInterns] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [allUser, setAllUser] = useState("");
+  const [expandedCardIndex, setExpandedCardIndex] = useState(null);
 
   const signOut = useSignOut();
   const navigate = useNavigate();
@@ -40,15 +31,40 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (selectedStudent) {
-      getAStudentforTeacher(setUserData, setInterns, selectedStudent.stu_id);
+    if (selectedStudentId) {
+      getAStudentforTeacher(setUserData, setInterns, selectedStudentId);
     }
-  }, [selectedStudent]);
+  }, [selectedStudentId]);
+  function handleClear() {
+    setSearchQuery("");
+    setUserData("");
+    setInterns("");
+    getAllStudentsForTeacher(setAllUser);
+  }
+  
 
   function handleSubmit(event) {
     event.preventDefault();
     const lowercaseSearchQuery = searchQuery.toLowerCase();
-    getAStudentforTeacher(setUserData, setInterns, lowercaseSearchQuery);
+    const filteredUsers = allUser.filter((user) => {
+      const firstName = user.firstname ? user.firstname.toLowerCase() : "";
+      const lastName = user.lastname ? user.lastname.toLowerCase() : "";
+      const stuname = user.stuname ? user.stuname.toLowerCase() : "";
+      return (
+        firstName.includes(lowercaseSearchQuery) ||
+        lastName.includes(lowercaseSearchQuery) ||
+        stuname.includes(lowercaseSearchQuery)
+      );
+    });
+    setAllUser(filteredUsers);
+    if (filteredUsers.length === 1) {
+      const index = allUser.findIndex(
+        (user) => user.id === filteredUsers[0].id
+      );
+      setExpandedCardIndex(index);
+    } else {
+      setExpandedCardIndex(null);
+    }
   }
 
   return (
@@ -80,11 +96,7 @@ function App() {
                 <Button
                   variant="info"
                   id="button-addon2"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setUserData("");
-                    setInterns("");
-                  }}
+                  onClick={handleClear}
                   value="clear"
                 >
                   Clear
@@ -104,97 +116,83 @@ function App() {
               </h1>
               <div className="border border-2 border-primary"></div>
               <br />
-              <div>
-                {allUser && allUser.length > 0 && (
-                  <div className="row mx-md-n5 gy-4">
-                    {allUser
-                      .filter((auser) =>
-                        auser.stuname
-                          ?.toLowerCase()
-                          .includes(searchQuery?.toLowerCase())
-                      )
-                      .map((filteredUser) => (
-                        <Col lg={4} key={filteredUser.id}>
-                          <div className="card shadow">
-                            <div className="card-body">
-                              <h4 className="card-title">
-                                <b>{filteredUser.stuname}</b>
-                              </h4>
-                              <p className="card-text">gender: {filteredUser.gender}</p>
-                              <p className="card-text">academic year: {filteredUser.academicyear}</p>
-                              <p className="card-text">division: {filteredUser.division}</p>
-                              <p className="card-text">class teacher: {filteredUser.classteacher}</p>
-                              <p className="card-text">hod: {filteredUser.hod}</p>
-                              <div
+              <div className="row mx-md-n5 gy-4">
+                {allUser &&
+                  allUser.length > 0 &&
+                  allUser.map((filteredUser, index) => (
+                    <Col
+                      lg={expandedCardIndex === index ? 12 : 4}
+                      key={filteredUser.id}
+                    >
+                      <div className="card shadow">
+                        {expandedCardIndex === index && (
+                          <div className="card-body">
+                            <h4>
+                              {filteredUser.firstname} {filteredUser.lastname}
+                            </h4>
+                            <dl>
+                              <dt>Father's Name:</dt>
+                              <dd>{filteredUser.fathername}</dd>
+                              <dt>Mother's Name:</dt>
+                              <dd>{filteredUser.mothername}</dd>
+                              <dt>Email:</dt>
+                              <dd>{filteredUser.email}</dd>
+                              <dt>Mobile Number:</dt>
+                              <dd>{filteredUser.mobileno}</dd>
+                              <dt>Academic Year:</dt>
+                              <dd>{filteredUser.academicyear}</dd>
+                            </dl>
+                            <div className="d-flex justify-content-end">
+                              <Button
                                 className="btn btn-primary"
-                                onClick={() => {
-                                  setSelectedStudent(filteredUser);
-                                  setShowModal(true);
-                                }}
+                                onClick={() => setExpandedCardIndex(null)}
                               >
-                                View
-                              </div>
+                                Close
+                              </Button>
                             </div>
                           </div>
-                        </Col>
-                      ))}
-                  </div>
-                )}
+                        )}
+                        {expandedCardIndex !== index && (
+                          <div className="card-body">
+                            <h4 className="card-title">
+                              <b>{filteredUser.stuname}</b>
+                            </h4>
+                            <div className="details">
+                              <div>
+                                Gender: <span>{filteredUser.gender}</span>
+                              </div>
+                              <div>
+                                Academic Year:{" "}
+                                <span>{filteredUser.academicyear}</span>
+                              </div>
+                              <div>
+                                Division: <span>{filteredUser.division}</span>
+                              </div>
+                              <div>
+                                Class Teacher:{" "}
+                                <span>{filteredUser.classteacher}</span>
+                              </div>
+                              <div>
+                                HOD: <span>{filteredUser.hod}</span>
+                              </div>
+                            </div>
+                            <div className="d-flex justify-content-end">
+                              <Button
+                                variant="primary"
+                                onClick={() => setExpandedCardIndex(index)}
+                              >
+                                View
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Col>
+                  ))}
               </div>
             </Col>
           </>
         )}
-      </Container>
-
-      <Container>
-        <Col md={8} lg={12} xs={12}>
-          <Modal show={showModal} onHide={() => setShowModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Student Details</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {selectedStudent && (
-                <>
-                  <h4>
-                    {selectedStudent.firstname} {selectedStudent.lastname}
-                  </h4>
-                  <p>Father's Name: {selectedStudent.fathername}</p>
-                  <p>Mother's Name: {selectedStudent.mothername}</p>
-                  <p>Email: {selectedStudent.email}</p>
-                  <p>Mobile Number: {selectedStudent.mobileno}</p>
-                  <p>Academic Year: {selectedStudent.academicyear}</p>
-                  {/* Add more details as needed */}
-                </>
-              )}
-              <h4>Internship Data:</h4>
-              {interns && interns.length > 0 ? (
-                <ul>
-                  {interns.map((internship) => (
-                    <li key={internship._id}>
-                      <b>Provider:</b> {internship.provider}
-                      <br />
-                      <b>From:</b> {internship.fromduration}
-                      <br />
-                      <b>To:</b> {internship.toduration}
-                      <br />
-                      <b>What For:</b> {internship.whatfor}
-                      <br />
-                      <b>Domain:</b> {internship.domain}
-                      <br />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No internship data available.</p>
-              )}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowModal(false)}>
-                Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </Col>
       </Container>
     </div>
   );
