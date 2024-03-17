@@ -15,6 +15,20 @@ dotenv.config()
 
 // const FRONTEND_ADDRESS process.env.FRONTEND_ADDRESS
 
+const upload = (prefix, req) => multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), `./media/uploads/${req.role}/${prefix}`), //changed path
+    filename: (req, file, cb) => {
+      // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(
+        null,
+        // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+        req.role + prefix + req.user._id + path.extname(file.originalname)
+      );
+    },
+  }),
+});
+
 export async function currentUser(req, res) {
   try {
     var user = null;
@@ -140,15 +154,29 @@ export async function downloadrequest(req, res) {
       _id: req.body.id,
       studentid: req.user._id,
     });
+    // console.log(request)
 
     if (!request)
       return res
         .status(500)
         .send({ error: "no requests were found with that id" });
 
-    if (request.approvalstatus < 2) {
-      return res.status(500).send({ error: "request does not have a pdf" });
-    } else {
+
+    // to prevent crashing
+    // doesnt work, also needs a better implementation
+
+    // const teachersignpath = `./media/uploads/teacher/sign/teachersign${classteacherid}.png`
+    // if (fs.existsSync(teachersignpath)) 
+    // return res.status(500).send({
+    //   error: "class teacher does not have a signature uploaded",
+    // });
+
+    // if (fs.existsSync(`./media/uploads/teacher/sign/teachersign${hodid}.png`)) 
+    // return res.status(500).send({
+    //   error: "hod does not have a signature uploaded",
+    // });
+
+    if (request.approvalstatus === 2) {
       const pdfPath = `./media/pdf/`;
       const pdfFilename = `${req.body.id}.pdf`;
       const pdfStream = fs.createWriteStream(`${pdfPath}${pdfFilename}`);
@@ -199,11 +227,13 @@ export async function downloadrequest(req, res) {
         )
         .moveDown(4);
 
-      pdfDoc.image("./media/fake.png", 40, 600, {
+        //./media/uploads/teacher/sign/teachersign${request.classteacherid}.png for actual sign
+      pdfDoc.image(`./media/fake.png`, 40, 600, {
         fit: [150, 150],
       });
 
-      pdfDoc.image("./media/fake.png", 430, 600, {
+      //./media/uploads/teacher/sign/teachersign${request.hodid}.png for actual sign
+      pdfDoc.image(`./media/fake.png`, 430, 600, {
         fit: [150, 150],
       });
 
@@ -232,6 +262,9 @@ export async function downloadrequest(req, res) {
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", 'inline; filename="document.pdf"');
       return res.end(pdfBinary);
+      
+    } else {
+      return res.status(500).send({ error: "request does not have a pdf" });
     }
   } catch (error) {
     let pdfFileToDel = `${req.body.id}.pdf`;
@@ -240,20 +273,6 @@ export async function downloadrequest(req, res) {
     return res.status(500).send({ error: error.message });
   }
 }
-
-const upload = (prefix, req) => multer({
-  storage: multer.diskStorage({
-    destination: path.join(process.cwd(), `./media/uploads/${req.role}/${prefix}`), //changed path
-    filename: (req, file, cb) => {
-      // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(
-        null,
-        // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-        req.role + prefix + req.user._id + path.extname(file.originalname)
-      );
-    },
-  }),
-});
 
 export async function uploadProfilePicture(req, res) {
   const handler = upload("profile", req).single("image");
@@ -264,6 +283,25 @@ export async function uploadProfilePicture(req, res) {
     }
     res.status(200).json({ status: `${req.role} Profile picture uploaded successfully.` });
   });
+}
+
+export async function deleteProfilePicture(req, res) {
+  const userId = req.user._id;
+  const filePath = `./media/uploads/${req.role}/profile/studentprofile${userId}.png`;
+
+  // Check if the file exists
+  if (fs.existsSync(filePath)) {
+    // Delete the file
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(200).json({ status: 'Profile picture deleted successfully.' });
+    });
+  } else {
+    // If the file doesn't exist, return an error
+    res.status(404).json({ error: 'Profile picture not found.' });
+  }
 }
 
 export async function fetchProfilePicture(req, res) {

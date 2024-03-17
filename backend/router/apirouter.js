@@ -29,6 +29,7 @@ router.post('/teacherfetchstudents', Auth, teachercontroller.teacherfetchstudent
 router.post('/teacherfetchastudent', Auth, teachercontroller.teacherfetchastudent)
 router.post('/teacherdelmynotifs', Auth, teachercontroller.teacherdelmynotifs)
 router.post('/teacherdeclinerequest', Auth, teachercontroller.teacherdeclinerequest)
+router.post('/teacheruploadsign', Auth, teachercontroller.teacherUploadSign)
 
 //testing and general / common requests ----------------------------------------------- in ../controller/apicontroller.js
 router.get('/userlogout', controller.userlogout)
@@ -37,6 +38,7 @@ router.post('/generateotp', generateOtp)
 router.get('/getnotifs', Auth, controller.getnotifs)
 router.post('/downloadrequest', Auth, controller.downloadrequest)
 router.post('/uploadprofilepicture', Auth, controller.uploadProfilePicture)
+router.get('/deleteprofilepicture', Auth, controller.deleteProfilePicture)
 router.get('/fetchprofilepicture/:userId', Auth, controller.fetchProfilePicture)
 
 router.post('/testsignup', controller.testsignup)

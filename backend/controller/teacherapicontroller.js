@@ -6,12 +6,28 @@ import CompIntern from "../models/compintern.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import multer from "multer";
+import path from "path";
 // import PDFDocument from 'pdfkit'
 // import path from "path";
 // import multer from "multer";
 // import fs from 'fs'
 
 dotenv.config();
+
+const upload = (prefix, req) => multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), `./media/uploads/${req.role}/${prefix}`), //changed path
+    filename: (req, file, cb) => {
+      // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(
+        null,
+        // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+        req.role + prefix + req.user._id + path.extname(file.originalname)
+      );
+    },
+  }),
+});
 
 export async function teachersignup(req, res) {
   try {
@@ -158,7 +174,10 @@ export async function teacherapproverequest(req, res) {
           classteacher: tchr,
           approvalstatus: aprlstts,
         },
-        { $inc: { approvalstatus: 1 } },
+        { 
+          $inc: { approvalstatus: 1 },
+          $set: { classteacherid: req.user._id } 
+        },
         { returnNewDocument: true }
       );
     } else {
@@ -168,7 +187,10 @@ export async function teacherapproverequest(req, res) {
           hod: tchr,
           approvalstatus: aprlstts,
         },
-        { $inc: { approvalstatus: 1 } },
+        { 
+          $inc: { approvalstatus: 1 },
+          $set: { hodid: req.user._id }
+        },
         { returnNewDocument: true }
       );
     }
@@ -321,6 +343,17 @@ export async function teacherdeclinerequest(req, res) {
     return res.status(500).send({ error: error.message });
   }
 }
+
+export async function teacherUploadSign(req, res) {
+  const handler = upload("sign", req).single("image");
+  handler(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ status: `${req.role} signature uploaded successfully.` });
+  });
+}
+
 // upload template
 // export async function uploadSingle(req, res) {
 //   const handler = uploads.single("image");
