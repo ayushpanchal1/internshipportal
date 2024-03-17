@@ -20,7 +20,7 @@ function TeacherProfile() {
             <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
               <Col md={3} className='d-flex justify-content-center'>
                 <br />
-                <img className="media-object mw150" width="256" src={IMAGE} />
+                <img className="media-object mw150" width="256" src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${UserData._id}`} />
               </Col>
               <Col md={9} style={{ paddingLeft: '26px' }}>
                 <br />
