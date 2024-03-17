@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Col,
   Button,
@@ -8,7 +8,6 @@ import {
   InputGroup,
   Modal,
 } from "react-bootstrap";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from "react-auth-kit";
 import { useAuthUser } from "react-auth-kit";
@@ -19,17 +18,16 @@ import {
   getAllStudentsForTeacher,
   getAStudentforTeacher,
 } from "../../services/TeacherServices";
-import { getMyInternsStudent } from "../../services/StudentServices";
 
 function App() {
   const auth = useAuthUser();
   const Session = auth().session;
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [UserData, setUserData] = useState("");
-  const [Interns, setInterns] = useState("");
-  const [searchquery, setsearchquery] = useState("");
-  const [AllUser, setAllUser] = useState("");
+  const [userData, setUserData] = useState("");
+  const [interns, setInterns] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allUser, setAllUser] = useState("");
 
   const signOut = useSignOut();
   const navigate = useNavigate();
@@ -43,13 +41,13 @@ function App() {
 
   useEffect(() => {
     if (selectedStudent) {
-      getMyInternsStudent(setInterns, selectedStudent.stu_id);
+      getAStudentforTeacher(setUserData, setInterns, selectedStudent.stu_id);
     }
   }, [selectedStudent]);
 
   function handleSubmit(event) {
     event.preventDefault();
-    const lowercaseSearchQuery = searchquery.toLowerCase();
+    const lowercaseSearchQuery = searchQuery.toLowerCase();
     getAStudentforTeacher(setUserData, setInterns, lowercaseSearchQuery);
   }
 
@@ -63,17 +61,17 @@ function App() {
             <Form onSubmit={handleSubmit}>
               <InputGroup className="mb-3 shadow">
                 <Form.Control
-                  value={searchquery}
-                  onChange={(e) => setsearchquery(e.target.value)}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   type="text"
                   placeholder="Search"
-                  aria-label="Searchq"
+                  aria-label="Search"
                   aria-describedby="basic-addon2"
                 />
                 <Button
                   variant="primary"
                   id="button-addon2"
-                  value="searchq"
+                  value="search"
                   type="submit"
                   style={{ marginRight: "2px" }}
                 >
@@ -83,11 +81,11 @@ function App() {
                   variant="info"
                   id="button-addon2"
                   onClick={() => {
-                    setsearchquery("");
+                    setSearchQuery("");
                     setUserData("");
                     setInterns("");
                   }}
-                  value="searchq"
+                  value="clear"
                 >
                   Clear
                 </Button>
@@ -98,7 +96,7 @@ function App() {
       </Container>
 
       <Container style={{ marginTop: "48px" }}>
-        {!UserData && (
+        {!userData && (
           <>
             <Col md={8} lg={12} xs={12}>
               <h1>
@@ -107,32 +105,39 @@ function App() {
               <div className="border border-2 border-primary"></div>
               <br />
               <div>
-                {AllUser && AllUser.length > 0 && (
+                {allUser && allUser.length > 0 && (
                   <div className="row mx-md-n5 gy-4">
-                    {AllUser.filter((auser) =>
-                      auser.stuname
-                        ?.toLowerCase()
-                        .includes(searchquery?.toLowerCase())
-                    ).map((filteredUser) => (
-                      <Col lg={4} key={filteredUser.id}>
-                        <div className="card shadow">
-                          <div className="card-body">
-                            <h4 className="card-title">
-                              <b>{filteredUser.stuname}</b>
-                            </h4>
-                            <div
-                              className="btn btn-primary"
-                              onClick={() => {
-                                setSelectedStudent(filteredUser);
-                                setShowModal(true);
-                              }}
-                            >
-                              view
+                    {allUser
+                      .filter((auser) =>
+                        auser.stuname
+                          ?.toLowerCase()
+                          .includes(searchQuery?.toLowerCase())
+                      )
+                      .map((filteredUser) => (
+                        <Col lg={4} key={filteredUser.id}>
+                          <div className="card shadow">
+                            <div className="card-body">
+                              <h4 className="card-title">
+                                <b>{filteredUser.stuname}</b>
+                              </h4>
+                              <p className="card-text">gender: {filteredUser.gender}</p>
+                              <p className="card-text">academic year: {filteredUser.academicyear}</p>
+                              <p className="card-text">division: {filteredUser.division}</p>
+                              <p className="card-text">class teacher: {filteredUser.classteacher}</p>
+                              <p className="card-text">hod: {filteredUser.hod}</p>
+                              <div
+                                className="btn btn-primary"
+                                onClick={() => {
+                                  setSelectedStudent(filteredUser);
+                                  setShowModal(true);
+                                }}
+                              >
+                                View
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Col>
-                    ))}
+                        </Col>
+                      ))}
                   </div>
                 )}
               </div>
@@ -162,9 +167,9 @@ function App() {
                 </>
               )}
               <h4>Internship Data:</h4>
-              {Interns && Interns.length > 0 ? (
+              {interns && interns.length > 0 ? (
                 <ul>
-                  {Interns.map((internship) => (
+                  {interns.map((internship) => (
                     <li key={internship._id}>
                       <b>Provider:</b> {internship.provider}
                       <br />

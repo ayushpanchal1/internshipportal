@@ -1,4 +1,4 @@
-import { Col, Row, Container, Button, Modal } from "react-bootstrap";
+import { Col, Row, Container, Button, Modal, Tab, Tabs } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import {
   getMyRequestsStudent,
@@ -44,114 +44,80 @@ function Requests() {
     downloadRequest(DownloadReqId);
   }
 
+  const completedRequests = Requests.filter(
+    (request) => request.approvalstatus === 2
+  );
+
+  const incompleteRequests = Requests.filter(
+    (request) => request.approvalstatus === 0 
+  );
+
+  const approvedByTeacherRequests = Requests.filter(
+    (request) => request.approvalstatus === 1
+  );
+
+  const renderRequestCards = (requests) => {
+    return (
+      <Row>
+        {requests.map((request, index) => (
+          <Col md={6} lg={6} xs={12} key={request._id}>
+            <div className="card shadow" style={{ marginTop: "25px" }}>
+              <div className="border border-2 border-primary"></div>
+              <div className="card-header">For {request.companyname}</div>
+              <div className="card-body">
+                <h3 className="card-title">
+                  <b>{request.whatfor}</b>
+                </h3>
+                <p className="card-text">{request.domain}</p>
+                <p className="card-text">
+                  Approval Status: {request.approvalstatus}
+                </p>
+                <Button
+                  className="btn btn-primary"
+                  onClick={() => handleShow(request)}
+                >
+                  View
+                </Button>{" "}
+                &nbsp;
+                <Button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    handleShow();
+                    setRemoveReqId(request._id);
+                  }}
+                >
+                  Remove
+                </Button>{" "}
+                &nbsp;
+                {request.approvalstatus === 2 && (
+                  <Button
+                    className="btn btn-primary"
+                    onClick={() => handleDownload(request._id)}
+                  >
+                    Download
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Col>
+        ))}
+      </Row>
+    );
+  };
+
   return (
     <Container style={{ marginTop: "100px" }}>
-      {Requests.length > 0 && (
-        <ul className="list-unstyled">
-          {Requests.map((request, index) =>
-            index % 2 === 0 ? (
-              <Row className="d-flex" key={request._id}>
-                <Col md={6} lg={6} xs={12}>
-                  <li style={{ marginTop: "25px" }}>
-                    <div className="card shadow">
-                      <div className="border border-2 border-primary"></div>
-                      <div className="card-header">
-                        For {request.companyname}
-                      </div>
-                      <div className="card-body">
-                        <h3 className="card-title">
-                          <b>{request.whatfor}</b>
-                        </h3>
-                        <p className="card-text">{request.domain}</p>
-                        <p className="card-text">
-                          Approval Status: {request.approvalstatus}
-                        </p>
-                        <Button
-                          className="btn btn-primary"
-                          onClick={() => handleShow(request)}
-                        >
-                          View
-                        </Button>{" "}
-                        &nbsp;
-                        <Button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            handleShow();
-                            setRemoveReqId(request._id);
-                          }}
-                        >
-                          Remove
-                        </Button>{" "}
-                        &nbsp;
-                        {request.approvalstatus === 2 && (
-                          <Button
-                            className="btn btn-primary"
-                            onClick={() => {
-                              handleDownload(request._id);
-                            }}
-                          >
-                            Download
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                </Col>
-                {Requests[index + 1] && (
-                  <Col md={6} lg={6} xs={12}>
-                    <li style={{ marginTop: "25px" }}>
-                      <div className="card shadow">
-                        <div className="border border-2 border-primary"></div>
-                        <div className="card-header">
-                          For {Requests[index + 1].companyname}
-                        </div>
-                        <div className="card-body">
-                          <h3 className="card-title">
-                            <b>{Requests[index + 1].whatfor}</b>
-                          </h3>
-                          <p className="card-text">
-                            {Requests[index + 1].domain}
-                          </p>
-                          <p className="card-text">
-                            Approval Status:{" "}
-                            {Requests[index + 1].approvalstatus}
-                          </p>
-                          <Button
-                            className="btn btn-primary"
-                            onClick={() => handleShow(Requests[index + 1])}
-                          >
-                            View
-                          </Button>{" "}
-                          &nbsp;
-                          <Button
-                            className="btn btn-primary mr-2"
-                            onClick={() =>
-                              setRemoveReqId(Requests[index + 1]._id)
-                            }
-                          >
-                            Remove
-                          </Button>
-                          {request.approvalstatus === 2 && (
-                            <Button
-                              className="btn btn-primary"
-                              style={{ marginLeft: "20px" }}
-                              onClick={() => {
-                                handleDownload(request._id);
-                              }}
-                            >
-                              Download
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  </Col>
-                )}
-              </Row>
-            ) : null
-          )}
-        </ul>
-      )}
+      <Tabs defaultActiveKey="completed" id="requests-tabs" className="justify-content-center">
+        <Tab eventKey="incomplete" title="UnApproved">
+          {incompleteRequests.length > 0 && renderRequestCards(incompleteRequests)}
+        </Tab>
+        <Tab eventKey="approved" title="Approved by Teacher">
+          {approvedByTeacherRequests.length > 0 && renderRequestCards(approvedByTeacherRequests)}
+        </Tab>
+        <Tab eventKey="completed" title="Approved By Hod">
+          {completedRequests.length > 0 && renderRequestCards(completedRequests)}
+        </Tab>
+      </Tabs>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
