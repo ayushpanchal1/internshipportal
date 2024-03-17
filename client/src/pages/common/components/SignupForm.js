@@ -1,7 +1,8 @@
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+import { Col, Button, Row, Container, Card, Form, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerStudent } from "../../../services/StudentServices";
+import { generateOTP } from "../../../services/Services";
 
 function SignupForm() {
   const [fname, setfname] = useState("");
@@ -24,7 +25,20 @@ function SignupForm() {
 
   const navigate = useNavigate();
 
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [otp, setOtp] = useState(""); // State to hold OTP input
+
   async function handleSubmit(event) {
+    event.preventDefault();
+    const requestBody = {
+      email,
+    }
+    generateOTP(requestBody)
+    setShowOTPModal(true)
+  }
+
+
+  async function handleModalSubmit(event) {
     event.preventDefault();
     const requestBody = {
       fname,
@@ -44,6 +58,7 @@ function SignupForm() {
       dateofbirth,
       email,
       password,
+      otp
     };
 
     registerStudent(requestBody, navigate);
@@ -373,6 +388,27 @@ function SignupForm() {
           </Col>
         </Row>
       </Container>
+      <Modal centered show={showOTPModal} onHide={() => setShowOTPModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter OTP</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowOTPModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleModalSubmit}>
+            Submit OTP
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

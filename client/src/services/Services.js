@@ -87,3 +87,16 @@ export async function uploadProfilePicture(formData) {
     alert(`Error while uploading profile picture! ${error}`);
   }
 }
+
+export async function generateOTP(requestBody) {
+  try {
+    const response = await httpAxios.post('/api/generateotp', requestBody);
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    alert(`Error generating otp! ${error}`);
+  }
+}
