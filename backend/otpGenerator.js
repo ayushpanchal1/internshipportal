@@ -6,7 +6,10 @@ import moment from 'moment';
 
 export async function generateOtp(req, res) {
     try {
-        const otp = otpGenerator.generate(6, { digits: true }); // Generate 6-digit OTP
+        //find existing any otp (idk if this needs to be done)
+        await OTPModel.deleteMany({ email: req.body.email });
+
+        const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: true, specialChars: false }); // Generate 6-digit OTP
 
         await OTPModel.create({
             email: req.body.email,
