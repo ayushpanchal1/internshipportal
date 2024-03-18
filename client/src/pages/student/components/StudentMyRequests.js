@@ -18,7 +18,7 @@ function Requests() {
   const [confirmRemove, setConfirmRemove] = useState(false);
 
   const handleClose = () => {
-    setRemoveReqId("");
+    setRemoveReqId(null);
     setShow(false);
     setSelectedRequest(null);
     setConfirmRemove(false);
@@ -38,7 +38,6 @@ function Requests() {
       removeRequestStudent(setRequests, RemoveReqId);
       setRemoveReqId("");
       handleClose();
-      window.location.reload();
     } else {
       setConfirmRemove(true);
     }
@@ -88,17 +87,14 @@ function Requests() {
                   <>
                     <Button
                       className="btn btn-primary"
-                      onClick={() => handleShow(request)}
+                      onClick={() => { setRemoveReqId(request._id); handleShow(request) }}
                     >
                       View
                     </Button>{" "}
                     &nbsp;
                     <Button
                       className="btn btn-primary"
-                      onClick={
-                      handleRemove
-                    
-                    }
+                      onClick={() => { setRemoveReqId(request._id); handleShow(); }}
                     >
                       Remove
                     </Button>{" "}
@@ -115,7 +111,7 @@ function Requests() {
                 )}
                 {request.approvalstatus === 3 && (
                   <>
-                    <strong>Decline Reason: {request.declinemsg}</strong>
+                    <strong>Decline Reason:</strong> {request.declinemsg}
                   </>
                 )}
                  {request.approvalstatus === 1 && <FaCheck />} 
@@ -149,11 +145,17 @@ function Requests() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
+        {selectedRequest ? (
           <Modal.Title style={{ color: "#802121" }}>
             Internship Details
           </Modal.Title>
+        ) :
+        <Modal.Title style={{ color: "#802121" }}>
+            Remove Internship Details
+          </Modal.Title>
+         }
         </Modal.Header>
-        {selectedRequest && (
+        {selectedRequest ? (
           <Modal.Body>
             <p>
               <strong>Company Name:</strong> {selectedRequest.companyname}
@@ -168,7 +170,7 @@ function Requests() {
               <strong>Approval Status:</strong> {selectedRequest.approvalstatus}
             </p>
           </Modal.Body>
-        )}
+        ): <Modal.Body>remove internship?</Modal.Body>}
         <Modal.Footer>
           {!confirmRemove ? (
             <>

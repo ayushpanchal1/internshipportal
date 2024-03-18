@@ -5,13 +5,15 @@ import { getMyRequestsTeacher, approveRequestTeacher, declineRequestTeacher } fr
 function Requests() {
     const [requests, setRequests] = useState('');
     const [approveReqId, setApproveReqId] = useState('');
+    const [declineReqId, setDeclineReqId] = useState('');
     const [show, setShow] = useState(false);
     const [declineMsg, setDeclineMsg] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredRequests, setFilteredRequests] = useState([]);
 
     const handleClose = () => {
-        setApproveReqId('');
+        setApproveReqId(null);
+        setDeclineReqId(null);
         setShow(false);
     }
     const handleShow = () => setShow(true);
@@ -39,8 +41,8 @@ function Requests() {
     }
 
     function handleDecline() {
-        declineRequestTeacher(setRequests, approveReqId, declineMsg);
-        setApproveReqId('');
+        declineRequestTeacher(setRequests, declineReqId, declineMsg);
+        setDeclineReqId('');
         handleClose();
     }
 
@@ -69,7 +71,7 @@ function Requests() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <Button variant="primary" className="me-2" onClick={handleSearch}>Search</Button>
-                <Button variant="secondary" onClick={handleClear}>Clear</Button>
+                <Button variant="info" onClick={handleClear}>Clear</Button>
             </div>
             {filteredRequests.length > 0 && (
                 <ul className='list-unstyled'>
@@ -88,7 +90,7 @@ function Requests() {
                                                 <p className="card-text">{request.domain}</p>
                                                 <p className="card-text">Approval Status: {request.approvalstatus}</p>
                                                 <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(request._id); }}>Approve</Button> &nbsp;
-                                                <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(request._id); }}>Decline</Button>
+                                                <Button className="btn btn-primary" onClick={() => { handleShow(); setDeclineReqId(request._id); }}>Decline</Button>
                                             </div>
                                         </div>
                                     </li>
@@ -106,7 +108,7 @@ function Requests() {
                                                     <p className="card-text">{filteredRequests[index + 1].domain}</p>
                                                     <p className="card-text">Approval Status: {filteredRequests[index + 1].approvalstatus}</p>
                                                     <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Approve</Button> &nbsp;
-                                                    <Button className="btn btn-danger" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Decline</Button>
+                                                    <Button className="btn btn-primary" onClick={() => { handleShow(); setDeclineReqId(filteredRequests[index + 1]._id); }}>Decline</Button>
                                                 </div>
                                             </div>
                                         </li>
@@ -121,12 +123,14 @@ function Requests() {
             
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ color: "#802121" }}>Approve Internship Request</Modal.Title>
+                    {approveReqId && <Modal.Title style={{ color: "#802121" }}>Approve Internship Request</Modal.Title> }
+                    {declineReqId && <Modal.Title style={{ color: "#802121" }}>Decline Internship Request</Modal.Title> }
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to {declineMsg ? 'decline' : 'approve'} this request?
-                    {declineMsg && (
-                        <Form.Group controlId="declineMsg">
+                    Are you sure you want to {declineReqId ? 'decline' : 'approve'} this request? 
+                    {declineReqId && (
+                        <Form.Group controlId="declineMsg"
+                        style={{marginTop:"30px"}}>
                             <Form.Label>Decline Message</Form.Label>
                             <Form.Control
                                 as="textarea"
@@ -141,8 +145,8 @@ function Requests() {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={declineMsg ? handleDecline : handleApprove}>
-                        {declineMsg ? 'Yes, Decline' : 'Yes, Approve'}
+                    <Button variant="primary" onClick={declineReqId ? handleDecline : handleApprove}>
+                        {declineReqId ? 'Yes, Decline' : 'Yes, Approve'}
                     </Button>
                 </Modal.Footer>
             </Modal>

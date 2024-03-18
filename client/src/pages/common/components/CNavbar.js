@@ -205,7 +205,7 @@ function CNavbar() {
               height="40"
               className="d-inline-block align-center"
               alt="Logo"
-              style={{ backgroundColor: "white" }}
+              style={{ backgroundColor: "white", borderRadius: "4px" }}
             ></img>
             &nbsp; <b1>Internship Management Portal</b1>
           </NavLink>
