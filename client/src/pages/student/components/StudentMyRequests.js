@@ -1,6 +1,7 @@
 import { Col, Row, Container, Button, Modal, Tab, Tabs } from "react-bootstrap";
 import { FaCheck, FaTimes, FaCheckDouble, FaClock } from "react-icons/fa";
-
+import { BiCheckDouble } from "react-icons/bi";
+import { RxCrossCircled } from "react-icons/rx";
 
 import { useState, useEffect } from "react";
 import {
@@ -114,10 +115,10 @@ function Requests() {
                     <strong>Decline Reason:</strong> {request.declinemsg}
                   </>
                 )}
-                 {request.approvalstatus === 1 && <FaCheck />} 
-                 {request.approvalstatus === 0 && <FaClock/>} 
-              {request.approvalstatus === 2 && <FaCheckDouble />} 
-              {request.approvalstatus === 3 && <FaTimes />} 
+                 {request.approvalstatus === 1 && <FaCheck size={20}/>} 
+                 {request.approvalstatus === 0 && <FaClock size={20}/>} 
+              {request.approvalstatus === 2 && <BiCheckDouble style={{paddingLeft: "10px", strokeWidth: "1"}} size={40}/>} 
+              {request.approvalstatus === 3 && <FaTimes style={{paddingLeft: "10px", strokeWidth: "1"}} size={25}/>} 
               </div>
             </div>
           </Col>
