@@ -1,4 +1,4 @@
-import { Col, Button, Container, Card, Modal } from "react-bootstrap";
+import { Col, Button, Container, Card, Modal, ModalBody } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyInternsStudent, delMyInternsStudent } from "../../../services/StudentServices";
 import { FaCheckDouble } from "react-icons/fa";
@@ -9,7 +9,10 @@ function MyInternships() {
     const [show, setShow] = useState(false);
     const [selectedIntern, setSelectedIntern] = useState(null);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setSelectedIntern(null)
+    }
     const handleShow = () => setShow(true);
 
     useEffect(() => {
@@ -40,7 +43,7 @@ function MyInternships() {
                             <li key={intern._id}>
                                 <Card className="shadow">
                                     <div className="card-header">
-                                        From {intern.provider}
+                                        From {intern.provider} {intern._id}
                                     </div>
                                     <div className="card-body">
                                         <h3 className="card-title"><b>{intern.whatfor}</b></h3>
@@ -54,46 +57,50 @@ function MyInternships() {
                                             </div>
                                         </div>
                                         <div>
-                                            <Button className="btn btn-primary" style= {{mr:2}}onClick={() => handleView(intern)}>View</Button>&nbsp;
+                                            <Button className="btn btn-primary" style={{ mr: 2 }} onClick={() => { setDelInternId(intern._id); handleView(intern);}}>View</Button>&nbsp;
                                             <Button className="btn btn-primary" onClick={() => { setDelInternId(intern._id); handleShow(); }}>Delete</Button>
                                         </div>
                                     </div>
                                 </Card>
                                 <br />
+                                <Modal show={show} onHide={handleClose}>
+                                    <Modal.Header closeButton>
+                                    { selectedIntern ? 
+                                        <Modal.Title style={{ color: "#802121" }}>Internship Details</Modal.Title>
+                                        :
+                                        <Modal.Title style={{ color: "#802121" }}>Delete Internship Details</Modal.Title>
+                                    }
+                                    </Modal.Header>
+                                    {selectedIntern ? (
+                                        <Modal.Body>
+                                            <p><strong>Student ID:</strong> {selectedIntern.stu_id}</p>
+                                            <p><strong>Student Name:</strong> {selectedIntern.stuname}</p>
+                                            <p><strong>Student Father's Name:</strong> {selectedIntern.stufname}</p>
+                                            <p><strong>Student Last Name:</strong> {selectedIntern.stulname}</p>
+                                            <p><strong>Email:</strong> {selectedIntern.email}</p>
+                                            <p><strong>Provider:</strong> {selectedIntern.provider}</p>
+                                            <p><strong>From Duration:</strong> {selectedIntern.fromduration}</p>
+                                            <p><strong>To Duration:</strong> {selectedIntern.toduration}</p>
+                                            <p><strong>What For:</strong> {selectedIntern.whatfor}</p>
+                                            <p><strong>Domain:</strong> {selectedIntern.domain}</p>
+                                        </Modal.Body>
+                                    ) : <Modal.Body>are you sure?</Modal.Body>}
+                                    <Modal.Footer>
+                                        <Button variant="primary" onClick={handleClose}>Close</Button>
+                                        {
+                                            selectedIntern ? 
+                                            <Button variant="primary" onClick={() => { handleClose(); handleShow(); }}>Delete</Button>
+                                            : 
+                                            <Button variant="primary" onClick={() => { handleDelete() }}>Delete</Button> 
+                                        }
+                                    </Modal.Footer>
+                                </Modal>
                             </li>
                         ))}
                     </ul>
                 )}
-                {/* {interns.stu_id === 2 && <FaCheckDouble />}  */}
-             
             </div>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title style={{ color: "#802121" }}>Internship Details</Modal.Title>
-                </Modal.Header>
-                {selectedIntern && (
-                    <Modal.Body>
-                        <p><strong>Student ID:</strong> {selectedIntern.stu_id}</p>
-                        <p><strong>Student Name:</strong> {selectedIntern.stuname}</p>
-                        <p><strong>Student Father's Name:</strong> {selectedIntern.stufname}</p>
-                        <p><strong>Student Last Name:</strong> {selectedIntern.stulname}</p>
-                        <p><strong>Email:</strong> {selectedIntern.email}</p>
-                        <p><strong>Provider:</strong> {selectedIntern.provider}</p>
-                        <p><strong>From Duration:</strong> {selectedIntern.fromduration}</p>
-                        <p><strong>To Duration:</strong> {selectedIntern.toduration}</p>
-                        <p><strong>What For:</strong> {selectedIntern.whatfor}</p>
-                        <p><strong>Domain:</strong> {selectedIntern.domain}</p>
-                        {selectedIntern.quote && (
-                            <p><strong>Quote:</strong> {selectedIntern.quote}</p>
-                        )}
-                    </Modal.Body>
-                )}
 
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleClose}>Close</Button>
-                    <Button variant="primary" onClick={handleDelete}>Delete</Button>
-                </Modal.Footer>
-            </Modal>
         </Container>
     );
 }
