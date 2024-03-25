@@ -1,6 +1,6 @@
 import Teacher from "../models/teacher.model.js";
 import Request from "../models/request.model.js";
-import Notif from "../models/notification.model.js";
+import Announcement from "../models/announcement.model.js";
 import Student from "../models/student.model.js";
 import CompIntern from "../models/compintern.model.js";
 import bcrypt from "bcryptjs";
@@ -8,10 +8,10 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import multer from "multer";
 import path from "path";
+import fs from 'fs';
 // import PDFDocument from 'pdfkit'
 // import path from "path";
 // import multer from "multer";
-// import fs from 'fs'
 
 dotenv.config();
 
@@ -162,6 +162,14 @@ export async function teacherapproverequest(req, res) {
     if (req.role != "teacher") {
       return res.status(500).send({ error: "User is not a teacher" });
     }
+        // check if the have a signature uploaded
+        // ./media/uploads/teacher/sign/teachersign${request.classteacherid}.png
+        const teacherSignaturePath = `./media/uploads/teacher/sign/teachersign${req.user._id}.png`;
+        
+        // Check if the class teacher's signature file exists
+        if (!fs.existsSync(teacherSignaturePath)) {
+          return res.send({ error: "Your signature doesn't exist, please upload a signature from the dashboard first!" });
+        }
 
     const tchr = [req.user.firstname, req.user.lastname].join(" ");
 
@@ -205,26 +213,26 @@ export async function teacherapproverequest(req, res) {
   }
 }
 
-export async function teachergetmynotifs(req, res) {
+export async function teachergetmyAnnouncements(req, res) {
   try {
     if (req.role != "teacher") {
       return res.status(500).send({ error: "User is not a teacher" });
     }
-    const mynotifsdata = await Notif.find({
+    const myAnnouncementsdata = await Announcement.find({
       teacher_id: req.user._id,
     });
-    return res.status(200).send(mynotifsdata);
+    return res.status(200).send(myAnnouncementsdata);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
 }
 
-export async function teacherpostnotif(req, res) {
+export async function teacherpostAnnouncement(req, res) {
   try {
     if (req.role != "teacher") {
       return res.status(500).send({ error: "User is not a teacher" });
     }
-    await Notif.create({
+    await Announcement.create({
       teacher_id: req.user._id,
       email: req.user.email,
       firstname: req.user.firstname,
@@ -282,13 +290,13 @@ export async function teacherfetchastudent(req, res) {
   }
 }
 
-export async function teacherdelmynotifs(req, res) {
+export async function teacherdelmyAnnouncements(req, res) {
   try {
-    const mynotifdata = await Notif.deleteOne({
+    const myAnnouncementdata = await Announcement.deleteOne({
       teacher_id: req.user._id,
       _id: req.body._id,
     });
-    return res.json(mynotifdata);
+    return res.json(myAnnouncementdata);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }

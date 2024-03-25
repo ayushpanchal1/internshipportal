@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Notif = new mongoose.Schema(
+const Announcement = new mongoose.Schema(
 	{	
 		teacher_id: { type: String, required: true },
 		email: { type: String, required: true },
@@ -9,9 +9,8 @@ const Notif = new mongoose.Schema(
 		title: { type: String, required: true },
         info: { type: String, required: true },
 		link: { type: String, required: true },
-		quote: { type: String },
 	},
-	{ collection: 'notif-data' }
+	{ collection: 'Announcement-data' }
 )
 
-export default mongoose.model('NotifData', Notif);
+export default mongoose.model('AnnouncementData', Announcement);

@@ -2,7 +2,7 @@ import Student from "../models/student.model.js";
 import Teacher from "../models/teacher.model.js";
 import Request from "../models/request.model.js";
 // import Request from '../models/request.model.js'
-import Notif from "../models/notification.model.js";
+import Announcement from "../models/announcement.model.js";
 import Test from "../models/test.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -133,10 +133,10 @@ export async function testmiddleware(req, res) {
   }
 }
 
-export async function getnotifs(req, res) {
+export async function getAnnouncements(req, res) {
   try {
-    const notifs = await Notif.find();
-    return res.json(notifs);
+    const Announcements = await Announcement.find();
+    return res.json(Announcements);
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
@@ -160,6 +160,23 @@ export async function downloadrequest(req, res) {
       return res
         .status(500)
         .send({ error: "no requests were found with that id" });
+
+    // Checking if signatures exist
+    // ./media/uploads/teacher/sign/teachersign${request.classteacherid}.png
+    const classteacherSignaturePath = `./media/uploads/teacher/sign/teachersign${request.classteacherid}.png`;
+    const hodSignaturePath = `./media/uploads/teacher/sign/teachersign${request.hodid}.png`;
+    
+    // Check if the class teacher's signature file exists
+    if (!fs.existsSync(classteacherSignaturePath)) {
+      return res.status(500).send({ error: "Class teacher's signature doesn't exist" });
+    }
+    
+    // Check if the HOD's signature file exists
+    if (!fs.existsSync(hodSignaturePath)) {
+      return res.status(500).send({ error: "HOD's signature doesn't exist" });
+    }
+    
+
 
 
     // to prevent crashing
@@ -227,13 +244,14 @@ export async function downloadrequest(req, res) {
         )
         .moveDown(4);
 
-        //./media/uploads/teacher/sign/teachersign${request.classteacherid}.png for actual sign
-      pdfDoc.image(`./media/fake.png`, 40, 600, {
+      //./media/fake.png for placeholder sign
+      //./media/uploads/teacher/sign/teachersign${request.classteacherid}.png for actual class teacher sign
+      pdfDoc.image(classteacherSignaturePath, 40, 600, {
         fit: [150, 150],
       });
 
-      //./media/uploads/teacher/sign/teachersign${request.hodid}.png for actual sign
-      pdfDoc.image(`./media/fake.png`, 430, 600, {
+      //./media/uploads/teacher/sign/teachersign${request.hodid}.png for actual hod sign
+      pdfDoc.image(hodSignaturePath, 430, 600, {
         fit: [150, 150],
       });
 
@@ -254,15 +272,15 @@ export async function downloadrequest(req, res) {
       // Delete the local PDF file
       fs.unlinkSync(`${pdfPath}${pdfFilename}`);
 
-          // Set CORS headers
+      // Set CORS headers
       res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_ADDRESS);
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      
+
       res.setHeader("Content-Type", "application/pdf");
       res.setHeader("Content-Disposition", 'inline; filename="document.pdf"');
       return res.end(pdfBinary);
-      
+
     } else {
       return res.status(500).send({ error: "request does not have a pdf" });
     }
@@ -307,7 +325,7 @@ export async function deleteProfilePicture(req, res) {
 export async function fetchProfilePicture(req, res) {
   const userId = req.params.userId;
   const role = req.role;
-  
+
   // Construct the file path
   const filePath = path.resolve(`./media/uploads/${role}/profile/${role}profile${userId}.png`);
 

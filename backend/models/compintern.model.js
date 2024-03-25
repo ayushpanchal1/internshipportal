@@ -13,7 +13,6 @@ const CompIntern = new mongoose.Schema(
 		toduration: { type: String, required: true },
         whatfor: { type: String, required: true },
 		domain: { type: String, required: true },
-		quote: { type: String },
 	},
 	{ collection: 'completed-internships-data' }
 )
