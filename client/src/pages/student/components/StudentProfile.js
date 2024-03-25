@@ -3,6 +3,7 @@ import { Col, Container, Card, Row } from "react-bootstrap";
 import IMAGE from '../../../media/user.png'
 import { getUserData } from "../../../services/Services"
 import UploadProfilePicture from '../../common/components/UploadProfilePic';
+import DeleteProfilePicture from '../../common/components/DeleteProfilePicture';
 
 function UserProfile() {
   const [UserData, setUserData] = useState('');
@@ -22,7 +23,7 @@ function UserProfile() {
                 <br />
                 <img class="media-object mw150" width="310" height="310" src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${UserData._id}`} />
               </Col>
-              <Col md={9} style={{ paddingLeft: '26px'}}>
+              <Col md={9} style={{ paddingLeft: '26px' }}>
                 <br />
                 <h1><b>{UserData.firstname} {UserData.lastname}</b></h1>
                 <br />
@@ -41,7 +42,10 @@ function UserProfile() {
                   </Col>
                 </Row>
                 <br />
-                <UploadProfilePicture />
+                <div className='d-flex'>
+                  <div><UploadProfilePicture /></div>
+                  <div><DeleteProfilePicture /></div>
+                </div>
               </Col>
             </Row>
           </Card>

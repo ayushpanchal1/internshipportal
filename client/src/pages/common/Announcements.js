@@ -2,14 +2,14 @@
 //import './App.css';
 import React from 'react'
 import CNavbar from './components/CNavbar';
-import Notification from './components/Notification';
+import AnnouncementsComponent from './components/AnnouncementsComponent';
 
 function App() {
   //console.log(Email)
   return (
     <div>
       <CNavbar />
-      <Notification />
+      <AnnouncementsComponent />
     </div>
   );
 }

@@ -34,9 +34,9 @@ export async function getUserData(setUserData) {
   }
 }
 
-export async function getNotifs(setNotifs) {
+export async function getAnnouncements(setAnnouncements) {
   try {
-    const response = await httpAxios.get('/api/getnotifs');
+    const response = await httpAxios.get('/api/getannouncements');
     var data = response.data;
 
     if (data.error) {
@@ -46,7 +46,7 @@ export async function getNotifs(setNotifs) {
         // `data` is an array, you can safely call reverse on it
         data.reverse();
       }
-      setNotifs(data)
+      setAnnouncements(data)
     }
   } catch (error) {
     alert(`Error fetching userdata! ${error}`);
@@ -56,6 +56,7 @@ export async function getNotifs(setNotifs) {
 export async function downloadRequest(DownloadReqId) {
   try {
     const response = await httpAxios.post('/api/downloadrequest', { id: DownloadReqId }, { responseType: 'arraybuffer' });
+    console.log(response.data);
     if (response.status === 200) {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const link = document.createElement('a');
@@ -85,6 +86,20 @@ export async function uploadProfilePicture(formData) {
     }
   } catch (error) {
     alert(`Error while uploading profile picture! ${error}`);
+  }
+}
+
+export async function deleteProfilePicture() {
+  try {
+    const response = await httpAxios.get('/api/deleteprofilepicture');
+    var data = response.data;
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      alert('Profile Picture Deleted!')
+    }
+  } catch (error) {
+    alert(`Error while deleting profile picture! ${error}`);
   }
 }
 

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useSignOut } from 'react-auth-kit';
 import { useAuthUser } from 'react-auth-kit';
 import CNavbar from '../common/components/CNavbar';
-import TeacherPostNotifsForm from './components/TeacherPostNotifsForm';
+import TeacherPostAnnouncementForm from './components/TeacherPostAnnouncementForm';
 import { logout } from '../../services/Services';
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
     <div>
       <CNavbar />
 
-      <TeacherPostNotifsForm />
+      <TeacherPostAnnouncementForm />
     </div>
   );
 }

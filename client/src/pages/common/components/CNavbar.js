@@ -110,7 +110,7 @@
 //               </Link>
 //             </li>
 //             <li className="nav-item">
-//               <Link to={"/teacher/TeacherPostNotifs"} className="nav-link">
+//               <Link to={"/teacher/TeacherPostAnnouncements"} className="nav-link">
 //                 Post
 //               </Link>
 //             </li>
@@ -300,6 +300,11 @@ function CNavbar() {
                   </NavLink>
                 </li>
                 <li className="nav-item">
+                  <NavLink to={"/Announcements"} className="nav-link">
+                    Announcements
+                  </NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink to={"/Notifications"} className="nav-link">
                     Notifications
                   </NavLink>
@@ -336,15 +341,15 @@ function CNavbar() {
                 </li>
                 <li className="nav-item">
                   <NavLink
-                    to={"/teacher/TeacherPostNotifs"}
+                    to={"/teacher/TeacherPostAnnouncements"}
                     className="nav-link"
                   >
                     Post
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to={"/Notifications"} className="nav-link">
-                    Notifications
+                  <NavLink to={"/Announcements"} className="nav-link">
+                    Announcements
                   </NavLink>
                 </li>
               </>

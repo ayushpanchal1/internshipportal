@@ -1,46 +1,46 @@
 import { Col, Button, Row, Container, Modal, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { getMyNotifsTeacher, delMyNotifsTeacher } from "../../../services/TeacherServices";
+import { getMyAnnouncementsTeacher, delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
 
-function TeacherMyNotifs() {
-    const [Notifs, setNotifs] = useState([]);
-    const [delnotifid, setDelNotifId] = useState('');
+function TeacherMyAnnouncements() {
+    const [Announcements, setAnnouncements] = useState([]);
+    const [delAnnouncementid, setDelAnnouncementId] = useState('');
     const [show, setShow] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [filteredNotifs, setFilteredNotifs] = useState([]);
+    const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     useEffect(() => {
-        getMyNotifsTeacher(setNotifs);
+        getMyAnnouncementsTeacher(setAnnouncements);
     }, []);
 
     const handleSubmit = () => {
-        delMyNotifsTeacher(setNotifs, delnotifid);
+        delMyAnnouncementsTeacher(setAnnouncements, delAnnouncementid);
         handleClose();
     };
     
 
     const handleSearch = () => {
-        const newFilteredNotifs = Notifs.filter(notif => {
+        const newFilteredAnnouncements = Announcements.filter(Announcement => {
             return (
-                notif.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                notif.info.toLowerCase().includes(searchQuery.toLowerCase())
+                Announcement.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                Announcement.info.toLowerCase().includes(searchQuery.toLowerCase())
             );
         });
-        setFilteredNotifs(newFilteredNotifs);
+        setFilteredAnnouncements(newFilteredAnnouncements);
     };
 
     const handleClear = () => {
         setSearchQuery('');
-        setFilteredNotifs([]);
+        setFilteredAnnouncements([]);
     };
 
     return (
         <Container style={{ marginTop: '48px' }}>
             <Col md={8} lg={12} xs={12}>
-                <h1><b>Notifications posted by you</b></h1>
+                <h1><b>Announcements posted by you</b></h1>
             </Col>
             <div className="border border-2 border-primary"></div>
             <br />
@@ -59,15 +59,15 @@ function TeacherMyNotifs() {
                         <Button variant="primary" className="me-1" style={{ height: "40px" }} onClick={handleClear}>Clear</Button>
                     </div>
                     <div>
-                        {(filteredNotifs.length > 0 ? filteredNotifs : Notifs).map(notif => (
-                            <div key={notif._id} className="card shadow mb-3">
+                        {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(Announcement => (
+                            <div key={Announcement._id} className="card shadow mb-3">
                                 <div className="card-header">
                                     Post by You
                                 </div>
                                 <div className="card-body">
-                                    <h3 className="card-title"><b>{notif.title}</b></h3>
-                                    <p className="card-text">{notif.info}</p>
-                                    <div className="btn btn-primary" onClick={() => { handleShow(); setDelNotifId(notif._id); }}>Delete</div>
+                                    <h3 className="card-title"><b>{Announcement.title}</b></h3>
+                                    <p className="card-text">{Announcement.info}</p>
+                                    <div className="btn btn-primary" onClick={() => { handleShow(); setDelAnnouncementId(Announcement._id); }}>Delete</div>
                                 </div>
                             </div>
                         ))}
@@ -76,9 +76,9 @@ function TeacherMyNotifs() {
             </Row>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ color: "#802121" }}>Delete Notification</Modal.Title>
+                    <Modal.Title style={{ color: "#802121" }}>Delete Announcementication</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to delete this notification?</Modal.Body>
+                <Modal.Body>Are you sure you want to delete this Announcementication?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
@@ -92,4 +92,4 @@ function TeacherMyNotifs() {
     )
 }
 
-export default TeacherMyNotifs;
+export default TeacherMyAnnouncements;

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import IMAGE from "../../../media/user.png";
 import { getUserData } from "../../../services/Services";
 import UploadProfilePicture from "../../common/components/UploadProfilePic";
+import DeleteProfilePicture from "../../common/components/DeleteProfilePicture";
 import UploadSignImage from "./TeacherSign";
 
 function TeacherProfile() {
@@ -47,7 +48,8 @@ function TeacherProfile() {
                 </Row>
                 <br />
                 <div className="d-flex">
-                 <div> <UploadProfilePicture /></div>
+                  <div> <UploadProfilePicture /></div>
+                  <div><DeleteProfilePicture /></div>
                   <div><UploadSignImage /></div>
                 </div>
               </Col>

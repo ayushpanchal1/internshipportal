@@ -43,7 +43,7 @@ function MyInternships() {
                             <li key={intern._id}>
                                 <Card className="shadow">
                                     <div className="card-header">
-                                        From {intern.provider} {intern._id}
+                                        From {intern.provider}
                                     </div>
                                     <div className="card-body">
                                         <h3 className="card-title"><b>{intern.whatfor}</b></h3>

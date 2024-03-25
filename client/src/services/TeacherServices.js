@@ -24,9 +24,9 @@ export async function loginTeacher(requestBody, navigate, signIn) {
   }
 }
 
-export async function getMyNotifsTeacher(setNotifs) {
+export async function getMyAnnouncementsTeacher(setAnnouncements) {
   try {
-    const response = await httpAxios.get('/api/teachergetmynotifs');
+    const response = await httpAxios.get('/api/teachergetmyannouncements');
     var data = response.data;
 
     if (data.error) {
@@ -36,25 +36,25 @@ export async function getMyNotifsTeacher(setNotifs) {
         // `data` is an array, you can safely call reverse on it
         data.reverse();
       }
-      setNotifs(data)
+      setAnnouncements(data)
     }
   } catch (error) {
-    alert(`Error fetching teachermynotifs! ${error}`);
+    alert(`Error fetching teachermyannouncements! ${error}`);
   }
 }
 
-export async function delMyNotifsTeacher(setNotifs, delnotifid) {
+export async function delMyAnnouncementsTeacher(setAnnouncements, delAnnouncementid) {
   try {
-    const response = await httpAxios.post('/api/teacherdelmynotifs', ({ _id: delnotifid }));
+    const response = await httpAxios.post('/api/teacherdelmyannouncements', ({ _id: delAnnouncementid }));
     var data = response.data;
 
     if (data.error) {
       throw new Error(data.error);
     } else {
-      getMyNotifsTeacher(setNotifs)
+      getMyAnnouncementsTeacher(setAnnouncements)
     }
   } catch (error) {
-    alert(`Error while deleting teachermynotif! ${error}`);
+    alert(`Error while deleting teachermyannouncement! ${error}`);
   }
 }
 export async function uploadSignaturePicture(formData) {
@@ -74,9 +74,9 @@ export async function uploadSignaturePicture(formData) {
     alert(`Error while uploading profile picture! ${error}`);
   }
 }
-export async function postNotifTeacher(requestBody) {
+export async function postAnnouncementTeacher(requestBody) {
   try {
-    const response = await httpAxios.post('/api/teacherpostnotif', requestBody);
+    const response = await httpAxios.post('/api/teacherpostannouncement', requestBody);
     const data = response.data;
 
     if (data.error) {

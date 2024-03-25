@@ -88,7 +88,7 @@ function Requests() {
                                             <div className="card-body">
                                                 <h3 className="card-title"><b>{request.whatfor}</b></h3>
                                                 <p className="card-text">{request.domain}</p>
-                                                <p className="card-text">Approval Status: {request.approvalstatus}</p>
+                                                {/* <p className="card-text">Approval Status: {request.approvalstatus}</p> */}
                                                 <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(request._id); }}>Approve</Button> &nbsp;
                                                 <Button className="btn btn-primary" onClick={() => { handleShow(); setDeclineReqId(request._id); }}>Decline</Button>
                                             </div>
@@ -106,7 +106,7 @@ function Requests() {
                                                 <div className="card-body">
                                                     <h3 className="card-title"><b>{filteredRequests[index + 1].whatfor}</b></h3>
                                                     <p className="card-text">{filteredRequests[index + 1].domain}</p>
-                                                    <p className="card-text">Approval Status: {filteredRequests[index + 1].approvalstatus}</p>
+                                                    {/* <p className="card-text">Approval Status: {filteredRequests[index + 1].approvalstatus}</p> */}
                                                     <Button className="btn btn-primary" onClick={() => { handleShow(); setApproveReqId(filteredRequests[index + 1]._id); }}>Approve</Button> &nbsp;
                                                     <Button className="btn btn-primary" onClick={() => { handleShow(); setDeclineReqId(filteredRequests[index + 1]._id); }}>Decline</Button>
                                                 </div>

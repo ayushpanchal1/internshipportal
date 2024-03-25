@@ -1,27 +1,28 @@
 import { Col, Row, Container, Button, Form } from "react-bootstrap";
 import { useState, useEffect } from 'react';
-import { delMyNotifsTeacher } from "../../../services/TeacherServices";
-import { getNotifs } from "../../../services/Services";
+import { delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
+import { getAnnouncements } from "../../../services/Services";
 
 function Notification() {
-  const [Notifs, setNotifs] = useState([]);
+  const [Announcements, setAnnouncements] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredNotifs, setFilteredNotifs] = useState([]);
+  const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
 
   useEffect(() => {
-    getNotifs(setNotifs);
+    getAnnouncements(setAnnouncements);
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      await delMyNotifsTeacher(setNotifs, id);
+      await delMyAnnouncementsTeacher(setAnnouncements, id);
+      await getAnnouncements(setAnnouncements);
     } catch (error) {
       alert(`Error deleting notification: ${error}`);
     }
   };
 
   const handleSearch = () => {
-    const newFilteredNotifs = Notifs.filter(notif => {
+    const newFilteredAnnouncements = Announcements.filter(notif => {
       return (
         notif.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
         notif.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -29,12 +30,12 @@ function Notification() {
         notif.info.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
-    setFilteredNotifs(newFilteredNotifs);
+    setFilteredAnnouncements(newFilteredAnnouncements);
   };
 
   const handleClear = () => {
     setSearchQuery('');
-    setFilteredNotifs([]);
+    setFilteredAnnouncements([]);
   };
 
   useEffect(() => {
@@ -58,7 +59,7 @@ function Notification() {
             <Button variant="primary" className="me-1" style={{height:"40px"}} onClick={handleClear}>Clear</Button>
           </div>
           <div>
-            {(filteredNotifs.length > 0 ? filteredNotifs : Notifs).map(notif => (
+            {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(notif => (
               <div key={notif._id} className="card shadow mb-3">
                 <div className="border border-2 border-primary"></div>
                 <div className="card-header">
@@ -87,28 +88,28 @@ export default Notification;
 
 // import { Col, Row, Container, Button, Form } from "react-bootstrap";
 // import { useState, useEffect } from 'react';
-// import { delMyNotifsTeacher } from "../../../services/TeacherServices";
-// import { getNotifs } from "../../../services/Services";
+// import { delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
+// import { getAnnouncements } from "../../../services/Services";
 
 // function Notification() {
-//   const [Notifs, setNotifs] = useState([]);
+//   const [Announcements, setAnnouncements] = useState([]);
 //   const [searchQuery, setSearchQuery] = useState('');
-//   const [filteredNotifs, setFilteredNotifs] = useState([]);
+//   const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
 
 //   useEffect(() => {
-//     getNotifs(setNotifs);
+//     getAnnouncements(setAnnouncements);
 //   }, []);
 
 //   const handleDelete = async (id) => {
 //     try {
-//       await delMyNotifsTeacher(setNotifs, id);
+//       await delMyAnnouncementsTeacher(setAnnouncements, id);
 //     } catch (error) {
 //       alert(`Error deleting notification: ${error}`);
 //     }
 //   };
 
 //   const handleSearch = () => {
-//     const newFilteredNotifs = Notifs.filter(notif => {
+//     const newFilteredAnnouncements = Announcements.filter(notif => {
 //       return (
 //         notif.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
 //         notif.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -116,12 +117,12 @@ export default Notification;
 //         notif.info.toLowerCase().includes(searchQuery.toLowerCase())
 //       );
 //     });
-//     setFilteredNotifs(newFilteredNotifs);
+//     setFilteredAnnouncements(newFilteredAnnouncements);
 //   };
 
 //   const handleClear = () => {
 //     setSearchQuery('');
-//     setFilteredNotifs([]);
+//     setFilteredAnnouncements([]);
 //   };
 
 //   return (
@@ -141,7 +142,7 @@ export default Notification;
 //             <Button variant="secondary" onClick={handleClear}>Clear</Button>
 //           </div>
 //           <div>
-//             {(filteredNotifs.length > 0 ? filteredNotifs : Notifs).map(notif => (
+//             {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(notif => (
 //               <div key={notif._id} className="card shadow mb-3">
 //                 <div className="border border-2 border-primary"></div>
 //                 <div className="card-header">

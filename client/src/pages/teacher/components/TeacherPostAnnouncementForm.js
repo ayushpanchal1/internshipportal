@@ -1,8 +1,8 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import { useState, useEffect } from 'react';
-import { postNotifTeacher } from "../../../services/TeacherServices";
+import { useState } from 'react';
+import { postAnnouncementTeacher } from "../../../services/TeacherServices";
 
-function TeacherPostNotifsForm() {
+function TeacherPostAnnouncementsForm() {
   const [Title, setTitle] = useState('')
   const [Info, setInfo] = useState('')
   const [iLink, setiLink] = useState('')
@@ -14,7 +14,7 @@ function TeacherPostNotifsForm() {
       Info,
       iLink,
     };
-    postNotifTeacher(requestBody)
+    postAnnouncementTeacher(requestBody)
   }
 
   return (
@@ -25,7 +25,7 @@ function TeacherPostNotifsForm() {
           <Card className="shadow px-4">
             <Card.Body>
               <div className="mb-3 mt-md-4">
-                <h2 className="fw-bold mb-2 text-center text-uppercase ">Enter details about your post</h2>
+                <h2 className="fw-bold mb-2 text-center text-uppercase ">Enter details about your Announcement</h2>
                 <div className="mb-3">
                   <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="Title">
@@ -46,12 +46,12 @@ function TeacherPostNotifsForm() {
                       <Form.Label className="text-center">
                         Link
                       </Form.Label>
-                      <Form.Control value={iLink} onChange={(e) => setiLink(e.target.value)} type="url" placeholder="Enter Link to learn more" />
+                      <Form.Control value={iLink} onChange={(e) => setiLink(e.target.value)} type="url" placeholder="Enter Link for people to learn more" />
                     </Form.Group>
 
                     <div className="d-grid">
-                      <Button variant="primary" value="submitnotif" type="submit">
-                        Post
+                      <Button variant="primary" value="submitannouncement" type="submit">
+                        Post Announcement
                       </Button>
                     </div>
                   </Form>
@@ -65,4 +65,4 @@ function TeacherPostNotifsForm() {
   )
 }
 
-export default TeacherPostNotifsForm;
+export default TeacherPostAnnouncementsForm;

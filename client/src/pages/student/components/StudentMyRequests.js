@@ -82,7 +82,7 @@ function Requests() {
                 </h3>
                 <p className="card-text">{request.domain}</p>
                 <p className="card-text">
-                  Approval Status: {request.approvalstatus}
+                  {/* Approval Status: {request.approvalstatus} */}
                 </p>
                 {request.approvalstatus !== 3 && (
                   <>
