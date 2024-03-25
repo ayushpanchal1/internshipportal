@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
 import { getAnnouncements } from "../../../services/Services";
 
-function Notification() {
+function Announcementsication() {
   const [Announcements, setAnnouncements] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
@@ -17,17 +17,17 @@ function Notification() {
       await delMyAnnouncementsTeacher(setAnnouncements, id);
       await getAnnouncements(setAnnouncements);
     } catch (error) {
-      alert(`Error deleting notification: ${error}`);
+      alert(`Error deleting Announcementsication: ${error}`);
     }
   };
 
   const handleSearch = () => {
-    const newFilteredAnnouncements = Announcements.filter(notif => {
+    const newFilteredAnnouncements = Announcements.filter(Announcements => {
       return (
-        notif.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        notif.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        notif.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        notif.info.toLowerCase().includes(searchQuery.toLowerCase())
+        Announcements.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        Announcements.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        Announcements.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        Announcements.info.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
     setFilteredAnnouncements(newFilteredAnnouncements);
@@ -59,18 +59,18 @@ function Notification() {
             <Button variant="primary" className="me-1" style={{height:"40px"}} onClick={handleClear}>Clear</Button>
           </div>
           <div>
-            {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(notif => (
-              <div key={notif._id} className="card shadow mb-3">
+            {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(Announcements => (
+              <div key={Announcements._id} className="card shadow mb-3">
                 <div className="border border-2 border-primary"></div>
                 <div className="card-header">
-                  Post by {notif.firstname} {notif.lastname}
+                  Post by {Announcements.firstname} {Announcements.lastname}
                 </div>
                 <div className="card-body">
-                  <h3 className="card-title"><b>{notif.title}</b></h3>
-                  <p className="card-text">{notif.info}</p>
-                  <a href={notif.link} className="btn btn-primary">Learn More</a>
-                  {localStorage.getItem('SessionEmail') === notif.email && (
-                    <Button  className="ms-2 btn btn-primary" onClick={() => handleDelete(notif._id)}>Delete</Button>
+                  <h3 className="card-title"><b>{Announcements.title}</b></h3>
+                  <p className="card-text">{Announcements.info}</p>
+                  <a href={Announcements.link} className="btn btn-primary">Learn More</a>
+                  {localStorage.getItem('SessionEmail') === Announcements.email && (
+                    <Button  className="ms-2 btn btn-primary" onClick={() => handleDelete(Announcements._id)}>Delete</Button>
                   )}
                 </div>
               </div>
@@ -82,7 +82,7 @@ function Notification() {
   )
 }
 
-export default Notification;
+export default Announcementsication;
 
 
 
@@ -91,7 +91,7 @@ export default Notification;
 // import { delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
 // import { getAnnouncements } from "../../../services/Services";
 
-// function Notification() {
+// function Announcementsication() {
 //   const [Announcements, setAnnouncements] = useState([]);
 //   const [searchQuery, setSearchQuery] = useState('');
 //   const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
@@ -104,17 +104,17 @@ export default Notification;
 //     try {
 //       await delMyAnnouncementsTeacher(setAnnouncements, id);
 //     } catch (error) {
-//       alert(`Error deleting notification: ${error}`);
+//       alert(`Error deleting Announcementsication: ${error}`);
 //     }
 //   };
 
 //   const handleSearch = () => {
-//     const newFilteredAnnouncements = Announcements.filter(notif => {
+//     const newFilteredAnnouncements = Announcements.filter(Announcements => {
 //       return (
-//         notif.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//         notif.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//         notif.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//         notif.info.toLowerCase().includes(searchQuery.toLowerCase())
+//         Announcements.firstname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//         Announcements.lastname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//         Announcements.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//         Announcements.info.toLowerCase().includes(searchQuery.toLowerCase())
 //       );
 //     });
 //     setFilteredAnnouncements(newFilteredAnnouncements);
@@ -142,18 +142,18 @@ export default Notification;
 //             <Button variant="secondary" onClick={handleClear}>Clear</Button>
 //           </div>
 //           <div>
-//             {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(notif => (
-//               <div key={notif._id} className="card shadow mb-3">
+//             {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(Announcements => (
+//               <div key={Announcements._id} className="card shadow mb-3">
 //                 <div className="border border-2 border-primary"></div>
 //                 <div className="card-header">
-//                   Post by {notif.firstname} {notif.lastname}
+//                   Post by {Announcements.firstname} {Announcements.lastname}
 //                 </div>
 //                 <div className="card-body">
-//                   <h3 className="card-title"><b>{notif.title}</b></h3>
-//                   <p className="card-text">{notif.info}</p>
-//                   <a href={notif.link} className="btn btn-primary">Learn More</a>
-//                   {localStorage.getItem('SessionEmail') === notif.email && (
-//                     <Button variant="danger" className="ms-2" onClick={() => handleDelete(notif._id)}>Delete</Button>
+//                   <h3 className="card-title"><b>{Announcements.title}</b></h3>
+//                   <p className="card-text">{Announcements.info}</p>
+//                   <a href={Announcements.link} className="btn btn-primary">Learn More</a>
+//                   {localStorage.getItem('SessionEmail') === Announcements.email && (
+//                     <Button variant="danger" className="ms-2" onClick={() => handleDelete(Announcements._id)}>Delete</Button>
 //                   )}
 //                 </div>
 //               </div>
@@ -165,4 +165,4 @@ export default Notification;
 //   )
 // }
 
-// export default Notification;
+// export default Announcementsication;

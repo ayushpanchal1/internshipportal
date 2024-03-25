@@ -60,6 +60,25 @@ export async function getMyInternsStudent(setInterns) {
   }
 }
 
+export async function getMyNotificationsStudent(setNotifications) {
+  try {
+    const response = await httpAxios.get('/api/studentgetmynotifications');
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      if (Array.isArray(data)) {
+        // `data` is an array, you can safely call reverse on it
+        data.reverse();
+      }
+      setNotifications(data)
+    }
+  } catch (error) {
+    alert(`Error fetching studentmyinterns! ${error}`);
+  }
+}
+
 export async function delMyInternsStudent(setInterns, delinternid) {
   try {
     const response = await httpAxios.post('/api/studentdelmyinterns', ({_id: delinternid}));

@@ -305,7 +305,7 @@ function CNavbar() {
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to={"/Notifications"} className="nav-link">
+                  <NavLink to={"/student/StudentNotifications"} className="nav-link">
                     Notifications
                   </NavLink>
                 </li>
