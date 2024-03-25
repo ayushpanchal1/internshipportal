@@ -1,6 +1,7 @@
 import Student from "../models/student.model.js";
 import Request from "../models/request.model.js";
 import CompIntern from "../models/compintern.model.js";
+import Notification from "../models/notification.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -215,6 +216,17 @@ export async function studentgetmyinterns(req, res) {
   }
 }
 
+export async function studentgetmynotifications(req, res) {
+  try {
+    const mynotifsdata = await Notification.find({
+      studentid: req.user._id,
+    });
+    return res.status(200).send(mynotifsdata);
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
+
 export async function studentsubcompintern(req, res) {
   try {
     const stuname = [req.user.firstname, req.user.lastname].join(" ");
@@ -247,5 +259,43 @@ export async function studentdelmyinterns(req, res) {
     return res.json(myinternsdata);
   } catch (error) {
     return res.status(500).send({ error: error.message });
+  }
+}
+
+export async function sendNotificationToStudent(studentid, teachername, teacherid, approvalstatus){
+  try {
+    let message = '';
+    switch(approvalstatus) {
+      case 1:
+        message = `Your internship request has been approved by your class teacher ${teachername}.`;
+        break;
+      case 2:
+        message = `Your internship request has been approved by your HOD ${teachername}. Your pdf is now available to download`;
+        break;
+      case 3:
+        message = `Your internship request has been rejected by ${teachername}.`;
+      default:
+        break;
+    }
+
+    // Create a new Notification document
+    const notification = new Notification({
+      studentid: studentid,
+      teachername: teachername,
+      teacherid: teacherid,
+      approvalstatus: approvalstatus,
+      message: message
+    });
+    
+    await notification.save();
+
+    // console.log("Notification sent to student:", studentid);
+    // console.log("Teacher name:", teachername);
+    // console.log("Teacher ID:", teacherid);
+    // console.log("Approval status:", approvalstatus);
+    // console.log("Message:", message);
+
+  } catch (error) {
+    console.error("Error sending notification:", error);
   }
 }

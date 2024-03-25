@@ -9,6 +9,8 @@ import dotenv from "dotenv";
 import multer from "multer";
 import path from "path";
 import fs from 'fs';
+
+import { sendNotificationToStudent } from "./studentapicontroller.js";
 // import PDFDocument from 'pdfkit'
 // import path from "path";
 // import multer from "multer";
@@ -173,7 +175,7 @@ export async function teacherapproverequest(req, res) {
 
     const tchr = [req.user.firstname, req.user.lastname].join(" ");
 
-    const aprlstts = req.user.role == "classteacher" ? 0 : 1;
+    var aprlstts = req.user.role == "classteacher" ? 0 : 1;
 
     if (aprlstts == 0) {
       var requests = await Request.findOneAndUpdate(
@@ -205,9 +207,65 @@ export async function teacherapproverequest(req, res) {
     if (!requests)
       return res.status(500).send({ error: "No request found to approve" });
 
+      aprlstts++;
+      sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
+
     return res.status(200).send({
       status: "ok, request approved",
     });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
+
+export async function teacherdeclinerequest(req, res) {
+  try {
+    if (req.role != "teacher") {
+      return res.status(500).send({ error: "User is not a teacher" });
+    }
+
+    const tchr = [req.user.firstname, req.user.lastname].join(" ");
+
+    var aprlstts = req.user.role == "classteacher" ? 0 : 1;
+
+    if (aprlstts == 0) {
+      var requests = await Request.findOneAndUpdate(
+        {
+          _id: req.body.id,
+          classteacher: tchr,
+          approvalstatus: aprlstts,
+        },
+        { 
+          $inc: { approvalstatus: 3 },
+          $set: { declinemsg: req.body.declinemsg } 
+        },
+        { returnNewDocument: true }
+      );
+    } else {
+      var requests = await Request.findOneAndUpdate(
+        {
+          _id: req.body.id,
+          hod: tchr,
+          approvalstatus: aprlstts,
+        },
+        { 
+          $inc: { approvalstatus: 2 },
+          $set: { declinemsg: req.body.declinemsg } 
+        },
+        { returnNewDocument: true }
+      );
+    }
+
+    if (!requests)
+      return res.status(500).send({ error: "No request found to decline" });
+
+    aprlstts = 3
+    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
+
+    return res.status(200).send({
+      status: "ok, request successfully deleted",
+    });
+
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
@@ -297,56 +355,6 @@ export async function teacherdelmyAnnouncements(req, res) {
       _id: req.body._id,
     });
     return res.json(myAnnouncementdata);
-  } catch (error) {
-    return res.status(500).send({ error: error.message });
-  }
-}
-
-export async function teacherdeclinerequest(req, res) {
-  try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
-    }
-
-    const tchr = [req.user.firstname, req.user.lastname].join(" ");
-
-    const aprlstts = req.user.role == "classteacher" ? 0 : 1;
-
-    if (aprlstts == 0) {
-      var requests = await Request.findOneAndUpdate(
-        {
-          _id: req.body.id,
-          classteacher: tchr,
-          approvalstatus: aprlstts,
-        },
-        { 
-          $inc: { approvalstatus: 3 },
-          $set: { declinemsg: req.body.declinemsg } 
-        },
-        { returnNewDocument: true }
-      );
-    } else {
-      var requests = await Request.findOneAndUpdate(
-        {
-          _id: req.body.id,
-          hod: tchr,
-          approvalstatus: aprlstts,
-        },
-        { 
-          $inc: { approvalstatus: 2 },
-          $set: { declinemsg: req.body.declinemsg } 
-        },
-        { returnNewDocument: true }
-      );
-    }
-
-    if (!requests)
-      return res.status(500).send({ error: "No request found to decline" });
-
-    return res.status(200).send({
-      status: "ok, request successfully deleted",
-    });
-
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }

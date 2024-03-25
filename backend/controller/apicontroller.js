@@ -305,7 +305,8 @@ export async function uploadProfilePicture(req, res) {
 
 export async function deleteProfilePicture(req, res) {
   const userId = req.user._id;
-  const filePath = `./media/uploads/${req.role}/profile/studentprofile${userId}.png`;
+  const role = req.role;
+  const filePath = path.resolve(`./media/uploads/${role}/profile/${role}profile${userId}.png`);
 
   // Check if the file exists
   if (fs.existsSync(filePath)) {

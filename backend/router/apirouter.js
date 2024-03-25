@@ -15,6 +15,7 @@ router.get('/studentgetmyinterns', Auth, studentcontroller.studentgetmyinterns)
 router.post('/studentsubcompintern', Auth, studentcontroller.studentsubcompintern)
 router.post('/studentdelmyinterns', Auth, studentcontroller.studentdelmyinterns)
 router.post('/studentgetmyrequests', Auth, studentcontroller.studentgetmyrequests)
+router.get('/studentgetmynotifications', Auth, studentcontroller.studentgetmynotifications)
 router.post('/studentaddrequest', Auth, studentcontroller.studentaddrequest)
 router.post('/studentremoverequest', Auth, studentcontroller.studentremoverequest)
 
