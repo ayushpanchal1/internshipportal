@@ -153,7 +153,7 @@
 
 // export default CNavbar;
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -174,6 +174,24 @@ function CNavbar() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [isDesktop, setIsDesktop] = useState(false);
+  // this entire useEffect and this const above is to check whether the display is a desktop to apply 
+  // the margins and keep signup login buttons on the right 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth > 768); // Adjust the breakpoint as needed
+    };
+
+    // Initial check on component mount
+    handleResize();
+
+    // Event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   function handleSubmit(event) {
     logout(navigate, signOut);
@@ -222,10 +240,10 @@ function CNavbar() {
                   title="Login"
                   id="collasible-nav-dropdown"
                   style={{
-                    marginLeft: "950px",
-                    marginRight: "40px",
-                    justifyContent: "space-around",
-                    display: "flex",
+                    marginLeft: isDesktop ? "950px" : "",
+                    marginRight: isDesktop ? "40px" : "",
+                    justifyContent: isDesktop ? "space-around" : "",
+                    display: isDesktop ? "flex" : "block",
                     fontSize: "18px",
                     
                   }}

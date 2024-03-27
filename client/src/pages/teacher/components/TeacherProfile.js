@@ -39,11 +39,14 @@ function TeacherProfile() {
                 <Row>
                   <Col md={6}>
                     <h4>First Name: {UserData.firstname}</h4>
+                    <h4>Gender: {UserData.gender} </h4>
                     <h4>Department: {UserData.department}</h4>
+                    
                   </Col>
                   <Col md={6}>
                     <h4>Last Name: {UserData.lastname}</h4>
                     <h4>Email: {UserData.email}</h4>
+                    <h4>Domain: {UserData.domain} </h4>
                   </Col>
                 </Row>
                 <br />
