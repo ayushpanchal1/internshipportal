@@ -15,7 +15,7 @@ function App() {
             <Card className="shadow px-4">
               <h1><br/><b>Internship Management Portal</b></h1>
               <h2>
-                for Student & Teachers for KJSIT
+                for Student & Teachers of KJSIT
                 <br/><br/><br/>
               </h2>
               <h4>
