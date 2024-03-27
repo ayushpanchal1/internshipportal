@@ -271,12 +271,6 @@ function CNavbar() {
                   <NavLink to="/Signup" className="dropdown-item">
                     Student
                   </NavLink>
-                  <NavLink
-                    to="/teacher/TeacherSignup"
-                    className="dropdown-item"
-                  >
-                    Teacher
-                  </NavLink>
                   {/* <NavLink to="/admin/AdminSignup" className="dropdown-item">
                     Admin
                   </NavLink> */}

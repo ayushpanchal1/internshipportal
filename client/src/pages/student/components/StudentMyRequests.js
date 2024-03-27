@@ -93,12 +93,13 @@ function Requests() {
                       View
                     </Button>{" "}
                     &nbsp;
+                    {request.approvalstatus !== 2 && (
                     <Button
                       className="btn btn-primary"
                       onClick={() => { setRemoveReqId(request._id); handleShow(); }}
                     >
                       Remove
-                    </Button>{" "}
+                    </Button>)}
                     &nbsp;
                     {request.approvalstatus === 2 && (
                       <Button
@@ -115,8 +116,8 @@ function Requests() {
                     <strong>Decline Reason:</strong> {request.declinemsg}
                   </>
                 )}
-                 {request.approvalstatus === 1 && <FaCheck size={20}/>} 
-                 {request.approvalstatus === 0 && <FaClock size={20}/>} 
+                 {request.approvalstatus === 1 && <FaCheck style={{paddingLeft: "10px", strokeWidth: "1"}} size={30} />} 
+                 {request.approvalstatus === 0 && <FaClock style={{paddingLeft: "10px", strokeWidth: "1"}} size={30}/>} 
               {request.approvalstatus === 2 && <BiCheckDouble style={{paddingLeft: "10px", strokeWidth: "1"}} size={40}/>} 
               {request.approvalstatus === 3 && <FaTimes style={{paddingLeft: "10px", strokeWidth: "1"}} size={25}/>} 
               </div>
