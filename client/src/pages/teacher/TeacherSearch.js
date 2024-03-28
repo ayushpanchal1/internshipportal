@@ -32,8 +32,8 @@ function App() {
 
   const handleOnExpand = (index) => {
     setExpandedCardIndex(index)
-    navigate('/studentdata')
-    
+    navigate('/StudentInfo')
+
   }
   useEffect(() => {
     if (selectedStudentId) {
