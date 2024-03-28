@@ -1,69 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { Col, Button, Row, Container, Form, InputGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useSignOut } from "react-auth-kit";
-import { useAuthUser } from "react-auth-kit";
-import CNavbar from "../common/components/CNavbar";
-import { logout } from "../../services/Services";
+import React, { useState, useEffect } from 'react'
+import { Col, Button, Row, Container, Form, InputGroup } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { useSignOut } from 'react-auth-kit'
+import { useAuthUser } from 'react-auth-kit'
+import CNavbar from '../common/components/CNavbar'
+import { logout } from '../../services/Services'
 import {
   getAllStudentsForTeacher,
   getAStudentforTeacher,
-} from "../../services/TeacherServices";
+} from '../../services/TeacherServices'
 
 function App() {
-  const auth = useAuthUser();
-  const Session = auth().session;
-  const [selectedStudentId, setSelectedStudentId] = useState(null);
-  const [userData, setUserData] = useState("");
-  const [interns, setInterns] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [allUser, setAllUser] = useState("");
-  const [expandedCardIndex, setExpandedCardIndex] = useState(null);
+  const auth = useAuthUser()
+  const Session = auth().session
+  const [selectedStudentId, setSelectedStudentId] = useState(null)
+  const [userData, setUserData] = useState('')
+  const [interns, setInterns] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [allUser, setAllUser] = useState('')
+  const [expandedCardIndex, setExpandedCardIndex] = useState(null)
 
-  const signOut = useSignOut();
-  const navigate = useNavigate();
+  const signOut = useSignOut()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    getAllStudentsForTeacher(setAllUser);
-    if (Session === "user") {
-      logout(navigate, signOut);
+    getAllStudentsForTeacher(setAllUser)
+    if (Session === 'user') {
+      logout(navigate, signOut)
     }
-  }, []);
+  }, [])
 
+  const handleOnExpand = (index) => {
+    setExpandedCardIndex(index)
+    navigate('/studentdata')
+    
+  }
   useEffect(() => {
     if (selectedStudentId) {
-      getAStudentforTeacher(setUserData, setInterns, selectedStudentId);
+      getAStudentforTeacher(setUserData, setInterns, selectedStudentId)
     }
-  }, [selectedStudentId]);
+  }, [selectedStudentId])
   function handleClear() {
-    setSearchQuery("");
-    setUserData("");
-    setInterns("");
-    getAllStudentsForTeacher(setAllUser);
+    setSearchQuery('')
+    setUserData('')
+    setInterns('')
+    getAllStudentsForTeacher(setAllUser)
   }
-  
 
   function handleSubmit(event) {
-    event.preventDefault();
-    const lowercaseSearchQuery = searchQuery.toLowerCase();
+    event.preventDefault()
+    const lowercaseSearchQuery = searchQuery.toLowerCase()
     const filteredUsers = allUser.filter((user) => {
-      const firstName = user.firstname ? user.firstname.toLowerCase() : "";
-      const lastName = user.lastname ? user.lastname.toLowerCase() : "";
-      const stuname = user.stuname ? user.stuname.toLowerCase() : "";
+      const firstName = user.firstname ? user.firstname.toLowerCase() : ''
+      const lastName = user.lastname ? user.lastname.toLowerCase() : ''
+      const stuname = user.stuname ? user.stuname.toLowerCase() : ''
       return (
         firstName.includes(lowercaseSearchQuery) ||
         lastName.includes(lowercaseSearchQuery) ||
         stuname.includes(lowercaseSearchQuery)
-      );
-    });
-    setAllUser(filteredUsers);
+      )
+    })
+    setAllUser(filteredUsers)
     if (filteredUsers.length === 1) {
-      const index = allUser.findIndex(
-        (user) => user.id === filteredUsers[0].id
-      );
-      setExpandedCardIndex(index);
+      const index = allUser.findIndex((user) => user.id === filteredUsers[0].id)
+      setExpandedCardIndex(index)
     } else {
-      setExpandedCardIndex(null);
+      setExpandedCardIndex(null)
     }
   }
 
@@ -71,33 +73,33 @@ function App() {
     <div>
       <CNavbar />
 
-      <Container style={{ marginTop: "100px" }}>
-        <Row className="d-flex justify-content-center align-items-center">
+      <Container style={{ marginTop: '100px' }}>
+        <Row className='d-flex justify-content-center align-items-center'>
           <Col md={8} lg={6} xs={12}>
             <Form onSubmit={handleSubmit}>
-              <InputGroup className="mb-3 shadow">
+              <InputGroup className='mb-3 shadow'>
                 <Form.Control
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  type="text"
-                  placeholder="Search"
-                  aria-label="Search"
-                  aria-describedby="basic-addon2"
+                  type='text'
+                  placeholder='Search'
+                  aria-label='Search'
+                  aria-describedby='basic-addon2'
                 />
                 <Button
-                  variant="primary"
-                  id="button-addon2"
-                  value="search"
-                  type="submit"
-                  style={{ marginRight: "2px" }}
+                  variant='primary'
+                  id='button-addon2'
+                  value='search'
+                  type='submit'
+                  style={{ marginRight: '2px' }}
                 >
                   Search
                 </Button>
                 <Button
-                  variant="info"
-                  id="button-addon2"
+                  variant='info'
+                  id='button-addon2'
                   onClick={handleClear}
-                  value="clear"
+                  value='clear'
                 >
                   Clear
                 </Button>
@@ -107,16 +109,16 @@ function App() {
         </Row>
       </Container>
 
-      <Container style={{ marginTop: "48px" }}>
+      <Container style={{ marginTop: '48px' }}>
         {!userData && (
           <>
             <Col md={8} lg={12} xs={12}>
               <h1>
                 <b>Students</b>
               </h1>
-              <div className="border border-2 border-primary"></div>
+              <div className='border border-2 border-primary'></div>
               <br />
-              <div className="row mx-md-n5 gy-4">
+              <div className='row mx-md-n5 gy-4'>
                 {allUser &&
                   allUser.length > 0 &&
                   allUser.map((filteredUser, index) => (
@@ -124,9 +126,9 @@ function App() {
                       lg={expandedCardIndex === index ? 12 : 4}
                       key={filteredUser.id}
                     >
-                      <div className="card shadow">
+                      <div className='card shadow'>
                         {expandedCardIndex === index && (
-                          <div className="card-body">
+                          <div className='card-body'>
                             <h4>
                               {filteredUser.firstname} {filteredUser.lastname}
                             </h4>
@@ -142,9 +144,9 @@ function App() {
                               <dt>Academic Year:</dt>
                               <dd>{filteredUser.academicyear}</dd>
                             </dl>
-                            <div className="d-flex justify-content-end">
+                            <div className='d-flex justify-content-end'>
                               <Button
-                                className="btn btn-primary"
+                                className='btn btn-primary'
                                 onClick={() => setExpandedCardIndex(null)}
                               >
                                 Close
@@ -153,33 +155,33 @@ function App() {
                           </div>
                         )}
                         {expandedCardIndex !== index && (
-                          <div className="card-body">
-                            <h4 className="card-title">
+                          <div className='card-body'>
+                            <h4 className='card-title'>
                               <b>{filteredUser.stuname}</b>
                             </h4>
-                            <div className="details">
+                            <div className='details'>
                               <div>
                                 Gender: <span>{filteredUser.gender}</span>
                               </div>
                               <div>
-                                Academic Year:{" "}
+                                Academic Year:{' '}
                                 <span>{filteredUser.academicyear}</span>
                               </div>
                               <div>
                                 Division: <span>{filteredUser.division}</span>
                               </div>
                               <div>
-                                Class Teacher:{" "}
+                                Class Teacher:{' '}
                                 <span>{filteredUser.classteacher}</span>
                               </div>
                               <div>
                                 HOD: <span>{filteredUser.hod}</span>
                               </div>
                             </div>
-                            <div className="d-flex justify-content-end">
+                            <div className='d-flex justify-content-end'>
                               <Button
-                                variant="primary"
-                                onClick={() => setExpandedCardIndex(index)}
+                                variant='primary'
+                                onClick={handleOnExpand}
                               >
                                 View
                               </Button>
@@ -195,7 +197,7 @@ function App() {
         )}
       </Container>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

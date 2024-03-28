@@ -1,13 +1,12 @@
 import React from 'react'
 
-    // Genuinely don't know why but this bootstrap import used to be in the Dashboard.js file and if you removed it, 
-    // the colors would switch back to default. It works fine here. Do not Touch.
+// Genuinely don't know why but this bootstrap import used to be in the Dashboard.js file and if you removed it,
+// the colors would switch back to default. It works fine here. Do not Touch.
 
-import 'bootstrap/dist/css/bootstrap.css'; // DO NOT remove this
-
+import 'bootstrap/dist/css/bootstrap.css' // DO NOT remove this
 
 import './style/custom.scss'
-import { BrowserRouter, Routes, Route,} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import StudentLogin from './pages/student/StudentLogin'
 import Signup from './pages/common/Signup'
 import StudentDashboard from './pages/student/StudentDashboard'
@@ -22,8 +21,8 @@ import TeacherLogin from './pages/teacher/TeacherLogin'
 import TeacherPostAnnouncements from './pages/teacher/TeacherPostAnnouncements'
 import TeacherApproveRequests from './pages/teacher/TeacherApproveRequests'
 import TeacherSearch from './pages/teacher/TeacherSearch'
-import { AuthProvider, RequireAuth } from 'react-auth-kit';
-import { ToastContainer } from 'react-toastify';
+import { AuthProvider, RequireAuth } from 'react-auth-kit'
+import { ToastContainer } from 'react-toastify'
 
 // import { RoleProvider } from './services/RoleContext'
 // import { RedirectStudent, RedirectTeacher } from './services/RedirectBasedOnRole'
@@ -33,31 +32,126 @@ const App = () => {
     <div>
       <ToastContainer position='top-center' autoClose={2000} hideProgressBar />
       <AuthProvider
-        authType={"cookie"}
-        authName={"_auth"}
+        authType={'cookie'}
+        authName={'_auth'}
         cookieDomain={window.location.hostname}
         cookieSecure={false}
       >
-
-      {/* <RoleProvider> */}
+        {/* <RoleProvider> */}
         <BrowserRouter>
-        <Routes>
-
-          <Route path="/" exact element={<Homepage/>} />
-          <Route path="/Signup" exact element={<Signup/>} />
-          <Route path="/Announcements" exact element={<RequireAuth loginPath='/student/StudentLogin'><Announcements/></RequireAuth>} />
-          <Route path="/student/StudentLogin" exact element={<StudentLogin/>} />
-          <Route path="/student/StudentDashboard" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentDashboard/></RequireAuth>} />
-          <Route path="/student/StudentCompletedInternship" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentCompletedInternship/></RequireAuth>} />
-          <Route path="/student/StudentAddRequest" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentAddRequest/></RequireAuth>} />
-          <Route path="/student/StudentViewRequests" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentViewRequests/></RequireAuth>} />
-          <Route path="/student/StudentNotifications" exact element={<RequireAuth loginPath='/student/StudentLogin'><StudentNotifications/></RequireAuth>} />
-          <Route path="/teacher/TeacherLogin" exact element={<TeacherLogin/>} />          
-          <Route path="/teacher/TeacherDashboard" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherDashboard/></RequireAuth>} />
-          <Route path="/teacher/TeacherPostAnnouncements" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherPostAnnouncements/></RequireAuth>} />
-          <Route path="/teacher/TeacherApproveRequests" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherApproveRequests/></RequireAuth>} />
-          <Route path="/teacher/TeacherSearch" exact element={<RequireAuth loginPath='/teacher/TeacherLogin'><TeacherSearch/></RequireAuth>} />
-        </Routes>
+          <Routes>
+            <Route path='/' exact element={<Homepage />} />
+            <Route path='/Signup' exact element={<Signup />} />
+            <Route
+              path='/Announcements'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <Announcements />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/student/StudentLogin'
+              exact
+              element={<StudentLogin />}
+            />
+            <Route
+              path='/student/StudentDashboard'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <StudentDashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/student/StudentCompletedInternship'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <StudentCompletedInternship />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/student/StudentAddRequest'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <StudentAddRequest />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/student/StudentViewRequests'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <StudentViewRequests />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/student/StudentNotifications'
+              exact
+              element={
+                <RequireAuth loginPath='/student/StudentLogin'>
+                  <StudentNotifications />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/teacher/TeacherLogin'
+              exact
+              element={<TeacherLogin />}
+            />
+            <Route
+              path='/teacher/TeacherDashboard'
+              exact
+              element={
+                <RequireAuth loginPath='/teacher/TeacherLogin'>
+                  <TeacherDashboard />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/teacher/TeacherPostAnnouncements'
+              exact
+              element={
+                <RequireAuth loginPath='/teacher/TeacherLogin'>
+                  <TeacherPostAnnouncements />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/teacher/TeacherApproveRequests'
+              exact
+              element={
+                <RequireAuth loginPath='/teacher/TeacherLogin'>
+                  <TeacherApproveRequests />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/teacher/TeacherSearch'
+              exact
+              element={
+                <RequireAuth loginPath='/teacher/TeacherLogin'>
+                  <TeacherSearch />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/teacher/TeacherSearch/TeacherInfo'
+              exact
+              element={
+                <RequireAuth loginPath='/teacher/TeacherLogin'>
+                  <TeacherSearch />
+                </RequireAuth>
+              }
+            />
+          </Routes>
         </BrowserRouter>
         {/* </RoleProvider> */}
       </AuthProvider>
