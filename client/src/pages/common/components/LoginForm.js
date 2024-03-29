@@ -6,6 +6,7 @@ import { loginStudent } from "../../../services/StudentServices";
 import { loginTeacher } from "../../../services/TeacherServices";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleLogin } from "@react-oauth/google";
 
 function LoginForm() {
   const signIn = useSignIn();
@@ -20,7 +21,6 @@ function LoginForm() {
     password: Password,
   };
 
-  
   function handleSubmit(event) {
     event.preventDefault();
     if (location.pathname === "/student/StudentLogin") {
@@ -29,14 +29,22 @@ function LoginForm() {
       loginTeacher(requestBody, navigate, signIn, handleLoginError);
     }
   }
-  
+
   function handleLoginError(error) {
-      toast.error(error.message || "Login failed");
-    }
-    //   if (!Email.trim() || !Password.trim()) {
-    //     toast.error("Email and password are required");
-    //     return;
-    //   }
+    toast.error(error.message || "Login failed");
+  }
+  //   if (!Email.trim() || !Password.trim()) {
+  //     toast.error("Email and password are required");
+  //     return;
+  //   }
+
+  function responseMessage(response) {
+    console.log(response);
+  }
+
+  function errorMessage(error) {
+    console.log(error);
+  }
 
   return (
     <div>
@@ -89,6 +97,10 @@ function LoginForm() {
                         <Button variant="primary" value="Log in" type="submit">
                           Log In
                         </Button>
+                        <GoogleLogin
+                          onSuccess={responseMessage}
+                          onError={errorMessage}
+                        />
                       </div>
                     </Form>
                     {location.pathname === "/student/StudentLogin" ? (
