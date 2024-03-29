@@ -41,6 +41,7 @@ router.post('/downloadrequest', Auth, controller.downloadrequest)
 router.post('/uploadprofilepicture', Auth, controller.uploadProfilePicture)
 router.get('/deleteprofilepicture', Auth, controller.deleteProfilePicture)
 router.get('/fetchprofilepicture/:userId', Auth, controller.fetchProfilePicture)
+router.post('/resetpassword', controller.resetPassword)
 
 router.post('/testsignup', controller.testsignup)
 router.post('/testlogin', controller.testlogin)

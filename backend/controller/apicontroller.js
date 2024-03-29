@@ -11,6 +11,8 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import dotenv from "dotenv";
+import { verifyOTP } from "../otpGenerator.js";
+
 dotenv.config()
 
 // const FRONTEND_ADDRESS process.env.FRONTEND_ADDRESS
@@ -343,6 +345,71 @@ export async function fetchProfilePicture(req, res) {
   });
 }
 
+export async function resetPassword(req, res) {
+  try {
+    // Check if any of the required fields are missing or empty
+    const requiredFields = [
+      "email",
+      "password",
+      "role",
+      "otp",
+    ];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ error: `${field} is required` });
+      }
+    }
+
+    // Validate OTP
+    const OTPcheck = await verifyOTP(req.body.email, req.body.otp)
+    if(OTPcheck == false) {  return res.status(400).json({ error: `otp error` }); }
+    
+    if (req.body.role === 'student') {
+      var userexists = await Student.findOne({
+        email: req.body.email,
+      });
+    } else {
+      var userexists = await Teacher.findOne({
+        email: req.body.email,
+      });
+    }
+    
+    if (!userexists) {
+      return res.json({ error: "user does not exist" });
+    }
+
+    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+      if (!err) {
+        if (req.body.role === 'student'){
+          await Teacher.findOneAndUpdate(
+            {
+              email: req.body.email,
+            },
+            { 
+              $set: { password: hashedPassword } // Set declinemsg directly
+            } 
+          );
+        } else {
+          await Teacher.findOneAndUpdate(
+            {
+              email: req.body.email,
+            },
+            { 
+              $set: { password: hashedPassword } // Set declinemsg directly
+            } 
+          );
+        }
+        return res.json({ status: "ok, password has been changed" });
+      } else {
+        console.log(err);
+        return res.json({ error: "bcrypt error occured" });
+      }
+    });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+}
 
 // //template
 // export async function testlogin(req,res){
