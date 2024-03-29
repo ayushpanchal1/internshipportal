@@ -7,6 +7,7 @@ import { loginTeacher } from "../../../services/TeacherServices";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleLogin } from "@react-oauth/google";
+import { httpAxios } from "../../../services/httpAxios";
 
 function LoginForm() {
   const signIn = useSignIn();
@@ -39,7 +40,8 @@ function LoginForm() {
   //   }
 
   function responseMessage(response) {
-    console.log(response);
+    console.log(response.credential);
+    // httpAxios.post("/api/studentlogin", response.credential);
   }
 
   function errorMessage(error) {
