@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const BACKEND_ADDRESS = process.env.REACT_APP_BACKEND_ADDRESS
+// const BACKEND_ADDRESS = process.env.REACT_APP_BACKEND_ADDRESS
 
 export const httpAxios = axios.create({
-  baseURL: BACKEND_ADDRESS,
+  // baseURL: BACKEND_ADDRESS,
+  baseURL: "http://localhost:1337",
   withCredentials: "true",
 });
-

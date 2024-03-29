@@ -40,8 +40,9 @@ function LoginForm() {
   //   }
 
   function responseMessage(response) {
-    console.log(response.credential);
-    // httpAxios.post("/api/studentlogin", response.credential);
+    const googleToken = response.credential;
+    console.log(googleToken);
+    httpAxios.post("/api/studentlogin", { googleToken });
   }
 
   function errorMessage(error) {
