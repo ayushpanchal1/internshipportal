@@ -29,15 +29,16 @@ const transporter = nodemailer.createTransport({
 export default async function sendOTPEmail(email, otp) {
   const mailOptions = {
     from: `Internship Management Portal <${process.env.ZOHO_EMAIL_ADDRESS}>`, // Replace with your email address
-    to: email,
-    subject: 'OTP for Signup Verification',
+    to: `yepote9271@storesr.com`,
+    subject: 'Your OTP for Internship Management Portal',
     // text: `Your OTP for signup verification is: ${otp}. Please enter this OTP within 5 minutes.`,
     html:
       `
-      <div style="background-color: #802121; padding: 20px;">
-        <h1 style="color: #fcfafa;">Your OTP for Internship Management Portal is: <strong style="color: #fcfafa; background-color: #000000; padding: 2px 9px; border-radius: 8px;">${otp}</strong></h1>
-        <p style="color: #fcfafa; font-size: 16px;">Please enter this OTP within 5 minutes.</p>
-        <div style="display: flex; align-items: center; color: #fcfafa; font-size: 14px; padding-top: 50px;">
+      <div style="background-color: #802121; padding: 20px; max-width: 640px">
+        <div style="max-width: 600px">
+        <h1 style="color: #fcfafa; font-family: Roboto Mono,monospace; font-weight: 1000; font-size: 39px; line-height: 1.2">Your OTP for Internship Management Portal is: <strong style="color: #fcfafa; background-color: #000000; padding: 2px 9px; border-radius: 8px;">${otp}</strong></h1>
+        <p style="color: #fcfafa; font-size: 16px; font-family: Arial">Please enter this OTP within 5 minutes.</p>
+        <div style="display: flex; align-items: center; color: #fcfafa; font-size: 14px; padding-top: 50px; font-family: Arial">
           <img src="https://i.imgur.com/IeFDAZ6.png" alt="Somaiya Logo" title="Somaiya Logo" style="display: block; height: 45px; width: 45px; margin-right: 10px; background: white; border-radius: 4px">
           <span>
             <p style="color: #fcfafa">This is an automated email. Please do not reply.</p>
@@ -45,6 +46,7 @@ export default async function sendOTPEmail(email, otp) {
           </span>
         </div>
       </div>
+     </div>
     `
   };
 

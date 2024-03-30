@@ -351,7 +351,7 @@ export async function resetPassword(req, res) {
     const requiredFields = [
       "email",
       "password",
-      "role",
+      "role", // valid values: teacher or student, cant fetch from req.user as sometimes it might come from login page
       "otp",
     ];
 
@@ -382,13 +382,14 @@ export async function resetPassword(req, res) {
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (!err) {
         if (req.body.role === 'student'){
-          await Teacher.findOneAndUpdate(
+          await Student.findOneAndUpdate(
             {
               email: req.body.email,
             },
             { 
               $set: { password: hashedPassword } // Set declinemsg directly
-            } 
+            },
+            { new: true } 
           );
         } else {
           await Teacher.findOneAndUpdate(
@@ -397,7 +398,8 @@ export async function resetPassword(req, res) {
             },
             { 
               $set: { password: hashedPassword } // Set declinemsg directly
-            } 
+            },
+            { new: true }  
           );
         }
         return res.json({ status: "ok, password has been changed" });
