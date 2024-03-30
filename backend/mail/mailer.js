@@ -1,4 +1,6 @@
 // const nodemailer = require('nodemailer');
+import dotenv from "dotenv";
+dotenv.config()
 import nodemailer from 'nodemailer';
 
 // const transporter = nodemailer.createTransport({
@@ -10,7 +12,9 @@ import nodemailer from 'nodemailer';
 //     user: process.env.EMAIL_ADDRESS,
 //     pass: process.env.EMAIL_APP_PASSWORD,
 //   },
-// });
+// // });
+// console.log(process.env.ZOHO_EMAIL_ADDRESS)
+// console.log(process.env.ZOHO_EMAIL_PASSWORD)
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.in',
