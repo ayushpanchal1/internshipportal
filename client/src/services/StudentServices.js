@@ -1,6 +1,30 @@
 import { toast } from 'react-toastify';
 import { httpAxios } from './httpAxios';
 
+export async function googleLoginStudent(requestBody, navigate, signIn) {
+  try {
+    const response = await httpAxios.post("/api/studentlogin", requestBody);
+    const data = response.data;
+    // console.log(data.email);
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      signIn({
+        token: data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: { email: data.email, session: "user" },
+      });
+      localStorage.setItem("SessionInfo", "user");
+      localStorage.setItem("SessionEmail", data.email);
+      navigate("/student/StudentDashboard");
+    }
+  } catch (error) {
+    toast.error(`Login credentials are incorrect!`);
+  }
+}
+
 export async function loginStudent(requestBody, navigate, signIn) {
   try {
     const response = await httpAxios.post('/api/studentlogin', requestBody);
