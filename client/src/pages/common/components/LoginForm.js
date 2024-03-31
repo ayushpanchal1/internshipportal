@@ -2,13 +2,18 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSignIn } from "react-auth-kit";
-import { googleLoginStudent, loginStudent } from "../../../services/StudentServices";
-import { loginTeacher } from "../../../services/TeacherServices";
+import {
+  googleLoginStudent,
+  loginStudent,
+} from "../../../services/StudentServices";
+import {
+  googleLoginTeacher,
+  loginTeacher,
+} from "../../../services/TeacherServices";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ResetPassword from "./ResetPassword";
 import { GoogleLogin } from "@react-oauth/google";
-
 
 function LoginForm() {
   const signIn = useSignIn();
@@ -23,7 +28,6 @@ function LoginForm() {
     password: Password,
   };
 
-  
   function handleSubmit(event) {
     event.preventDefault();
     if (location.pathname === "/student/StudentLogin") {
@@ -32,26 +36,33 @@ function LoginForm() {
       loginTeacher(requestBody, navigate, signIn, handleLoginError);
     }
   }
-  
-  function handleLoginError(error) {
-      toast.error(error.message || "Login failed");
-    }
-    //   if (!Email.trim() || !Password.trim()) {
-    //     toast.error("Email and password are required");
-    //     return;
-    //   }
 
-    function responseMessage(response) {
-      const googleToken = response.credential;
-      console.log(googleToken);
-      const requestBody = { googleToken };
-      // httpAxios.post("/api/studentlogin", { googleToken });
+  function handleLoginError(error) {
+    toast.error(error.message || "Login failed");
+  }
+  //   if (!Email.trim() || !Password.trim()) {
+  //     toast.error("Email and password are required");
+  //     return;
+  //   }
+
+  function responseMessage(response) {
+    const googleToken = response.credential;
+    // console.log(googleToken);
+    const requestBody = { googleToken };
+    // httpAxios.post("/api/studentlogin", { googleToken });
+
+    if (location.pathname === "/student/StudentLogin") {
       googleLoginStudent(requestBody, navigate, signIn);
+    } else {
+      googleLoginTeacher(requestBody, navigate, signIn);
     }
-  
-    function errorMessage(error) {
-      console.log(error);
-    }
+
+    googleLoginStudent(requestBody, navigate, signIn);
+  }
+
+  function errorMessage(error) {
+    console.log(error);
+  }
 
   return (
     <div>
