@@ -11,12 +11,7 @@ function StudentInfo() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const { student, completedInterns, requestedInterns } = await getAStudentforTeacher(id);
-        setUserData(student);
-        setInterns({
-          completedInterns: completedInterns,
-          requestedInterns: requestedInterns
-        });
+        const { student, completedInterns, requestedInterns } = await getAStudentforTeacher(id, setUserData, setInterns);
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
@@ -34,7 +29,7 @@ function StudentInfo() {
               <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
                 <Col md={3} className="d-flex justify-content-center">
                   <br />
-                  <img className="media-object mw150" width="256" src={userData.profilePicUrl} alt="Profile" />
+                  <img className="media-object mw150" width="256" src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${id}`} alt="Profile" />
                 </Col>
                 <Col md={9} style={{ paddingLeft: '26px' }}>
                   <br />

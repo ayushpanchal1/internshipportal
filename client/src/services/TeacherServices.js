@@ -105,16 +105,22 @@ export async function getAllStudentsForTeacher(setAllUser) {
   }
 }
 
-export async function getAStudentforTeacher(id, setUserData) {
+export async function getAStudentforTeacher(id, setUserData, setInterns) {
   try {
-    const response = await httpAxios.post("/api/teacherfetchastudent/",{id:id});
+    const response = await httpAxios.post("/api/teacherfetchastudent/",{id: id});
     const data = response.data;
 
     if (data.error) {
       throw new Error(data.error);
     } else {
       const userData = data.student;
+      const completedInterns = data.interns;
+      const requestedInterns = data.internreqs;
       setUserData(userData);
+      setInterns({
+        completedInterns: completedInterns,
+        requestedInterns: requestedInterns
+      });
     }
   } catch (error) {
     toast.error(`Error while fetching a student's profile! ${error}`);
