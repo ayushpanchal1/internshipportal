@@ -6,8 +6,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { verifyOTP } from "../otpGenerator.js";
+import { OAuth2Client } from "google-auth-library";
+
 
 dotenv.config();
+
+const client = new OAuth2Client(
+  "780340517253-mulvd9vf85ta69kj57aqu39lt7ef377s.apps.googleusercontent.com"
+);
 
 export async function studentsignup(req, res) {
   try {
@@ -88,18 +94,49 @@ export async function studentsignup(req, res) {
 }
 
 export async function studentlogin(req, res) {
+  // console.log(req.body.googleToken);
   try {
-    const student = await Student.findOne({
-      email: req.body.email,
-    });
+    if (!req.body.googleToken) {
+      const student = await Student.findOne({
+        email: req.body.email,
+      });
 
-    if (!student) {
-      return res.json({ error: "account not found" });
+      if (!student) {
+        return res.json({ error: "account not found" });
+      } else {
+        const match = await bcrypt.compare(req.body.password, student.password);
+        if (!match) {
+          // passwords do not match!
+          return res.json({ status: "error" });
+        } else {
+          const token = jwt.sign(
+            {
+              id: student._id,
+              role: "student",
+              userdata: student,
+            },
+            process.env.JWT_KEY,
+            { expiresIn: "24h" }
+          );
+
+          return res.cookie("token", token).status(200).send({
+            status: "ok, student logged in",
+            user: "student",
+          });
+        }
+      }
     } else {
-      const match = await bcrypt.compare(req.body.password, student.password);
-      if (!match) {
-        // passwords do not match!
-        return res.json({ error: "incorrect username or password" });
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.googleToken,
+      });
+      const payload = ticket.getPayload();
+      const { email } = payload;
+
+      // Check if the user exists in your database
+      let student = await Student.findOne({ email });
+
+      if (!student) {
+        return res.json({ error: "account not found" });
       } else {
         const token = jwt.sign(
           {
@@ -111,18 +148,10 @@ export async function studentlogin(req, res) {
           { expiresIn: "24h" }
         );
 
-        return res
-          .cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-          })
-          .status(200)
-          .send({
-            status: "ok, student logged in",
-            user: "student",
-            token: token,
-          });
+        return res.cookie("token", token).status(200).send({
+          status: "ok, student logged in",
+          user: "student",
+        });
       }
     }
   } catch (error) {
