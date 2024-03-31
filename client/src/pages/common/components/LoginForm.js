@@ -56,8 +56,6 @@ function LoginForm() {
     } else {
       googleLoginTeacher(requestBody, navigate, signIn);
     }
-
-    googleLoginStudent(requestBody, navigate, signIn);
   }
 
   function errorMessage(error) {
