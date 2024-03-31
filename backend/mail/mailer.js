@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 export default async function sendOTPEmail(email, otp) {
   const mailOptions = {
     from: `Internship Management Portal <${process.env.ZOHO_EMAIL_ADDRESS}>`, // Replace with your email address
-    to: `yepote9271@storesr.com`,
+    to: email,
     subject: 'Your OTP for Internship Management Portal',
     // text: `Your OTP for signup verification is: ${otp}. Please enter this OTP within 5 minutes.`,
     html:
