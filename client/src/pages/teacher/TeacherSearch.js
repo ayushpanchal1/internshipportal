@@ -155,7 +155,8 @@ function TeacherSearch() {
                         {expandedCardIndex !== index && (
                           <div className='card-body'>
                             <h4 className='card-title'>
-                              <b>{filteredUser.stuname}</b>
+                              <b>{filteredUser.firstname}  {filteredUser.lastname}</b>
+                           
                             </h4>
                             <div className='details'>
                               <div>
