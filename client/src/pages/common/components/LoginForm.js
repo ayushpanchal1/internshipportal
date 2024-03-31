@@ -6,6 +6,7 @@ import { loginStudent } from "../../../services/StudentServices";
 import { loginTeacher } from "../../../services/TeacherServices";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ResetPassword from "./ResetPassword";
 
 function LoginForm() {
   const signIn = useSignIn();
@@ -91,6 +92,7 @@ function LoginForm() {
                         </Button>
                       </div>
                     </Form>
+                    <ResetPassword />
                     {location.pathname === "/student/StudentLogin" ? (
                       <div className="mt-3">
                         <p className="mb-0  text-center">

@@ -117,3 +117,19 @@ export async function generateOTP(requestBody) {
     toast.error(`Error generating otp! ${error}`);
   }
 }
+
+export async function resetPassword(requestBody, navigate, signOut) {
+  try {
+    const response = await httpAxios.post('/api/resetpassword', requestBody);
+    var data = response.data;
+
+    if (data.error) {
+      throw new Error(data.error);
+    } else {
+      alert(`your password has been reset successfully`)
+      logout(navigate, signOut)
+    }
+  } catch (error) {
+    alert(`Error generating otp! ${error}`);
+  }
+}

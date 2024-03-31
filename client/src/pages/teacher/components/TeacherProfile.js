@@ -1,10 +1,10 @@
 import { Col, Container, Card, Row } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import IMAGE from "../../../media/user.png";
 import { getUserData } from "../../../services/Services";
 import UploadProfilePicture from "../../common/components/UploadProfilePic";
 import DeleteProfilePicture from "../../common/components/DeleteProfilePicture";
 import UploadSignImage from "./TeacherSign";
+import ResetPassword from '../../common/components/ResetPassword';
 
 function TeacherProfile() {
   const [UserData, setUserData] = useState("");
@@ -54,6 +54,7 @@ function TeacherProfile() {
                   <div> <UploadProfilePicture /></div>
                   <div><DeleteProfilePicture /></div>
                   <div><UploadSignImage /></div>
+                  <div><ResetPassword /></div>
                 </div>
               </Col>
             </Row>

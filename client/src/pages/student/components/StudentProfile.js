@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Col, Container, Card, Row } from "react-bootstrap";
-import IMAGE from '../../../media/user.png'
 import { getUserData } from "../../../services/Services"
 import UploadProfilePicture from '../../common/components/UploadProfilePic';
 import DeleteProfilePicture from '../../common/components/DeleteProfilePicture';
+import ResetPassword from '../../common/components/ResetPassword';
 
 function UserProfile() {
   const [UserData, setUserData] = useState('');
@@ -45,6 +45,7 @@ function UserProfile() {
                 <div className='d-flex'>
                   <div><UploadProfilePicture /></div>
                   <div><DeleteProfilePicture /></div>
+                  <div><ResetPassword /></div>
                 </div>
               </Col>
             </Row>
