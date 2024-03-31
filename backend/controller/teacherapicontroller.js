@@ -8,9 +8,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import multer from "multer";
 import path from "path";
-import fs from 'fs';
+import fs from "fs";
 import { OAuth2Client } from "google-auth-library";
-
 
 import { sendNotificationToStudent } from "./studentapicontroller.js";
 // import PDFDocument from 'pdfkit'
@@ -23,19 +22,23 @@ const client = new OAuth2Client(
   "780340517253-mulvd9vf85ta69kj57aqu39lt7ef377s.apps.googleusercontent.com"
 );
 
-const upload = (prefix, req) => multer({
-  storage: multer.diskStorage({
-    destination: path.join(process.cwd(), `./media/uploads/${req.role}/${prefix}`), //changed path
-    filename: (req, file, cb) => {
-      // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(
-        null,
-        // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-        req.role + prefix + req.user._id + path.extname(file.originalname)
-      );
-    },
-  }),
-});
+const upload = (prefix, req) =>
+  multer({
+    storage: multer.diskStorage({
+      destination: path.join(
+        process.cwd(),
+        `./media/uploads/${req.role}/${prefix}`
+      ), //changed path
+      filename: (req, file, cb) => {
+        // const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(
+          null,
+          // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+          req.role + prefix + req.user._id + path.extname(file.originalname)
+        );
+      },
+    }),
+  });
 
 export async function teachersignup(req, res) {
   try {
@@ -91,51 +94,10 @@ export async function teachersignup(req, res) {
 export async function teacherlogin(req, res) {
   try {
     if (!req.body.googleToken) {
-    const teacher = await Teacher.findOne({
-      email: req.body.email,
-    });
-
-    if (!teacher) {
-      return res.json({ error: "account not found" });
-    } else {
-      const match = await bcrypt.compare(req.body.password, teacher.password);
-      if (!match) {
-        // passwords do not match!
-        return res.json({ error: "incorrect username or password" });
-      } else {
-        const token = jwt.sign(
-          {
-            id: teacher._id,
-            role: "teacher",
-            userdata: teacher,
-          },
-          process.env.JWT_KEY,
-          { expiresIn: "24h" }
-        );
-        return res
-          .cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-          })
-          .status(200)
-          .send({
-            status: "ok, teacher logged in",
-            user: "teacher",
-            token: token,
-          });
-      }
-    }} else{
-      const ticket = await client.verifyIdToken({
-        idToken: req.body.googleToken,
-      });
-      const payload = ticket.getPayload();
-      const { email } = payload;
-
       const teacher = await Teacher.findOne({
-        email: email,
+        email: req.body.email,
       });
-  
+
       if (!teacher) {
         return res.json({ error: "account not found" });
       } else {
@@ -166,7 +128,43 @@ export async function teacherlogin(req, res) {
               token: token,
             });
         }
-      }  
+      }
+    } else {
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.googleToken,
+      });
+      const payload = ticket.getPayload();
+      const { email } = payload;
+
+      const teacher = await Teacher.findOne({
+        email: email,
+      });
+
+      if (!teacher) {
+        return res.json({ error: "account not found" });
+      } else {
+        const token = jwt.sign(
+          {
+            id: teacher._id,
+            role: "teacher",
+            userdata: teacher,
+          },
+          process.env.JWT_KEY,
+          { expiresIn: "24h" }
+        );
+        return res
+          .cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+          })
+          .status(200)
+          .send({
+            status: "ok, teacher logged in",
+            user: "teacher",
+            token: token,
+          });
+      }
     }
   } catch (error) {
     return res.status(500).send({ error: error.message });
@@ -213,14 +211,17 @@ export async function teacherapproverequest(req, res) {
     if (req.role != "teacher") {
       return res.status(500).send({ error: "User is not a teacher" });
     }
-        // check if the have a signature uploaded
-        // ./media/uploads/teacher/sign/teachersign${request.classteacherid}.png
-        const teacherSignaturePath = `./media/uploads/teacher/sign/teachersign${req.user._id}.png`;
-        
-        // Check if the class teacher's signature file exists
-        if (!fs.existsSync(teacherSignaturePath)) {
-          return res.send({ error: "Your signature doesn't exist, please upload a signature from the dashboard first!" });
-        }
+    // check if the have a signature uploaded
+    // ./media/uploads/teacher/sign/teachersign${request.classteacherid}.png
+    const teacherSignaturePath = `./media/uploads/teacher/sign/teachersign${req.user._id}.png`;
+
+    // Check if the class teacher's signature file exists
+    if (!fs.existsSync(teacherSignaturePath)) {
+      return res.send({
+        error:
+          "Your signature doesn't exist, please upload a signature from the dashboard first!",
+      });
+    }
 
     const tchr = [req.user.firstname, req.user.lastname].join(" ");
 
@@ -233,9 +234,9 @@ export async function teacherapproverequest(req, res) {
           classteacher: tchr,
           approvalstatus: aprlstts,
         },
-        { 
+        {
           $inc: { approvalstatus: 1 },
-          $set: { classteacherid: req.user._id } 
+          $set: { classteacherid: req.user._id },
         },
         { returnNewDocument: true }
       );
@@ -246,9 +247,9 @@ export async function teacherapproverequest(req, res) {
           hod: tchr,
           approvalstatus: aprlstts,
         },
-        { 
+        {
           $inc: { approvalstatus: 1 },
-          $set: { hodid: req.user._id }
+          $set: { hodid: req.user._id },
         },
         { returnNewDocument: true }
       );
@@ -256,8 +257,8 @@ export async function teacherapproverequest(req, res) {
     if (!requests)
       return res.status(500).send({ error: "No request found to approve" });
 
-      aprlstts++;
-      sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
+    aprlstts++;
+    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
 
     return res.status(200).send({
       status: "ok, request approved",
@@ -284,9 +285,9 @@ export async function teacherdeclinerequest(req, res) {
           classteacher: tchr,
           approvalstatus: aprlstts,
         },
-        { 
+        {
           $inc: { approvalstatus: 3 },
-          $set: { declinemsg: req.body.declinemsg } 
+          $set: { declinemsg: req.body.declinemsg },
         },
         { returnNewDocument: true }
       );
@@ -297,9 +298,9 @@ export async function teacherdeclinerequest(req, res) {
           hod: tchr,
           approvalstatus: aprlstts,
         },
-        { 
+        {
           $inc: { approvalstatus: 2 },
-          $set: { declinemsg: req.body.declinemsg } 
+          $set: { declinemsg: req.body.declinemsg },
         },
         { returnNewDocument: true }
       );
@@ -308,13 +309,12 @@ export async function teacherdeclinerequest(req, res) {
     if (!requests)
       return res.status(500).send({ error: "No request found to decline" });
 
-    aprlstts = 3
+    aprlstts = 3;
     sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
 
     return res.status(200).send({
       status: "ok, request successfully deleted",
     });
-
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
@@ -384,14 +384,13 @@ export async function teacherfetchastudent(req, res) {
 
     var internreqs = await Request.find({
       studentid: req.body.id,
-    })
+    });
 
     return res.status(200).send({
       student,
       interns,
       internreqs,
     });
-
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
@@ -415,7 +414,9 @@ export async function teacherUploadSign(req, res) {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.status(200).json({ status: `${req.role} signature uploaded successfully.` });
+    res
+      .status(200)
+      .json({ status: `${req.role} signature uploaded successfully.` });
   });
 }
 
