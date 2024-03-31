@@ -32,12 +32,12 @@ export async function registerStudent(requestBody, navigate) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      alert('Sign up complete! Please log in');
+      toast.error('Sign up complete! Please log in');
       navigate('/student/StudentLogin');
     }
   } catch (error) {
     console.log('Signup request failed:', error);
-    alert(`An error occurred while signing up. Please try again later. ${error}`);
+    toast.error(`An error occurred while signing up. Please try again later. ${error}`);
   }
 }
 
@@ -56,7 +56,7 @@ export async function getMyInternsStudent(setInterns) {
       setInterns(data)
     }
   } catch (error) {
-    alert(`Error fetching studentmyinterns! ${error}`);
+    toast.error(`Error fetching studentmyinterns! ${error}`);
   }
 }
 
@@ -75,7 +75,7 @@ export async function getMyNotificationsStudent(setNotifications) {
       setNotifications(data)
     }
   } catch (error) {
-    alert(`Error fetching studentmyinterns! ${error}`);
+    toast.error(`Error fetching studentmyinterns! ${error}`);
   }
 }
 
@@ -90,7 +90,7 @@ export async function delMyInternsStudent(setInterns, delinternid) {
       getMyInternsStudent(setInterns)
     }
   } catch (error) {
-    alert(`Error while deleting studentmyintern! ${error}`);
+    toast.error(`Error while deleting studentmyintern! ${error}`);
   }
 }
 
@@ -102,10 +102,10 @@ export async function subCompInternStudent(requestBody) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      alert("Submitted!")
+      toast.error("Submitted!")
     }
   } catch (error) {
-    alert(`Error occured while posting! ${error}`);
+    toast.error(`Error occured while posting! ${error}`);
   }
 }
 
@@ -117,10 +117,10 @@ export async function addRequestStudent(requestBody) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      alert("Submitted!")
+      toast.error("Submitted!")
     }
   } catch (error) {
-    alert(`Error occured while posting! ${error}`);
+    toast.error(`Error occured while posting! ${error}`);
   }
 }
 
@@ -140,7 +140,7 @@ export async function getMyRequestsStudent(setRequests) {
       setRequests(data)
     }
   } catch (error) {
-    alert(`Error fetching usermyrequests! ${error}`);
+    toast.error(`Error fetching usermyrequests! ${error}`);
   }
 }
 
@@ -155,6 +155,6 @@ export async function removeRequestStudent(setRequests, RemoveReqId) {
       getMyRequestsStudent(setRequests)
     }
   } catch (error) {
-    alert(`Error while removing studentmyrequest! ${error}`);
+    toast.error(`Error while removing studentmyrequest! ${error}`);
   }
 }

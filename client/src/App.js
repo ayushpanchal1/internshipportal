@@ -23,6 +23,7 @@ import TeacherApproveRequests from './pages/teacher/TeacherApproveRequests'
 import TeacherSearch from './pages/teacher/TeacherSearch'
 import { AuthProvider, RequireAuth } from 'react-auth-kit'
 import { ToastContainer } from 'react-toastify'
+import UserProfile from './pages/teacher/components/StudentInfo'
 
 // import { RoleProvider } from './services/RoleContext'
 // import { RedirectStudent, RedirectTeacher } from './services/RedirectBasedOnRole'
@@ -143,11 +144,11 @@ const App = () => {
               }
             />
             <Route
-              path='/teacher/TeacherSearch/TeacherInfo'
+              path='/teacher/TeacherSearch/StudentInfo/:id'
               exact
               element={
                 <RequireAuth loginPath='/teacher/TeacherLogin'>
-                  <TeacherSearch />
+                  <UserProfile />
                 </RequireAuth>
               }
             />

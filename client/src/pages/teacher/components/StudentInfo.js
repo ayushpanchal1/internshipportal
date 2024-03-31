@@ -1,70 +1,94 @@
-import { useState, useEffect } from 'react'
-import { Col, Container, Card, Row } from 'react-bootstrap'
-import IMAGE from '../../../media/user.png'
-import { getUserData } from '../../../services/Services'
-import UploadProfilePicture from '../../common/components/UploadProfilePic'
-import DeleteProfilePicture from '../../common/components/DeleteProfilePicture'
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { getAStudentforTeacher } from '../../../services/TeacherServices';
 
-function UserProfile() {
-  const [UserData, setUserData] = useState('')
+function StudentInfo() {
+  const { id } = useParams();
+  const [userData, setUserData] = useState(null);
+  const [interns, setInterns] = useState(null);
 
   useEffect(() => {
-    //Runs on every render
-    getUserData(setUserData)
-  }, [])
+    const fetchStudentData = async () => {
+      try {
+        const { student, completedInterns, requestedInterns } = await getAStudentforTeacher(id);
+        setUserData(student);
+        setInterns({
+          completedInterns: completedInterns,
+          requestedInterns: requestedInterns
+        });
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      }
+    };
+
+    fetchStudentData();
+  }, [id]);
 
   return (
     <Container style={{ marginTop: '100px' }}>
-      <Row>
-        <Col>
-          <Card className='shadow'>
-            <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
-              <Col md={3} className='d-flex justify-content-center'>
-                <br />
-                <img
-                  class='media-object mw150'
-                  width='256'
-                  src={`${process.env.REACT_APP_BACKEND_ADDRESS}/api/fetchprofilepicture/${UserData._id}`}
-                />
-              </Col>
-              <Col md={9} style={{ paddingLeft: '26px' }}>
-                <br />
-                <h1>
-                  <b>
-                    {UserData.firstname} {UserData.lastname}
-                  </b>
-                </h1>
-                <br />
-                <Row>
-                  <Col md={6}>
-                    <h4>First Name: {UserData.firstname}</h4>
-                    <h4>Father's Name: {UserData.fathername}</h4>
-                    <h4>Mobile Number: {UserData.mobileno}</h4>
-                    <h4>Academic Year: {UserData.academicyear}</h4>
-                  </Col>
-                  <Col md={6}>
-                    <h4>Last Name: {UserData.lastname}</h4>
-                    <h4>Mother's Name: {UserData.mothername}</h4>
-                    <h4>Email: {UserData.email}</h4>
-                    <h4>Department: {UserData.department}</h4>
-                  </Col>
-                </Row>
-                <br />
-                <div className='d-flex'>
-                  <div>
-                    <UploadProfilePicture />
-                  </div>
-                  <div>
-                    <DeleteProfilePicture />
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+      {userData && (
+        <Row>
+          <Col>
+            <Card className="shadow">
+              <Row style={{ marginTop: '18px', marginBottom: '18px' }}>
+                <Col md={3} className="d-flex justify-content-center">
+                  <br />
+                  <img className="media-object mw150" width="256" src={userData.profilePicUrl} alt="Profile" />
+                </Col>
+                <Col md={9} style={{ paddingLeft: '26px' }}>
+                  <br />
+                  <h1><b>{userData.firstname} {userData.lastname}</b></h1>
+                  <br />
+                  <Row>
+                    <Col md={6}>
+                      <h4>First Name: {userData.firstname}</h4>
+                      <h4>Last Name: {userData.lastname}</h4>
+                      <h4>Email: {userData.email}</h4>
+                      {/* Add more fields as needed */}
+                    </Col>
+                    <Col md={6}>
+                      {/* Display additional user information */}
+                    </Col>
+                  </Row>
+                  <br />
+                  {/* Add any additional components for profile picture upload/delete if needed */}
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+      )}
+
+      {interns && (
+        <Row>
+          <Col>
+            <h2>Completed Internships</h2>
+            {/* Display completed internships data */}
+            <ul>
+              {interns.completedInterns.map((intern) => (
+                <li key={intern._id}>{intern.companyname}</li>
+              ))}
+            </ul>
+          </Col>
+        </Row>
+      )}
+
+      {interns && (
+        <Row>
+          <Col>
+            <h2>Requested Internships</h2>
+            {/* Display requested internships data */}
+            <ul>
+              {interns.requestedInterns.map((request) => (
+                <li key={request._id}>{request.companyname}</li>
+              ))}
+            </ul>
+          </Col>
+        </Row>
+      )}
     </Container>
-  )
+  );
 }
 
-export default UserProfile
+export default StudentInfo;

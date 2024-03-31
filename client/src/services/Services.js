@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { httpAxios } from './httpAxios';
 
 export async function logout(navigate, signOut) {
@@ -15,7 +16,7 @@ export async function logout(navigate, signOut) {
     }
 
   } catch (error) {
-    alert(`Error while logging out! ${error}`);
+    toast.error(`Error while logging out! ${error}`);
   }
 }
 
@@ -30,7 +31,7 @@ export async function getUserData(setUserData) {
       setUserData(data);
     }
   } catch (error) {
-    alert(`Error fetching userdata! ${error}`);
+    toast.error(`Error fetching userdata! ${error}`);
   }
 }
 
@@ -49,7 +50,7 @@ export async function getAnnouncements(setAnnouncements) {
       setAnnouncements(data)
     }
   } catch (error) {
-    alert(`Error fetching userdata! ${error}`);
+    toast.error(`Error fetching userdata! ${error}`);
   }
 }
 
@@ -67,7 +68,7 @@ export async function downloadRequest(DownloadReqId) {
       throw new Error('Failed to download request');
     }
   } catch (error) {
-    alert(`Error while downloading pdf! ${error}`);
+    toast.error(`Error while downloading pdf! ${error}`);
   }
 }
 
@@ -80,12 +81,12 @@ export async function uploadProfilePicture(formData) {
     });
     var data = response.data;
     if (response.status === 200) {
-      alert (data.status)
+      toast.error (data.status)
     } else {
       throw new Error('Failed to upload profile picture');
     }
   } catch (error) {
-    alert(`Error while uploading profile picture! ${error}`);
+    toast.error(`Error while uploading profile picture! ${error}`);
   }
 }
 
@@ -96,10 +97,10 @@ export async function deleteProfilePicture() {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      alert('Profile Picture Deleted!')
+      toast.error('Profile Picture Deleted!')
     }
   } catch (error) {
-    alert(`Error while deleting profile picture! ${error}`);
+    toast.error(`Error while deleting profile picture! ${error}`);
   }
 }
 
@@ -113,6 +114,6 @@ export async function generateOTP(requestBody) {
       throw new Error(data.error);
     }
   } catch (error) {
-    alert(`Error generating otp! ${error}`);
+    toast.error(`Error generating otp! ${error}`);
   }
 }

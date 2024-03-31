@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { httpAxios } from './httpAxios';
 
 export async function loginTeacher(requestBody, navigate, signIn) {
@@ -20,7 +21,7 @@ export async function loginTeacher(requestBody, navigate, signIn) {
       navigate('/teacher/TeacherDashboard');
     }
   } catch (error) {
-    alert(`Teacher Log in credentials are incorrect! Sign up if you do not have an account! ${error}`);
+    toast.error(`Teacher Log in credentials are incorrect! Sign up if you do not have an account! ${error}`);
   }
 }
 
@@ -39,7 +40,7 @@ export async function getMyAnnouncementsTeacher(setAnnouncements) {
       setAnnouncements(data)
     }
   } catch (error) {
-    alert(`Error fetching teachermyannouncements! ${error}`);
+    toast.error(`Error fetching teachermyannouncements! ${error}`);
   }
 }
 
@@ -54,7 +55,7 @@ export async function delMyAnnouncementsTeacher(setAnnouncements, delAnnouncemen
       getMyAnnouncementsTeacher(setAnnouncements)
     }
   } catch (error) {
-    alert(`Error while deleting teachermyannouncement! ${error}`);
+    toast.error(`Error while deleting teachermyannouncement! ${error}`);
   }
 }
 export async function uploadSignaturePicture(formData) {
@@ -66,12 +67,12 @@ export async function uploadSignaturePicture(formData) {
     });
     var data = response.data;
     if (response.status === 200) {
-      alert (data.status)
+      toast.error (data.status)
     } else {
       throw new Error('Failed to upload profile picture');
     }
   } catch (error) {
-    alert(`Error while uploading profile picture! ${error}`);
+    toast.error(`Error while uploading profile picture! ${error}`);
   }
 }
 export async function postAnnouncementTeacher(requestBody) {
@@ -82,10 +83,10 @@ export async function postAnnouncementTeacher(requestBody) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      alert("Submitted!")
+      toast.error("Submitted!")
     }
   } catch (error) {
-    alert(`Error occured while posting! ${error}`);
+    toast.error(`Error occured while posting! ${error}`);
   }
 }
 
@@ -100,13 +101,13 @@ export async function getAllStudentsForTeacher(setAllUser) {
       setAllUser(data);
     }
   } catch (error) {
-    alert(`Error fetching all students! ${error}`);
+    toast.error(`Error fetching all students! ${error}`);
   }
 }
 
-export async function getAStudentforTeacher(setUserData, setInterns, searchquery) {
+export async function getAStudentforTeacher(id, setUserData) {
   try {
-    const response = await httpAxios.post('/api/teacherfetchastudent', { searchquery: searchquery });
+    const response = await httpAxios.post("/api/teacherfetchastudent/",{id:id});
     const data = response.data;
 
     if (data.error) {
@@ -114,17 +115,14 @@ export async function getAStudentforTeacher(setUserData, setInterns, searchquery
     } else {
       const userData = data.student;
       setUserData(userData);
-
-      const internsData = data.interns;
-      if (Array.isArray(internsData)) {
-        internsData.reverse();
-      }
-      setInterns(internsData);
     }
   } catch (error) {
-    alert(`Error while fetching a student's profile! ${error}`);
+    toast.error(`Error while fetching a student's profile! ${error}`);
   }
 }
+
+
+
 export async function getMyRequestsTeacher(setRequests) {
   try {
     const response = await httpAxios.get('/api/teachergetmyrequests');
@@ -141,7 +139,7 @@ export async function getMyRequestsTeacher(setRequests) {
       setRequests(data)
     }
   } catch (error) {
-    alert(`Error fetching teachermyrequests! ${error}`);
+    toast.error(`Error fetching teachermyrequests! ${error}`);
   }
 }
 
@@ -156,7 +154,7 @@ export async function approveRequestTeacher(setRequests, ApproveReqId) {
       getMyRequestsTeacher(setRequests)
     }
   } catch (error) {
-    alert(`Error while approving a request! ${error}`);
+    toast.error(`Error while approving a request! ${error}`);
   }
 }
 
@@ -174,6 +172,6 @@ export async function declineRequestTeacher(setRequests, DeclineReqId, DeclineMs
       getMyRequestsTeacher(setRequests);
     }
   } catch (error) {
-    alert(`Error while declining a request! ${error}`);
+    toast.error(`Error while declining a request! ${error}`);
   }
 }
