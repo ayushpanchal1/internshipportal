@@ -9,6 +9,8 @@ import dotenv from "dotenv";
 import multer from "multer";
 import path from "path";
 import fs from 'fs';
+import { OAuth2Client } from "google-auth-library";
+
 
 import { sendNotificationToStudent } from "./studentapicontroller.js";
 // import PDFDocument from 'pdfkit'
@@ -16,6 +18,10 @@ import { sendNotificationToStudent } from "./studentapicontroller.js";
 // import multer from "multer";
 
 dotenv.config();
+
+const client = new OAuth2Client(
+  "780340517253-mulvd9vf85ta69kj57aqu39lt7ef377s.apps.googleusercontent.com"
+);
 
 const upload = (prefix, req) => multer({
   storage: multer.diskStorage({
@@ -84,6 +90,7 @@ export async function teachersignup(req, res) {
 
 export async function teacherlogin(req, res) {
   try {
+    if (!req.body.googleToken) {
     const teacher = await Teacher.findOne({
       email: req.body.email,
     });
@@ -118,6 +125,48 @@ export async function teacherlogin(req, res) {
             token: token,
           });
       }
+    }} else{
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.googleToken,
+      });
+      const payload = ticket.getPayload();
+      const { email } = payload;
+
+      const teacher = await Teacher.findOne({
+        email: email,
+      });
+  
+      if (!teacher) {
+        return res.json({ error: "account not found" });
+      } else {
+        const match = await bcrypt.compare(req.body.password, teacher.password);
+        if (!match) {
+          // passwords do not match!
+          return res.json({ error: "incorrect username or password" });
+        } else {
+          const token = jwt.sign(
+            {
+              id: teacher._id,
+              role: "teacher",
+              userdata: teacher,
+            },
+            process.env.JWT_KEY,
+            { expiresIn: "24h" }
+          );
+          return res
+            .cookie("token", token, {
+              httpOnly: true,
+              secure: true,
+              sameSite: "none",
+            })
+            .status(200)
+            .send({
+              status: "ok, teacher logged in",
+              user: "teacher",
+              token: token,
+            });
+        }
+      }  
     }
   } catch (error) {
     return res.status(500).send({ error: error.message });
