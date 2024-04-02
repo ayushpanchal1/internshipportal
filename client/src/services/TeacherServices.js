@@ -132,7 +132,7 @@ export async function getAllStudentsForTeacher(setAllUser) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      setAllUser(data);
+      setAllUser(data.students);
     }
   } catch (error) {
     toast.error(`Error fetching all students! ${error}`);
