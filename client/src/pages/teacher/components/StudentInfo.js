@@ -14,7 +14,7 @@ function StudentInfo() {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const { student, completedInterns, requestedInterns } = await getAStudentforTeacher(id, setUserData, setInterns);
+        await getAStudentforTeacher(id, setUserData, setInterns);
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
