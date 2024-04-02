@@ -360,7 +360,19 @@ export async function teacherfetchstudents(req, res) {
       return res.status(500).send({ error: "User is not a teacher" });
     }
 
-    var students = await Student.find();
+    const name = [req.user.firstname, req.user.lastname].join(" ");
+
+    if (req.user.role === "classteacher") {
+      var students = await Student.find({
+        classteacher: name,
+      });
+    } else if (req.user.role === "hod"){
+      var students = await Student.find({
+        hod: name
+      });
+    } else {
+      var students = await Student.find();
+    }
 
     return res.status(200).send(students);
   } catch (error) {
