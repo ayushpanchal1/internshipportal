@@ -266,6 +266,8 @@ export async function studentsubcompintern(req, res) {
       stuname: stuname,
       stufname: req.user.firstname,
       stulname: req.user.lastname,
+      classteacher: req.user.classteacher,
+      hod: req.user.hod,
       provider: req.body.Provider,
       fromduration: req.body.FromDuration,
       toduration: req.body.ToDuration,

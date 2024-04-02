@@ -374,7 +374,11 @@ export async function teacherfetchstudents(req, res) {
       var students = await Student.find();
     }
 
-    return res.status(200).send(students);
+    // for excel generation on frontend
+    var compinterns = await CompIntern.find();
+    var internreqs = await Request.find();
+
+    return res.status(200).send({students, compinterns, internreqs});
   } catch (error) {
     return res.status(500).send({ error: error.message });
   }
