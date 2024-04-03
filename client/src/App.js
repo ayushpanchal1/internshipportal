@@ -6,7 +6,7 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css' // DO NOT remove this
 
 import './style/custom.scss'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import StudentLogin from './pages/student/StudentLogin'
 import Signup from './pages/common/Signup'
 import StudentDashboard from './pages/student/StudentDashboard'
@@ -41,8 +41,11 @@ const App = () => {
         {/* <RoleProvider> */}
         <BrowserRouter>
           <Routes>
+          <Route path='/student/*' element={<Navigate to='/student/StudentDashboard' />} />
+            <Route path='/teacher/*' element={<Navigate to='/teacher/TeacherDashboard' />} />
             <Route path='/' exact element={<Homepage />} />
             <Route path='/Signup' exact element={<Signup />} />
+            <Route path='/Signup*' exact element={<Navigate to = '' />} />
             <Route
               path='/Announcements'
               exact
@@ -153,6 +156,7 @@ const App = () => {
               }
             />
           </Routes>
+          
         </BrowserRouter>
         {/* </RoleProvider> */}
       </AuthProvider>

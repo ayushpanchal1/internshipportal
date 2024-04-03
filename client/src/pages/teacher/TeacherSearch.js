@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ExcelJS from 'exceljs';
 import { Col, Button, Row, Container, Form, InputGroup, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useSignOut } from 'react-auth-kit';
@@ -16,6 +17,11 @@ function TeacherSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [allUser, setAllUser] = useState(null);
   const [expandedCardIndex, setExpandedCardIndex] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({
+    academicYear: 'All Academic Years',
+    department: 'All Departments',
+    semester: 'All Semesters'
+  });
 
   const signOut = useSignOut();
   const navigate = useNavigate();
@@ -48,7 +54,7 @@ function TeacherSearch() {
   function handleSubmit(event) {
     event.preventDefault();
     const lowercaseSearchQuery = searchQuery.toLowerCase();
-    const filteredUsers = allUser.filter((user) => {
+    let filteredUsers = allUser.filter((user) => {
       const firstName = user.firstname ? user.firstname.toLowerCase() : '';
       const lastName = user.lastname ? user.lastname.toLowerCase() : '';
       const stuname = user.stuname ? user.stuname.toLowerCase() : '';
@@ -58,6 +64,22 @@ function TeacherSearch() {
         stuname.includes(lowercaseSearchQuery)
       );
     });
+
+    // Filter by department if a department is selected
+    if (selectedOption.academicYear !== 'All Academic Years') {
+      filteredUsers = filteredUsers.filter(user => user.academicyear === selectedOption.academicYear);
+    }
+    if (selectedOption.department !== 'All Departments') {
+      filteredUsers = filteredUsers.filter(user => user.department === selectedOption.department);
+    }
+
+    // Filter by academic year if an academic year is selected
+
+    // Filter by semester if a semester is selected
+    if (selectedOption.semester !== 'All Semesters') {
+      filteredUsers = filteredUsers.filter(user => user.semester === selectedOption.semester);
+    }
+
     setAllUser(filteredUsers);
     if (filteredUsers.length === 1) {
       const index = allUser.findIndex((user) => user.id === filteredUsers[0].id);
@@ -67,6 +89,53 @@ function TeacherSearch() {
     }
   }
 
+  // Dropdown options for departments
+  const departmentOptions = ['All Departments', 'Department A', 'Department B', 'Department C'];
+
+  // Dropdown options for academic years
+  const academicYearOptions = ['All Academic Years', '1', '2', '3', '4'];
+
+  // Dropdown options for semesters
+  const semesterOptions = ['All Semesters', '1', '2', '3', '4', '5', '6', '7', '8'];
+  const downloadExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Students');
+
+    sheet.addRow(['First Name', 'Last Name', 'Gender', 'Seat No', 'Academic Year', 'Department', 'Semester', 'Division', 'Class Teacher', 'HOD', 'Address', 'Mother\'s Name', 'Father\'s Name', 'Date of Birth', 'Email','internshipRequestCount','activeInternshipRequestCount','completedInternshipCount','declinedInternshipRequestCount']);
+
+    allUser.forEach(user => {
+      sheet.addRow([
+        user.firstname,
+        user.lastname,
+        user.gender,
+        user.seatno,
+        user.academicyear,
+        user.department,
+        user.semester,
+        user.division,
+        user.classteacher,
+        user.hod,
+        user.address,
+        user.mothername,
+        user.fathername,
+        user.dateofbirth,
+        user.email,
+        user.internshipRequestCount,
+        user.activeInternshipRequestCount,
+        user.completedInternshipCount,
+        user.declinedInternshipRequestCount
+
+      ]);
+    });
+
+    const blob = await workbook.xlsx.writeBuffer();
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'students.xlsx';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
   return (
     <div>
       <CNavbar />
@@ -104,6 +173,43 @@ function TeacherSearch() {
               </InputGroup>
             </Form>
           </Col>
+          <Col md={4} lg={3} xs={12}>
+            <Form.Control
+              as='select'
+              value={selectedOption.department}
+              onChange={(e) => setSelectedOption({...selectedOption, department: e.target.value})}
+            >
+              {departmentOptions.map((option, index) => (
+                <option key={index}>{option}</option>
+              ))}
+            </Form.Control>
+          </Col>
+          {selectedOption.department !== 'All Departments' && (
+            <>
+              <Col md={4} lg={3} xs={12}>
+                <Form.Control
+                  as='select'
+                  value={selectedOption.academicYear}
+                  onChange={(e) => setSelectedOption({...selectedOption, academicYear: e.target.value})}
+                >
+                  {academicYearOptions.map((option, index) => (
+                    <option key={index}>{option}</option>
+                  ))}
+                </Form.Control>
+              </Col>
+              <Col md={4} lg={3} xs={12}>
+                <Form.Control
+                  as='select'
+                  value={selectedOption.semester}
+                  onChange={(e) => setSelectedOption({...selectedOption, semester: e.target.value})}
+                >
+                  {semesterOptions.map((option, index) => (
+                    <option key={index}>{option}</option>
+                  ))}
+                </Form.Control>
+              </Col>
+            </>
+          )}
         </Row>
       </Container>
 
@@ -227,6 +333,9 @@ function TeacherSearch() {
             </Card>
           </Col>
         )}
+        <div className='d-flex justify-content-center'>
+        <Button variant='primary' onClick={downloadExcel}>Download Excel</Button>
+      </div>
       </Container>
     </div>
   );

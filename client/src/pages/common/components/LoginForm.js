@@ -113,10 +113,13 @@ function LoginForm() {
                         <Button variant="primary" value="Log in" type="submit">
                           Log In
                         </Button>
-                        <GoogleLogin
-                          onSuccess={responseMessage}
-                          onError={errorMessage}
-                        />
+                        <div className="mt-2 google-login-container">
+                          <GoogleLogin
+                            onSuccess={responseMessage}
+                            onError={errorMessage}
+                            width={250}
+                          />
+                        </div>
                       </div>
                     </Form>
                     <ResetPassword />

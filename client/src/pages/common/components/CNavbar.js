@@ -202,14 +202,14 @@ function CNavbar() {
       <Navbar
         collapseOnSelect
         expand="lg"
-        className="navbar fixed-top navbar-dark bg-primary"
-        style={{
-          fontSize: "18px",
-          justifyContent: "space-between",
-          display: "flex",
-        }}
+        className="navbar fixed-top navbar-dark bg-primary justify-content-between fs-5"
+        // style={{
+        //   fontSize: "18px",
+        //   justifyContent: "space-between",
+        //   display: "flex",
+        // }}
       >
-        <Navbar.Brand style={{ paddingLeft: "10px" }}>
+        <Navbar.Brand className="pl-5">
           <NavLink
             to="/"
             style={{

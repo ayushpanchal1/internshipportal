@@ -155,7 +155,7 @@ function StudentInfo() {
         <Modal.Body>
           {selectedIntern && (
             <>
-              <p><strong>Company Name:</strong> {selectedIntern.companyname}</p>
+              <p><strong>Company Name:</strong>{selectedIntern.companyname}</p>
               <p><strong>Technology:</strong> {selectedIntern.whatfor}</p>
               <p><strong>Domain:</strong> {selectedIntern.domain}</p>
               <p><strong>From Duration:</strong> {selectedIntern.fromduration}</p>
