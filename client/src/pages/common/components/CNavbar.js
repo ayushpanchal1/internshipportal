@@ -209,7 +209,7 @@ function CNavbar() {
         //   display: "flex",
         // }}
       >
-        <Navbar.Brand className="pl-5">
+        <Navbar.Brand className="pl-5" style={{ paddingLeft: "10px" }}>
           <NavLink
             to="/"
             style={{
