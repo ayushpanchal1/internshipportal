@@ -58,10 +58,15 @@ function TeacherSearch() {
       const firstName = user.firstname ? user.firstname.toLowerCase() : '';
       const lastName = user.lastname ? user.lastname.toLowerCase() : '';
       const stuname = user.stuname ? user.stuname.toLowerCase() : '';
+      const department = selectedOption.department ? selectedOption.department.toLowerCase() : '';
+      const academicyear = selectedOption.academicYear !== 'All Academic Years' ? selectedOption.academicYear : '';
+      console.log(academicyear)
       return (
         firstName.includes(lowercaseSearchQuery) ||
         lastName.includes(lowercaseSearchQuery) ||
-        stuname.includes(lowercaseSearchQuery)
+        stuname.includes(lowercaseSearchQuery) ||
+        department.includes(lowercaseSearchQuery) ||
+        (academicyear && user.academicyear === academicyear)
       );
     });
 
@@ -90,7 +95,7 @@ function TeacherSearch() {
   }
 
   // Dropdown options for departments
-  const departmentOptions = ['All Departments', 'Department A', 'Department B', 'Department C'];
+  const departmentOptions = ['All Departments', 'Information Technology', 'Department B', 'Department C'];
 
   // Dropdown options for academic years
   const academicYearOptions = ['All Academic Years', '1', '2', '3', '4'];
@@ -173,6 +178,7 @@ function TeacherSearch() {
               </InputGroup>
             </Form>
           </Col>
+          <Row className='d-flex justify-content-center align-items-center'>
           <Col md={4} lg={3} xs={12}>
             <Form.Control
               as='select'
@@ -209,7 +215,7 @@ function TeacherSearch() {
                 </Form.Control>
               </Col>
             </>
-          )}
+          )}</Row>
         </Row>
       </Container>
 
