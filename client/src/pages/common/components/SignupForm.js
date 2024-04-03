@@ -374,7 +374,7 @@ function SignupForm() {
                     <div className="mt-3">
                       <p className="mb-0  text-center">
                         Already have an account?{" "}
-                        <Link to={"/Login"} className="text-primary fw-bold">
+                        <Link to={"/student/StudentLogin"} className="text-primary fw-bold">
                           Log In
                         </Link>
                       </p>
