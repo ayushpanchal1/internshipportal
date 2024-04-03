@@ -18,11 +18,14 @@ const Student = new mongoose.Schema(
         fathername: { type: String, required: true },
         mobileno: { type: Number, required: true },
         dateofbirth: { type: String, required: true },
+        internshipRequestCount: { type: Number, default: 0 },
+        activeInternshipRequestCount: { type: Number, default: 0 },
+        declinedInternshipRequestCount: { type: Number, default: 0 },
+        completedInternshipCount: { type: Number, default: 0 },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
     },
     { collection: 'student-data' }
 )
-
 
 export default mongoose.model('StudentData', Student);

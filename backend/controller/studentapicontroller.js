@@ -161,8 +161,8 @@ export async function studentlogin(req, res) {
 
 export async function studentaddrequest(req, res) {
   try {
-    //console.log(req.body)
-    await Request.create({
+
+    const request = new Request({
       studentid: req.user._id,
       studentemail: req.user.email,
       firstname: req.user.firstname,
@@ -184,6 +184,9 @@ export async function studentaddrequest(req, res) {
       domain: req.body.domain,
       approvalstatus: 0, //initialised as zero
     });
+    
+    await request.save();
+
     return res.json({ status: "ok" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
@@ -197,16 +200,13 @@ export async function studentremoverequest(req, res) {
         .status(500)
         .send({ error: "please give id of request to be deleted in req body" });
 
-    const delrequest = await Request.deleteOne({
+    await Request.findOneAndDelete({
       _id: req.body.id,
       studentid: req.user._id,
     });
-
-    if (delrequest.deletedCount == 0)
-      return res.status(500).send({ error: "no requests were deleted" });
-
+    
     return res.status(200).send({
-      status: "ok, deleted " + delrequest.deletedCount + " requests",
+      status: "ok, deleted 1 request",
     });
   } catch (error) {
     return res.status(500).send({ error: error.message });
@@ -260,7 +260,7 @@ export async function studentsubcompintern(req, res) {
   try {
     const stuname = [req.user.firstname, req.user.lastname].join(" ");
 
-    await CompIntern.create({
+    const intern = new CompIntern({
       stu_id: req.user._id,
       email: req.user.email,
       stuname: stuname,
@@ -268,12 +268,16 @@ export async function studentsubcompintern(req, res) {
       stulname: req.user.lastname,
       classteacher: req.user.classteacher,
       hod: req.user.hod,
+      certificateLink: req.body.certificateLink,
       provider: req.body.Provider,
       fromduration: req.body.FromDuration,
       toduration: req.body.ToDuration,
       whatfor: req.body.WhatFor,
       domain: req.body.Domain,
     });
+
+    await intern.save()
+
     res.json({ status: "ok" });
   } catch (error) {
     return res.status(500).send({ error: error.message });
@@ -282,7 +286,7 @@ export async function studentsubcompintern(req, res) {
 
 export async function studentdelmyinterns(req, res) {
   try {
-    const myinternsdata = await CompIntern.deleteOne({
+    const myinternsdata = await CompIntern.findOneAndDelete({
       stu_id: req.user._id,
       _id: req.body._id,
     });

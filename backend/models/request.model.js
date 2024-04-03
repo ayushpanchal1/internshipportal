@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Student from "./student.model.js"
 
 const Request = new mongoose.Schema(
 	{
@@ -29,5 +30,61 @@ const Request = new mongoose.Schema(
 	},
 	{ collection: 'request-data' }
 )
+
+Request.post('save', async function(doc) {
+    // console.log('Hit save middleware');
+    // console.log('Request document:', doc);
+
+    try {
+        const student = await Student.findById(doc.studentid);
+        // console.log('Found student:', student);
+
+        if (student) {
+            const requestCount = await RequestModel.countDocuments({ studentid: doc.studentid });
+            // console.log('Request count:', requestCount);
+            const activeRequestCount = await RequestModel.countDocuments({ studentid: doc.studentid, approvalstatus:{ $in: [0, 1, 2] }});
+            const declinedRequestCount = await RequestModel.countDocuments({ studentid: doc.studentid, approvalstatus:3})
+
+            student.internshipRequestCount = requestCount;
+            student.activeInternshipRequestCount = activeRequestCount;
+            student.declinedInternshipRequestCount = declinedRequestCount;
+            await student.save();
+            // console.log('Student document updated:', student);
+        } else {
+            console.log('Student not found for id:', doc.studentid);
+        }
+    } catch (error) {
+        console.error('Error updating student:', error);
+    }
+});
+
+Request.post('findOneAndDelete', async function(doc) {
+    // console.log('Hit del middleware');
+    // console.log('Request document:', doc);
+
+    try {
+        const student = await Student.findById(doc.studentid);
+        // console.log('Found student:', student);
+
+        if (student) {
+            const requestCount = await RequestModel.countDocuments({ studentid: doc.studentid });
+            // console.log('Request count:', requestCount);
+            const activeRequestCount = await RequestModel.countDocuments({ studentid: doc.studentid, approvalstatus:{ $in: [0, 1, 2] }});
+            const declinedRequestCount = await RequestModel.countDocuments({ studentid: doc.studentid, approvalstatus:3})
+
+            student.internshipRequestCount = requestCount;
+            student.activeInternshipRequestCount = activeRequestCount;
+            student.declinedInternshipRequestCount = declinedRequestCount;
+            await student.save();
+            // console.log('Student document updated:', student);
+        } else {
+            console.log('Student not found for id:', doc.studentid);
+        }
+    } catch (error) {
+        console.error('Error updating student:', error);
+    }
+});
+
+const RequestModel = mongoose.model('RequestData', Request);
 
 export default mongoose.model('RequestData', Request);
