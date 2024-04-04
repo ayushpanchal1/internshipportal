@@ -7,6 +7,7 @@ import { useAuthUser } from 'react-auth-kit';
 import CNavbar from '../common/components/CNavbar';
 import { logout } from '../../services/Services';
 import { getAllStudentsForTeacher, getAStudentforTeacher } from '../../services/TeacherServices';
+import { IoMdDownload } from "react-icons/io";
 
 function TeacherSearch() {
   const auth = useAuthUser();
@@ -223,9 +224,13 @@ function TeacherSearch() {
         {!userData && (
           <>
             <Col md={8} lg={12} xs={12}>
+            <div className='d-flex justify-content-center'>
+        <Button variant='primary' onClick={downloadExcel} style={{marginLeft:'1100px'}}><IoMdDownload />Download Excel</Button>
+      </div>
               <h1>
                 <b>Students</b>
               </h1>
+              
               <div className='border border-2 border-primary'></div>
               <br />
               <div className='row mx-md-n5 gy-4'>
@@ -339,9 +344,6 @@ function TeacherSearch() {
             </Card>
           </Col>
         )}
-        <div className='d-flex justify-content-center'>
-        <Button variant='primary' onClick={downloadExcel}>Download Excel</Button>
-      </div>
       </Container>
     </div>
   );

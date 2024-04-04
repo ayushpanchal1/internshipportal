@@ -16,6 +16,7 @@ root.render(
         autoClose={2000}
         hideProgressBar
         limit={1}
+        style={{zIndex:1000}}
       />
       <App />
     </React.StrictMode>

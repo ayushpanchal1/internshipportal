@@ -116,6 +116,7 @@ export async function delMyInternsStudent(setInterns, delinternid) {
       throw new Error(data.error);
     } else {
       getMyInternsStudent(setInterns);
+      toast.success( `Deleted successfully`)
     }
   } catch (error) {
     toast.error(`Error while deleting studentmyintern! ${error}`);
