@@ -255,24 +255,54 @@ function SignupForm() {
                         <Form.Label className="text-center">
                           Class Teacher
                         </Form.Label>
-                        <Form.Control
+                        {/* <Form.Control
                           value={classteacher}
                           onChange={(e) => setclassteacher(e.target.value)}
                           type="text"
                           placeholder="Enter Class Teacher Name"
-                        />
+                        /> */}
+                        <Form.Select value={classteacher} type="text"
+                        onChange={(e) => setclassteacher(e.target.value)}
+                        >
+                          <option
+                            value="invalid"
+                            onClick={(e) => setclassteacher("")}
+                          >
+                            Select Your Class Teacher
+                          </option>
+                          <option
+                            value="Vijaya Pinjarkar"
+                          >
+                            Vijaya Pinjarkar
+                          </option>
+                        </Form.Select>
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="hod">
                         <Form.Label className="text-center">
                           Head Of Department
                         </Form.Label>
-                        <Form.Control
+                        {/* <Form.Control
                           value={hod}
                           onChange={(e) => sethod(e.target.value)}
                           type="text"
                           placeholder="Enter Head of Department Name"
-                        />
+                        /> */}
+                        <Form.Select value={hod} type="text"
+                        onChange={(e) => sethod(e.target.value)}
+                        >
+                          <option
+                            value="invalid"
+                            onClick={(e) => sethod("")}
+                          >
+                            Select Your Head Of Department
+                          </option>
+                          <option
+                            value="Radhika Kotecha"
+                          >
+                            Radhika Kotecha
+                          </option>
+                        </Form.Select>
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="address">
