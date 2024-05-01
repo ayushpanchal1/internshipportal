@@ -1,26 +1,26 @@
-import Teacher from "../models/teacher.model.js";
-import Request from "../models/request.model.js";
-import Announcement from "../models/announcement.model.js";
-import Student from "../models/student.model.js";
-import CompIntern from "../models/compintern.model.js";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { OAuth2Client } from "google-auth-library";
+import Teacher from '../models/teacher.model.js'
+import Request from '../models/request.model.js'
+import Announcement from '../models/announcement.model.js'
+import Student from '../models/student.model.js'
+import CompIntern from '../models/compintern.model.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import multer from 'multer'
+import path from 'path'
+import fs from 'fs'
+import { OAuth2Client } from 'google-auth-library'
 
-import { sendNotificationToStudent } from "./studentapicontroller.js";
+import { sendNotificationToStudent } from './studentapicontroller.js'
 // import PDFDocument from 'pdfkit'
 // import path from "path";
 // import multer from "multer";
 
-dotenv.config();
+dotenv.config()
 
 const client = new OAuth2Client(
-  "780340517253-mulvd9vf85ta69kj57aqu39lt7ef377s.apps.googleusercontent.com"
-);
+  '780340517253-mulvd9vf85ta69kj57aqu39lt7ef377s.apps.googleusercontent.com'
+)
 
 const upload = (prefix, req) =>
   multer({
@@ -35,37 +35,47 @@ const upload = (prefix, req) =>
           null,
           // file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
           req.role + prefix + req.user._id + path.extname(file.originalname)
-        );
+        )
       },
     }),
-  });
+    limits: {
+      fileSize: 600 * 1024, // 600 KB limit
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype === 'image/png') {
+        cb(null, true)
+      } else {
+        cb(new Error('Only PNG files are allowed.'))
+      }
+    },
+  })
 
 export async function teachersignup(req, res) {
   try {
     const requiredFields = [
-      "firstname",
-      "lastname",
-      "gender",
-      "department",
-      "domain",
-      "role",
-      "dateofbirth",
-      "email",
-      "password",
-    ];
+      'firstname',
+      'lastname',
+      'gender',
+      'department',
+      'domain',
+      'role',
+      'dateofbirth',
+      'email',
+      'password',
+    ]
 
     for (const field of requiredFields) {
       if (!req.body[field]) {
-        return res.status(400).json({ error: `${field} is required` });
+        return res.status(400).json({ error: `${field} is required` })
       }
     }
 
     // console.log(req.body)
     const userexists = await Teacher.findOne({
       email: req.body.Email,
-    });
+    })
     if (userexists) {
-      return res.json({ error: "user already exists" });
+      return res.json({ error: 'user already exists' })
     }
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (!err) {
@@ -79,15 +89,15 @@ export async function teachersignup(req, res) {
           dateofbirth: req.body.dateofbirth,
           email: req.body.email,
           password: hashedPassword,
-        });
-        return res.json({ status: "ok" });
+        })
+        return res.json({ status: 'ok' })
       } else {
-        console.log(err);
-        return res.json({ error: "bcrypt error occured" });
+        console.log(err)
+        return res.json({ error: 'bcrypt error occured' })
       }
-    });
+    })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
@@ -96,136 +106,136 @@ export async function teacherlogin(req, res) {
     if (!req.body.googleToken) {
       const teacher = await Teacher.findOne({
         email: req.body.email,
-      });
+      })
 
       if (!teacher) {
-        return res.json({ error: "account not found" });
+        return res.json({ error: 'account not found' })
       } else {
-        const match = await bcrypt.compare(req.body.password, teacher.password);
+        const match = await bcrypt.compare(req.body.password, teacher.password)
         if (!match) {
           // passwords do not match!
-          return res.json({ error: "incorrect username or password" });
+          return res.json({ error: 'incorrect username or password' })
         } else {
           const token = jwt.sign(
             {
               id: teacher._id,
-              role: "teacher",
+              role: 'teacher',
               userdata: teacher,
             },
             process.env.JWT_KEY,
-            { expiresIn: "24h" }
-          );
+            { expiresIn: '24h' }
+          )
           return res
-            .cookie("token", token, {
+            .cookie('token', token, {
               httpOnly: true,
               secure: true,
-              sameSite: "none",
+              sameSite: 'none',
             })
             .status(200)
             .send({
-              status: "ok, teacher logged in",
-              user: "teacher",
+              status: 'ok, teacher logged in',
+              user: 'teacher',
               token: token,
-            });
+            })
         }
       }
     } else {
       const ticket = await client.verifyIdToken({
         idToken: req.body.googleToken,
-      });
-      const payload = ticket.getPayload();
-      const { email } = payload;
+      })
+      const payload = ticket.getPayload()
+      const { email } = payload
 
       const teacher = await Teacher.findOne({
         email: email,
-      });
+      })
 
       if (!teacher) {
-        return res.json({ error: "account not found" });
+        return res.json({ error: 'account not found' })
       } else {
         const token = jwt.sign(
           {
             id: teacher._id,
-            role: "teacher",
+            role: 'teacher',
             userdata: teacher,
           },
           process.env.JWT_KEY,
-          { expiresIn: "24h" }
-        );
+          { expiresIn: '24h' }
+        )
         return res
-          .cookie("token", token, {
+          .cookie('token', token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: 'none',
           })
           .status(200)
           .send({
-            status: "ok, teacher logged in",
-            user: "teacher",
+            status: 'ok, teacher logged in',
+            user: 'teacher',
             token: token,
-          });
+          })
       }
     }
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teachergetmyrequests(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     } else {
-      const tchr = [req.user.firstname, req.user.lastname].join(" ");
-      const aprlstts = req.user.role == "classteacher" ? 0 : 1;
+      const tchr = [req.user.firstname, req.user.lastname].join(' ')
+      const aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
       if (aprlstts == 0) {
         var requests = await Request.find({
           classteacher: tchr,
           approvalstatus: aprlstts,
-        });
+        })
       } else {
         var requests = await Request.find({
           hod: tchr,
           approvalstatus: aprlstts,
-        });
+        })
       }
 
       if (!requests)
         return res
           .status(500)
-          .send({ error: "The teacher has no requests to approve" });
+          .send({ error: 'The teacher has no requests to approve' })
 
       return res.status(200).send({
-        status: "ok",
+        status: 'ok',
         requests: requests,
-      });
+      })
     }
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherapproverequest(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
     // check if the have a signature uploaded
     // ./media/uploads/teacher/sign/teachersign${request.classteacherid}.png
-    const teacherSignaturePath = `./media/uploads/teacher/sign/teachersign${req.user._id}.png`;
+    const teacherSignaturePath = `./media/uploads/teacher/sign/teachersign${req.user._id}.png`
 
     // Check if the class teacher's signature file exists
     if (!fs.existsSync(teacherSignaturePath)) {
       return res.send({
         error:
           "Your signature doesn't exist, please upload a signature from the dashboard first!",
-      });
+      })
     }
 
-    const tchr = [req.user.firstname, req.user.lastname].join(" ");
+    const tchr = [req.user.firstname, req.user.lastname].join(' ')
 
-    var aprlstts = req.user.role == "classteacher" ? 0 : 1;
+    var aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
     if (aprlstts == 0) {
       var requests = await Request.findOneAndUpdate(
@@ -239,7 +249,7 @@ export async function teacherapproverequest(req, res) {
           $set: { classteacherid: req.user._id },
         },
         { returnNewDocument: true }
-      );
+      )
     } else {
       var requests = await Request.findOneAndUpdate(
         {
@@ -252,31 +262,31 @@ export async function teacherapproverequest(req, res) {
           $set: { hodid: req.user._id },
         },
         { returnNewDocument: true }
-      );
+      )
     }
     if (!requests)
-      return res.status(500).send({ error: "No request found to approve" });
+      return res.status(500).send({ error: 'No request found to approve' })
 
-    aprlstts++;
-    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
+    aprlstts++
+    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts)
 
     return res.status(200).send({
-      status: "ok, request approved",
-    });
+      status: 'ok, request approved',
+    })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherdeclinerequest(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
 
-    const tchr = [req.user.firstname, req.user.lastname].join(" ");
+    const tchr = [req.user.firstname, req.user.lastname].join(' ')
 
-    var aprlstts = req.user.role == "classteacher" ? 0 : 1;
+    var aprlstts = req.user.role == 'classteacher' ? 0 : 1
 
     if (aprlstts == 0) {
       var requests = await Request.findOneAndUpdate(
@@ -290,7 +300,7 @@ export async function teacherdeclinerequest(req, res) {
           $set: { declinemsg: req.body.declinemsg },
         },
         { returnNewDocument: true }
-      );
+      )
     } else {
       var requests = await Request.findOneAndUpdate(
         {
@@ -303,41 +313,41 @@ export async function teacherdeclinerequest(req, res) {
           $set: { declinemsg: req.body.declinemsg },
         },
         { returnNewDocument: true }
-      );
+      )
     }
 
     if (!requests)
-      return res.status(500).send({ error: "No request found to decline" });
+      return res.status(500).send({ error: 'No request found to decline' })
 
-    aprlstts = 3;
-    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts);
+    aprlstts = 3
+    sendNotificationToStudent(requests.studentid, tchr, req.user._id, aprlstts)
 
     return res.status(200).send({
-      status: "ok, request successfully deleted",
-    });
+      status: 'ok, request successfully deleted',
+    })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teachergetmyAnnouncements(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
     const myAnnouncementsdata = await Announcement.find({
       teacher_id: req.user._id,
-    });
-    return res.status(200).send(myAnnouncementsdata);
+    })
+    return res.status(200).send(myAnnouncementsdata)
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherpostAnnouncement(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
     await Announcement.create({
       teacher_id: req.user._id,
@@ -347,68 +357,68 @@ export async function teacherpostAnnouncement(req, res) {
       title: req.body.Title,
       info: req.body.Info,
       link: req.body.iLink,
-    });
-    return res.json({ status: "ok" });
+    })
+    return res.json({ status: 'ok' })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherfetchstudents(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
 
-    const name = [req.user.firstname, req.user.lastname].join(" ");
+    const name = [req.user.firstname, req.user.lastname].join(' ')
 
-    if (req.user.role === "classteacher") {
+    if (req.user.role === 'classteacher') {
       var students = await Student.find({
         classteacher: name,
-      });
-    } else if (req.user.role === "hod"){
+      })
+    } else if (req.user.role === 'hod') {
       var students = await Student.find({
-        hod: name
-      });
+        hod: name,
+      })
     } else {
-      var students = await Student.find();
+      var students = await Student.find()
     }
 
     // for excel generation on frontend
-    var compinterns = await CompIntern.find();
-    var internreqs = await Request.find();
+    var compinterns = await CompIntern.find()
+    var internreqs = await Request.find()
 
-    return res.status(200).send({students, compinterns, internreqs});
+    return res.status(200).send({ students, compinterns, internreqs })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherfetchastudent(req, res) {
   try {
-    if (req.role != "teacher") {
-      return res.status(500).send({ error: "User is not a teacher" });
+    if (req.role != 'teacher') {
+      return res.status(500).send({ error: 'User is not a teacher' })
     }
 
     var student = await Student.findOne({
       _id: req.body.id,
-    });
+    })
 
     var interns = await CompIntern.find({
       stu_id: req.body.id,
-    });
+    })
 
     var internreqs = await Request.find({
       studentid: req.body.id,
-    });
+    })
 
     return res.status(200).send({
       student,
       interns,
       internreqs,
-    });
+    })
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
@@ -417,24 +427,44 @@ export async function teacherdelmyAnnouncements(req, res) {
     const myAnnouncementdata = await Announcement.deleteOne({
       teacher_id: req.user._id,
       _id: req.body._id,
-    });
-    return res.json(myAnnouncementdata);
+    })
+    return res.json(myAnnouncementdata)
   } catch (error) {
-    return res.status(500).send({ error: error.message });
+    return res.status(500).send({ error: error.message })
   }
 }
 
 export async function teacherUploadSign(req, res) {
-  const handler = upload("sign", req).single("image");
+  const handler = upload('sign', req).single('image')
   handler(req, res, (err) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading
+      return res
+        .status(400)
+        .json({ error: 'File upload error', details: err.message })
+    } else if (err) {
+      // An unknown error occurred
+      return res.status(500).json({ error: err.message })
     }
+
+    // No errors, signature uploaded successfully
     res
       .status(200)
-      .json({ status: `${req.role} signature uploaded successfully.` });
-  });
+      .json({ status: `${req.role} signature uploaded successfully.` })
+  })
 }
+
+// export async function teacherUploadSign(req, res) {
+//   const handler = upload("sign", req).single("image");
+//   handler(req, res, (err) => {
+//     if (err) {
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res
+//       .status(200)
+//       .json({ status: `${req.role} signature uploaded successfully.` });
+//   });
+// }
 
 // upload template
 // export async function uploadSingle(req, res) {
