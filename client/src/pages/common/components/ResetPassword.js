@@ -96,7 +96,7 @@ function ResetPassword() {
                     </div>
                 ) : (
                     <Button onClick={() => handleShow()} variant="info">
-                        Reset Password
+                        Reset Your Password
                     </Button>
                 )
             }

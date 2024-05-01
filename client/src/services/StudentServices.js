@@ -116,7 +116,7 @@ export async function delMyInternsStudent(setInterns, delinternid) {
       throw new Error(data.error);
     } else {
       getMyInternsStudent(setInterns);
-      toast.success( `Deleted successfully`)
+      toast.success( `Successfully deleted internship from profile!`)
     }
   } catch (error) {
     toast.error(`Error while deleting studentmyintern! ${error}`);
@@ -134,7 +134,7 @@ export async function subCompInternStudent(requestBody) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      toast.error("Submitted!");
+      toast.success("Profile Updated with new internship!");
     }
   } catch (error) {
     toast.error(`Error occured while posting! ${error}`);
@@ -152,7 +152,7 @@ export async function addRequestStudent(requestBody) {
     if (data.error) {
       throw new Error(data.error);
     } else {
-      toast.error("Submitted!");
+      toast.success("Request Submitted!");
     }
   } catch (error) {
     toast.error(`Error occured while posting! ${error}`);
@@ -190,6 +190,7 @@ export async function removeRequestStudent(setRequests, RemoveReqId) {
       throw new Error(data.error);
     } else {
       getMyRequestsStudent(setRequests);
+      toast.success("Request Deleted!");
     }
   } catch (error) {
     toast.error(`Error while removing studentmyrequest! ${error}`);
