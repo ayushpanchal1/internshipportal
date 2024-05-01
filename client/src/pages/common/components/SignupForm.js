@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerStudent } from "../../../services/StudentServices";
 import { generateOTP } from "../../../services/Services";
+import { toast } from "react-toastify";
 
 function SignupForm() {
   const [fname, setfname] = useState("");
@@ -22,21 +23,81 @@ function SignupForm() {
   const [dateofbirth, setdateofbirth] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [otp, setOtp] = useState(""); // State to hold OTP input
 
+  const currentYear = new Date().getFullYear();
+  const minYear = currentYear - 23; 
+  const maxYear = currentYear - 17; 
+
   async function handleSubmit(event) {
     event.preventDefault();
-    const requestBody = {
-      email,
+    const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+    const newErrors = {};
+    if (!fname.trim()) {
+      newErrors.fname = 'First Name is required.';
     }
-    generateOTP(requestBody)
-    setShowOTPModal(true)
+  
+    if (!lname.trim()) {
+      newErrors.lname = 'Last Name is required.';
+    }
+  
+    if (!gender.trim() || gender === 'invalid') {
+      newErrors.gender = 'Gender is required.';
+    }
+  
+    if (!academic.trim() || academic === 'invalid') {
+      newErrors.academic = 'Academic Year is required.';
+    }
+  
+    if (!department.trim() || department === 'invalid') {
+      newErrors.department = 'Department is required.';
+    }
+  
+    if (!semester.trim() || semester === 'invalid') {
+      newErrors.semester = 'Semester is required.';
+    }
+  
+    if (!classteacher.trim() || classteacher === 'invalid') {
+      newErrors.classteacher = 'Class Teacher is required.';
+    }
+  
+    if (!hod.trim() || hod === 'invalid') {
+      newErrors.hod = 'Head of Department is required.';
+    }
+  
+    if (!address.trim()) {
+      newErrors.address = 'Address is required.';
+    }
+  
+    if (!mothername.trim()) {
+      newErrors.mothername = "Mother's First Name is required.";
+    }
+  
+    if (!fathername.trim()) {
+      newErrors.fathername = "Father's First Name is required.";
+    }
+  
+    if (!mobileno.trim() || mobileno.length !== 10) {
+      newErrors.mobileno = 'Phone number must be 10 digits long.';
+    }
+  
+    if (!dateofbirth.trim() || dateofbirth > `${maxYear}-12-31` || dateofbirth < `${minYear}-01-01`) {
+      newErrors.dateofbirth = 'Date of Birth is required and should be between 17 and 23 years.';
+    }
+  
+    setErrors(newErrors);
+  
+    if (Object.keys(newErrors).length === 0) {
+      const requestBody = { email };
+      generateOTP(requestBody);
+      setShowOTPModal(true);
+    }
   }
-
+  
 
   async function handleModalSubmit(event) {
     event.preventDefault();
@@ -88,6 +149,7 @@ function SignupForm() {
                           type="text"
                           placeholder="Enter First Name"
                         />
+                         {errors.fname && <p className="text-danger">{errors.fname}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="lname">
@@ -100,6 +162,7 @@ function SignupForm() {
                           type="text"
                           placeholder="Enter Last Name"
                         />
+                         {errors.lname && <p className="text-danger">{errors.lname}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="gender">
@@ -132,6 +195,7 @@ function SignupForm() {
                             Other
                           </option>
                         </Form.Select>
+                        {errors.gender && <p className="text-danger">{errors.gender}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="seatno">
@@ -146,6 +210,7 @@ function SignupForm() {
                             MozAppearance: "textfield",
                           }}
                         />
+                           {errors.seatno && <p className="text-danger">{errors.seatno}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="academic">
@@ -164,6 +229,7 @@ function SignupForm() {
                           <option value="3">Third Year</option>
                           <option value="4">Fourth Year</option>
                         </Form.Select>
+                        {errors.academic && <p className="text-danger">{errors.academic}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="semester">
@@ -184,6 +250,7 @@ function SignupForm() {
                           <option value="7">7</option>
                           <option value="8">8</option>
                         </Form.Select>
+                        {errors.semester && <p className="text-danger">{errors.semester}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="department">
@@ -223,6 +290,7 @@ function SignupForm() {
                             Electronics And Telecommunications
                           </option>
                         </Form.Select>
+                        {errors.department && <p className="text-danger">{errors.department}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="division">
@@ -249,6 +317,7 @@ function SignupForm() {
                             B
                           </option>
                         </Form.Select>
+                        {errors.division && <p className="text-danger">{errors.division}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="classteacher">
@@ -276,6 +345,7 @@ function SignupForm() {
                             Vijaya Pinjarkar
                           </option>
                         </Form.Select>
+                        {errors.classteacher && <p className="text-danger">{errors.classteacher}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="hod">
@@ -303,6 +373,7 @@ function SignupForm() {
                             Radhika Kotecha
                           </option>
                         </Form.Select>
+                        {errors.hod && <p className="text-danger">{errors.hod}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="address">
@@ -313,6 +384,7 @@ function SignupForm() {
                           type="text"
                           placeholder="Enter Address"
                         />
+                         {errors.address && <p className="text-danger">{errors.address}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="mothername">
@@ -325,6 +397,7 @@ function SignupForm() {
                           type="text"
                           placeholder="Enter only the First Name of your Mother"
                         />
+                         {errors.mothername && <p className="text-danger">{errors.mothername}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="fathername">
@@ -337,6 +410,7 @@ function SignupForm() {
                           type="text"
                           placeholder="Enter only the First Name of your Father"
                         />
+                         {errors.fathername && <p className="text-danger">{errors.fathername}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="mobileno">
@@ -350,6 +424,7 @@ function SignupForm() {
                           pattern="[0-9]{10}"
                           placeholder="Enter Your Phone Number"
                         />
+                             {errors.mobile && <p className="text-danger">{errors.mobileno}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="dateofbirth">
@@ -360,7 +435,10 @@ function SignupForm() {
                           value={dateofbirth}
                           onChange={(e) => setdateofbirth(e.target.value)}
                           type="date"
+                          max={`${maxYear}-12-31`}
+                          min={`${minYear}-01-01`}
                         />
+                           {errors.dateofbirth && <p className="text-danger">{errors.dateofbirth}</p>}
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="email">
@@ -371,8 +449,9 @@ function SignupForm() {
                           value={email}
                           onChange={(e) => setemail(e.target.value)}
                           type="email"
-                          placeholder="Enter email"
+                          placeholder=" Email should have @somaiya.edu"
                         />
+                           {errors.email && <p className="text-danger">{errors.email}</p>}
                       </Form.Group>
 
                       <Form.Group
@@ -384,8 +463,9 @@ function SignupForm() {
                           value={password}
                           onChange={(e) => setpassword(e.target.value)}
                           type="password"
-                          placeholder="password"
+                          placeholder="Passord must have special-Char,upper,lower and 8 characters"
                         />
+                           {errors.password && <p className="text-danger">{errors.password}</p>}
                       </Form.Group>
                       <Form.Group
                         className="mb-3"
