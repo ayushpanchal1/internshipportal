@@ -279,7 +279,7 @@ function CNavbar() {
             )}
             {Session === "user" && (
               <>
-                <li className="nav-item active" style={{ marginLeft: "35px" }}>
+                <li className="nav-item">
                   <NavLink
                     to={"/student/StudentDashboard"}
                     className="nav-link"

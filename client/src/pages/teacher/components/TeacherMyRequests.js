@@ -1,4 +1,4 @@
-import { Col, Row, Container, Button, Modal, Form } from "react-bootstrap";
+import { Col, Row, Container, Button, Modal, Form, InputGroup } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyRequestsTeacher, approveRequestTeacher, declineRequestTeacher } from "../../../services/TeacherServices";
 
@@ -61,18 +61,18 @@ function Requests() {
 
     return (
         <Container style={{ marginTop: '100px' }}>
-            <div className="d-flex mb-3">
-                <input
+            <InputGroup className="d-flex mb-3 justify-content-end">
+                <Form.Control
                     type="text"
                     placeholder="Search..."
-                    className="form-control me-2"
-                    style={{marginLeft:"700px"}}
+                    className="form-control shadow"
+                    style={{maxWidth:"300px"}}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <Button variant="primary" className="me-2" onClick={handleSearch}>Search</Button>
-                <Button variant="info" onClick={handleClear}>Clear</Button>
-            </div>
+                <Button variant="primary" className="shadow" onClick={handleSearch}>Search</Button>
+                <Button variant="info" className="shadow" onClick={handleClear}>Clear</Button>
+            </InputGroup>
             {filteredRequests.length > 0 && (
                 <ul className='list-unstyled'>
                     {filteredRequests.map((request, index) => (

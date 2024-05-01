@@ -107,7 +107,7 @@ function TeacherSearch() {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Students');
 
-    sheet.addRow(['First Name', 'Last Name', 'Gender', 'Seat No', 'Academic Year', 'Department', 'Semester', 'Division', 'Class Teacher', 'HOD', 'Address', 'Mother\'s Name', 'Father\'s Name', 'Date of Birth', 'Email','internshipRequestCount','activeInternshipRequestCount','completedInternshipCount','declinedInternshipRequestCount']);
+    sheet.addRow(['First Name', 'Last Name', 'Gender', 'Seat No', 'Academic Year', 'Department', 'Semester', 'Division', 'Class Teacher', 'HOD', 'Address', 'Mother\'s Name', 'Father\'s Name', 'Date of Birth', 'Email', 'internshipRequestCount', 'activeInternshipRequestCount', 'completedInternshipCount', 'declinedInternshipRequestCount']);
 
     allUser.forEach(user => {
       sheet.addRow([
@@ -164,7 +164,6 @@ function TeacherSearch() {
                   id='button-addon2'
                   value='search'
                   type='submit'
-                  style={{ marginRight: '2px' }}
                 >
                   Search
                 </Button>
@@ -180,43 +179,43 @@ function TeacherSearch() {
             </Form>
           </Col>
           <Row className='d-flex justify-content-center align-items-center'>
-          <Col md={4} lg={3} xs={12}>
-            <Form.Control
-              as='select'
-              value={selectedOption.department}
-              onChange={(e) => setSelectedOption({...selectedOption, department: e.target.value})}
-            >
-              {departmentOptions.map((option, index) => (
-                <option key={index}>{option}</option>
-              ))}
-            </Form.Control>
-          </Col>
-          {selectedOption.department !== 'All Departments' && (
-            <>
-              <Col md={4} lg={3} xs={12}>
-                <Form.Control
-                  as='select'
-                  value={selectedOption.academicYear}
-                  onChange={(e) => setSelectedOption({...selectedOption, academicYear: e.target.value})}
-                >
-                  {academicYearOptions.map((option, index) => (
-                    <option key={index}>{option}</option>
-                  ))}
-                </Form.Control>
-              </Col>
-              <Col md={4} lg={3} xs={12}>
-                <Form.Control
-                  as='select'
-                  value={selectedOption.semester}
-                  onChange={(e) => setSelectedOption({...selectedOption, semester: e.target.value})}
-                >
-                  {semesterOptions.map((option, index) => (
-                    <option key={index}>{option}</option>
-                  ))}
-                </Form.Control>
-              </Col>
-            </>
-          )}</Row>
+            <Col md={4} lg={3} xs={12}>
+              <Form.Control
+                as='select'
+                value={selectedOption.department}
+                onChange={(e) => setSelectedOption({ ...selectedOption, department: e.target.value })}
+              >
+                {departmentOptions.map((option, index) => (
+                  <option key={index}>{option}</option>
+                ))}
+              </Form.Control>
+            </Col>
+            {selectedOption.department !== 'All Departments' && (
+              <>
+                <Col md={4} lg={3} xs={12}>
+                  <Form.Control
+                    as='select'
+                    value={selectedOption.academicYear}
+                    onChange={(e) => setSelectedOption({ ...selectedOption, academicYear: e.target.value })}
+                  >
+                    {academicYearOptions.map((option, index) => (
+                      <option key={index}>{option}</option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col md={4} lg={3} xs={12}>
+                  <Form.Control
+                    as='select'
+                    value={selectedOption.semester}
+                    onChange={(e) => setSelectedOption({ ...selectedOption, semester: e.target.value })}
+                  >
+                    {semesterOptions.map((option, index) => (
+                      <option key={index}>{option}</option>
+                    ))}
+                  </Form.Control>
+                </Col>
+              </>
+            )}</Row>
         </Row>
       </Container>
 
@@ -224,13 +223,13 @@ function TeacherSearch() {
         {!userData && (
           <>
             <Col md={8} lg={12} xs={12}>
-            <div className='d-flex justify-content-center'>
-        <Button variant='primary' onClick={downloadExcel} style={{marginLeft:'1100px'}}><IoMdDownload />Download Excel</Button>
-      </div>
+              <div className='d-flex justify-content-end'>
+                <Button variant='primary' onClick={downloadExcel}><IoMdDownload />Download Excel</Button>
+              </div>
               <h1>
                 <b>Students</b>
               </h1>
-              
+
               <div className='border border-2 border-primary'></div>
               <br />
               <div className='row mx-md-n5 gy-4'>
@@ -273,7 +272,7 @@ function TeacherSearch() {
                           <div className='card-body'>
                             <h4 className='card-title'>
                               <b>{filteredUser.firstname}  {filteredUser.lastname}</b>
-                           
+
                             </h4>
                             <div className='details'>
                               <div>

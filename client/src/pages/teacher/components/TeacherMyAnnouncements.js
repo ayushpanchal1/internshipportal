@@ -1,4 +1,4 @@
-import { Col, Button, Row, Container, Modal, Form } from "react-bootstrap";
+import { Col, Button, Row, Container, Modal, Form, InputGroup } from "react-bootstrap";
 import { useState, useEffect } from 'react';
 import { getMyAnnouncementsTeacher, delMyAnnouncementsTeacher } from "../../../services/TeacherServices";
 
@@ -46,18 +46,18 @@ function TeacherMyAnnouncements() {
             <br />
             <Row className="d-flex">
                 <Col md={8} lg={12} xs={12}>
-                    <div className="d-flex justify-content-end">
+                    <InputGroup className="d-flex mb-3 justify-content-end">
                         <Form.Control
                             type="text"
                             placeholder="Search..."
-                            className="mb-3 me-2"
-                            style={{ width: "300px" }}
+                            className="form-control shadow"
+                            style={{ maxWidth: "300px" }}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <Button variant="primary" className="me-1" style={{ height: "40px" }} onClick={handleSearch}>Search</Button>
-                        <Button variant="primary" className="me-1" style={{ height: "40px" }} onClick={handleClear}>Clear</Button>
-                    </div>
+                        <Button variant="primary" className="shadow" style={{ height: "40px" }} onClick={handleSearch}>Search</Button>
+                        <Button variant="primary" className="shadow" style={{ height: "40px" }} onClick={handleClear}>Clear</Button>
+                    </InputGroup>
                     <div>
                         {(filteredAnnouncements.length > 0 ? filteredAnnouncements : Announcements).map(Announcement => (
                             <div key={Announcement._id} className="card shadow mb-3">

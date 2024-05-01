@@ -135,12 +135,12 @@ function SignupForm() {
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="seatno">
-                        <Form.Label className="text-center">Seat No</Form.Label>
+                        <Form.Label className="text-center">College ID</Form.Label>
                         <Form.Control
                           value={seatno}
                           onChange={(e) => setseatno(e.target.value)}
                           type="number"
-                          placeholder="Enter Seat No"
+                          placeholder="Enter College ID (same as seen on SIMS)"
                           style={{
                             WebkitAppearance: "none", // Remove arrow buttons in Firefox
                             MozAppearance: "textfield",
@@ -317,25 +317,25 @@ function SignupForm() {
 
                       <Form.Group className="mb-3" controlId="mothername">
                         <Form.Label className="text-center">
-                          Mother's Name
+                          Mother's First Name
                         </Form.Label>
                         <Form.Control
                           value={mothername}
                           onChange={(e) => setmothername(e.target.value)}
                           type="text"
-                          placeholder="Enter Your Mother's Name"
+                          placeholder="Enter only the First Name of your Mother"
                         />
                       </Form.Group>
 
                       <Form.Group className="mb-3" controlId="fathername">
                         <Form.Label className="text-center">
-                          Father's Name
+                          Father's First Name
                         </Form.Label>
                         <Form.Control
                           value={fathername}
                           onChange={(e) => setfathername(e.target.value)}
                           type="text"
-                          placeholder="Enter Your Father's Name"
+                          placeholder="Enter only the First Name of your Father"
                         />
                       </Form.Group>
 
