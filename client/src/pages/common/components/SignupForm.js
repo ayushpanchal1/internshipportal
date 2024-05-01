@@ -37,6 +37,14 @@ function SignupForm() {
     event.preventDefault();
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
     const newErrors = {};
+    if (!passwordPattern.test(password)) {
+      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be at least 8 characters long.';
+    }
+  
+    if (!email.endsWith('@somaiya.edu')) {
+      newErrors.email = 'Email address must be from @somaiya.edu domain.';
+    }
+  
     if (!fname.trim()) {
       newErrors.fname = 'First Name is required.';
     }
